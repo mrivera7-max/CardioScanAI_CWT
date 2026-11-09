@@ -123,7 +123,7 @@ def export_report():
         "  CardioScan AI",
         "  Diseñado y desarrollado por:",
         "  Ing. María Fernanda Rivera Sanclemente",
-        "  UDI 2025 ",
+        "  2025",
         "=" * 60,
     ]
     text = "\n".join(lines)
