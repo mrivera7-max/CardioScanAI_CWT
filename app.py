@@ -14,6 +14,7 @@ except ImportError:
 
 from ecg_pipeline import analyze_ecg, generate_demo_ecg
 import numpy as np
+import wfdb_import
 
 def _get_base_dir():
     """Funciona tanto en ejecución normal como empaquetada con PyInstaller."""
@@ -26,7 +27,7 @@ BASE_DIR = _get_base_dir()
 app = Flask(__name__,
             static_folder=str(BASE_DIR / "static"),
             template_folder=str(BASE_DIR / "templates"))
-app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024  # 50 MB
+app.config["MAX_CONTENT_LENGTH"] = 500 * 1024 * 1024  # 500 MB (zip de bases PhysioNet)
 
 UPLOAD_DIR = Path(tempfile.gettempdir()) / "ecg_uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -88,6 +89,74 @@ def api_demo(condition: str):
             tmp.unlink()
         except Exception:
             pass
+
+
+# ─── Importación directa de PhysioNet (WFDB) ─────────────────────────────────
+def _wfdb_params():
+    d = request.get_json(silent=True) or request.values
+    token = d.get("token", "")
+    rec = d.get("record", "")
+    try:
+        ch = int(d.get("channel", 0) or 0)
+        start = float(d.get("start", 0) or 0)
+        dur = d.get("duration", "")
+        dur = float(dur) if str(dur).strip() not in ("", "0") else None
+    except ValueError:
+        raise ValueError("Canal, inicio o duración no válidos.")
+    return wfdb_import.session_dir(UPLOAD_DIR, token), rec, ch, start, dur
+
+
+@app.route("/api/wfdb/upload", methods=["POST"])
+def api_wfdb_upload():
+    files = request.files.getlist("files")
+    if not files:
+        return jsonify({"status": "error", "message": "No se recibieron archivos."}), 400
+    try:
+        out = wfdb_import.save_upload(UPLOAD_DIR, files)
+        return jsonify({"status": "ok", **out})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+
+@app.route("/api/wfdb/analyze", methods=["POST"])
+def api_wfdb_analyze():
+    try:
+        d, rec, ch, start, dur = _wfdb_params()
+        x, fs, info = wfdb_import.read_segment(d, rec, ch, start, dur)
+        tmp = d / f"_seg_{os.getpid()}.csv"
+        wfdb_import.segment_to_csv(x, fs, info, tmp)
+        try:
+            result = analyze_ecg(str(tmp), fs=fs)
+        finally:
+            tmp.unlink(missing_ok=True)
+        if result.get("status") == "ok":
+            result["signal_info"]["fs_source"] = f"cabecera WFDB ({rec})"
+            result["wfdb"] = info
+            result["reference"] = wfdb_import.reference_annotations(
+                d, rec, info["sampfrom"], info["sampto"])
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+
+@app.route("/api/wfdb/csv")
+def api_wfdb_csv():
+    try:
+        d, rec, ch, start, dur = _wfdb_params()
+        x, fs, info = wfdb_import.read_segment(d, rec, ch, start, dur)
+        name = f"{Path(rec).as_posix().replace('/', '_')}_canal{ch}.csv"
+        out = d / name
+        wfdb_import.segment_to_csv(x, fs, info, out)
+        return send_file(str(out), as_attachment=True, download_name=name,
+                         mimetype="text/csv")
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+
+@app.errorhandler(413)
+def too_large(_e):
+    return jsonify({"status": "error",
+                    "message": "Archivo demasiado grande (máx. 500 MB)."}), 413
 
 
 @app.route("/api/export_report", methods=["POST"])

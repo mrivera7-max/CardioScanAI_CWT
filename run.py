@@ -20,6 +20,7 @@ REQUIRED = [
     ("matplotlib", "matplotlib"),
     ("sklearn",    "scikit-learn"),
     ("PIL",        "pillow"),
+    ("wfdb",       "wfdb"),
 ]
 
 

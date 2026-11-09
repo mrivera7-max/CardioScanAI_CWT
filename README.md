@@ -277,3 +277,21 @@ python validar_picos_physionet.py
 **Limitaciones abiertas:** el clasificador sigue siendo por reglas con umbrales no validados; los 4 registros
 y las demos no constituyen una validación. Siguiente paso: validación cruzada sobre bases PhysioNet completas
 (opción 3 del plan, incluyendo features wavelet).
+
+
+---
+
+## Importar PhysioNet directamente (WFDB) — v2.2
+
+Sección **📦 Importar PhysioNet (WFDB)** en la interfaz: ya no hace falta convertir a CSV por fuera.
+
+1. Descarga el **.zip** de una base desde PhysioNet (p. ej. *BUT PDB*, *MIT-BIH*), o ten a mano los archivos
+   `.hea` + `.dat` (+ `.atr` / `.qrs` para la referencia).
+2. **Cargar registros** → la app lista todos los registros con su fs, derivaciones, duración y anotaciones (✓ref).
+3. Elige registro, canal, inicio y duración → **Analizar registro**. La fs se toma de la cabecera WFDB.
+4. Si hay anotaciones, aparece la tarjeta **Referencia PhysioNet (cardiólogos)**: ritmo anotado
+   (p. ej. *Fibrilación auricular*) y conteo de latidos por tipo, junto al diagnóstico de CardioScan.
+5. **Descargar CSV** exporta el tramo seleccionado con cabecera `# fs=`.
+
+Detalles: `wfdb_import.py`. Límite de carga 500 MB. El zip se extrae en una carpeta temporal por sesión
+(se borra a las 3 h), solo con extensiones WFDB y con protección contra rutas maliciosas (*zip slip*).

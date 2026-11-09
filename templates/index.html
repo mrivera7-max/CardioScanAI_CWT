@@ -457,6 +457,24 @@ body {
 }
 .info-row span:first-child { color: var(--text-dim); font-weight: 500; min-width: 110px; }
 
+
+/* ── Importar PhysioNet (WFDB) ───────────────────────────────────── */
+.wf-field { display:flex; flex-direction:column; gap:4px; font-size:.72rem; color:var(--text-muted); }
+.wf-input, .wf-select {
+  background:var(--bg-panel); border:1px solid var(--border); border-radius:6px;
+  color:var(--text); padding:.4rem .5rem; font-size:.8rem; width:100%;
+}
+.wf-input:focus, .wf-select:focus { outline:none; border-color:var(--accent); }
+.wf-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.5rem; margin:.6rem 0; }
+.wf-meta { font-size:.72rem; color:var(--text-muted); margin:.35rem 0 .1rem; font-family:var(--font-mono); }
+.wf-status { font-size:.75rem; margin:.5rem 0; color:var(--text-dim); }
+.wf-actions { display:flex; gap:.5rem; flex-wrap:wrap; }
+.ref-table { width:100%; border-collapse:collapse; font-size:.78rem; margin-top:.5rem; }
+.ref-table td { padding:4px 6px; border-bottom:1px solid var(--border); color:var(--text-dim); }
+.ref-table td:last-child { text-align:right; font-family:var(--font-mono); }
+.ref-rhythm { display:inline-block; margin:2px 4px 2px 0; padding:2px 8px; border-radius:999px;
+  background:rgba(99,102,241,.15); color:var(--accent3); font-size:.75rem; }
+
 /* ── Scrollbar ───────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -589,6 +607,50 @@ body {
       </div>
     </div>
 
+    <!-- PhysioNet WFDB import card -->
+    <div class="card" style="margin-bottom:1.25rem">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--accent3)"></div>
+        <h3>Importar PhysioNet (WFDB)</h3>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.6rem">
+          Sube el <b>.zip</b> descargado de PhysioNet o los archivos <b>.hea + .dat</b>
+          (y <b>.atr/.qrs</b> si quieres ver la referencia de los cardiólogos).
+        </p>
+        <input type="file" id="wfFiles" multiple
+               accept=".zip,.hea,.dat,.atr,.qrs,.ecg,.ari,.pwave,.atrb,.mat"
+               style="font-size:.75rem;color:var(--text-dim);width:100%">
+        <div class="wf-actions" style="margin-top:.6rem">
+          <button class="btn btn-outline btn-sm" id="wfUploadBtn" onclick="wfUpload()">📦 Cargar registros</button>
+        </div>
+        <div class="wf-status" id="wfStatus"></div>
+
+        <div id="wfPanel" style="display:none">
+          <label class="wf-field">Registro
+            <select class="wf-select" id="wfRecord" onchange="wfOnRecord()"></select>
+          </label>
+          <div class="wf-meta" id="wfMeta"></div>
+          <div class="wf-grid">
+            <label class="wf-field">Canal
+              <select class="wf-select" id="wfChannel"></select>
+            </label>
+            <label class="wf-field">Inicio (s)
+              <input class="wf-input" type="number" id="wfStart" value="0" min="0" step="1">
+            </label>
+            <label class="wf-field">Duración (s)
+              <input class="wf-input" type="number" id="wfDur" value="300" min="0" step="10"
+                     title="0 = registro completo">
+            </label>
+          </div>
+          <div class="wf-actions">
+            <button class="btn btn-primary btn-sm" onclick="wfAnalyze()">🔬 Analizar registro</button>
+            <button class="btn btn-outline btn-sm" onclick="wfCsv()">⬇ Descargar CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Demo card -->
     <div class="card" style="margin-bottom:1.25rem">
       <div class="card-header">
@@ -661,6 +723,15 @@ body {
           ⚠ Este análisis es de apoyo diagnóstico y no reemplaza la evaluación de un médico cardiólogo.
         </p>
       </div>
+    </div>
+
+    <!-- Reference annotations (PhysioNet) -->
+    <div class="card" id="refCard" style="display:none">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--accent3)"></div>
+        <h3>Referencia PhysioNet (cardiólogos)</h3>
+      </div>
+      <div class="card-body" style="padding-top:0.5rem" id="refBody"></div>
     </div>
 
     <!-- Plots card -->
@@ -757,6 +828,93 @@ async function analyzeFile() {
   );
 }
 
+// ── PhysioNet WFDB import ──────────────────────────────────────────────────
+let wfToken = null, wfRecords = [];
+const wfStatus = (msg, color) => {
+  const el = document.getElementById('wfStatus');
+  el.textContent = msg; el.style.color = color || '';
+};
+
+async function wfUpload() {
+  const files = document.getElementById('wfFiles').files;
+  if (!files.length) { wfStatus('Selecciona el .zip o los archivos .hea/.dat.', 'var(--warn)'); return; }
+  const fd = new FormData();
+  for (const f of files) fd.append('files', f);
+  const btn = document.getElementById('wfUploadBtn');
+  btn.disabled = true; wfStatus('Cargando y leyendo cabeceras…');
+  try {
+    const r = await fetch('/api/wfdb/upload', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+    wfToken = data.token; wfRecords = data.records;
+    const sel = document.getElementById('wfRecord');
+    sel.innerHTML = wfRecords.map((rec, i) =>
+      `<option value="${i}">${rec.id}${rec.annotations.length ? '  ✓ref' : ''}</option>`).join('');
+    document.getElementById('wfPanel').style.display = 'block';
+    wfOnRecord();
+    const nAnn = wfRecords.filter(r => r.annotations.length).length;
+    wfStatus(`✓ ${wfRecords.length} registro(s) encontrados · ${nAnn} con anotaciones de referencia`, 'var(--success)');
+  } catch (e) {
+    wfStatus('Error: ' + e.message, 'var(--danger)');
+  } finally { btn.disabled = false; }
+}
+
+function wfOnRecord() {
+  const rec = wfRecords[+document.getElementById('wfRecord').value];
+  if (!rec) return;
+  document.getElementById('wfChannel').innerHTML =
+    rec.sig_name.map((n, i) => `<option value="${i}">${i} · ${n}</option>`).join('');
+  const ann = rec.annotations.length ? 'anot.: ' + rec.annotations.map(a => '.' + a).join(' ') : 'sin anotaciones';
+  document.getElementById('wfMeta').textContent =
+    `fs ${rec.fs} Hz · ${rec.n_sig} derivación(es) · ${rec.duration_sec} s · ${ann}`;
+  const dur = document.getElementById('wfDur');
+  if (+dur.value > rec.duration_sec || +dur.value === 0) dur.value = Math.floor(rec.duration_sec);
+}
+
+function wfParams() {
+  const rec = wfRecords[+document.getElementById('wfRecord').value];
+  return {
+    token: wfToken, record: rec.id,
+    channel: document.getElementById('wfChannel').value,
+    start: document.getElementById('wfStart').value || 0,
+    duration: document.getElementById('wfDur').value || 0,
+  };
+}
+
+async function wfAnalyze() {
+  if (!wfToken) return;
+  await runAnalysis(() =>
+    fetch('/api/wfdb/analyze', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(wfParams()),
+    }).then(r => r.json())
+  );
+}
+
+function wfCsv() {
+  if (!wfToken) return;
+  window.location = '/api/wfdb/csv?' + new URLSearchParams(wfParams()).toString();
+}
+
+function renderReference(data) {
+  const card = document.getElementById('refCard');
+  const ref = data.reference;
+  if (!data.wfdb) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  const w = data.wfdb;
+  let html = `<div class="wf-meta">${w.record} · canal ${w.channel} (${w.lead}) · ${w.start_sec}–${(w.start_sec + w.duration_sec).toFixed(1)} s</div>`;
+  if (!ref) {
+    html += '<p style="font-size:.78rem;color:var(--text-muted);margin-top:.5rem">Este registro no trae anotaciones (.atr/.qrs) en lo cargado.</p>';
+  } else {
+    if (ref.rhythms.length)
+      html += '<div style="margin-top:.5rem">' + ref.rhythms.map(r => `<span class="ref-rhythm">${r}</span>`).join('') + '</div>';
+    html += '<table class="ref-table">' + ref.beats.map(b =>
+      `<tr><td><b>${b.symbol}</b> · ${b.desc}</td><td>${b.count} (${b.pct}%)</td></tr>`).join('') + '</table>';
+    html += `<p style="font-size:.7rem;color:var(--text-muted);margin-top:.5rem">${ref.n_beats} latidos anotados (${ref.source}) · CardioScan detectó ${data.features.num_peaks}</p>`;
+  }
+  document.getElementById('refBody').innerHTML = html;
+}
+
 // ── Load demo ──────────────────────────────────────────────────────────────
 async function loadDemo(condition) {
   await runAnalysis(() =>
@@ -767,6 +925,7 @@ async function loadDemo(condition) {
 // ── Core pipeline ──────────────────────────────────────────────────────────
 const LOADING_MSGS = [
   'Cargando señal ECG…',
+  'Leyendo registro WFDB…',
   'Aplicando filtros de preprocesamiento…',
   'Calculando espectrograma STFT…',
   'Calculando escalograma CWT (Morlet)…',
@@ -869,6 +1028,9 @@ function renderResult(data) {
     <button class="btn btn-outline btn-sm" onclick="exportReport()">📄 Exportar reporte</button>
     <button class="btn btn-outline btn-sm" onclick="downloadScores()">📊 Scores JSON</button>
   `;
+
+  // Referencia PhysioNet (solo registros WFDB)
+  renderReference(data);
 
   // Plots
   renderPlots(data.plots);
