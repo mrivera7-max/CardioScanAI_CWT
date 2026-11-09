@@ -21,6 +21,7 @@ REQUIRED = [
     ("sklearn",    "scikit-learn"),
     ("PIL",        "pillow"),
     ("wfdb",       "wfdb"),
+    ("reportlab",  "reportlab"),
 ]
 
 

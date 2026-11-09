@@ -18,6 +18,8 @@ hidden_imports = (
     collect_submodules('sklearn') +
     collect_submodules('scipy') +
     collect_submodules('matplotlib') +
+    collect_submodules('reportlab') +
+    collect_submodules('wfdb') +
     [
         'engineio.async_drivers.threading',
         'PIL._tkinter_finder',

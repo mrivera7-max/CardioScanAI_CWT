@@ -13,7 +13,8 @@ queda **congelada como referencia** y no recibe estas correcciones.
 | `4e60697` | Pie de página y reporte: solo el año |
 | `c809d06` | v2.1: correcciones metodológicas (fs, picos R tipo Pan-Tompkins, HRV sobre tacograma RR, regla de flutter, ventana STFT 0.5 s) |
 
-| _(este)_ | v2.2: sección **Importar PhysioNet (WFDB)** — carga directa de .zip/.hea/.dat con referencia de cardiólogos |
+| `4d5ea37` | v2.2: sección **Importar PhysioNet (WFDB)** — carga directa de .zip/.hea/.dat con referencia de cardiólogos |
+| _(este)_ | v2.3: **Reporte PDF** con diagnóstico, métricas, referencia y las 7 gráficas con guía de lectura |
 
 Detalle técnico y resultados: ver `README.md`.
 

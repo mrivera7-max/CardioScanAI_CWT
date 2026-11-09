@@ -12,9 +12,10 @@ except ImportError:
     os.system(f"{sys.executable} -m pip install flask --break-system-packages -q")
     from flask import Flask, request, jsonify, send_file
 
-from ecg_pipeline import analyze_ecg, generate_demo_ecg
+from ecg_pipeline import analyze_ecg, generate_demo_ecg, render_plots_for_report
 import numpy as np
 import wfdb_import
+import report_pdf
 
 def _get_base_dir():
     """Funciona tanto en ejecución normal como empaquetada con PyInstaller."""
@@ -63,6 +64,7 @@ def api_analyze():
                 return jsonify({"status": "error",
                                 "message": f"fs no válida: '{fs_txt}'"}), 400
         result = analyze_ecg(str(tmp), fs=fs_user, original_name=f.filename)
+        result["source"] = f"Archivo: {f.filename}"
         return jsonify(result)
     finally:
         try:
@@ -83,6 +85,7 @@ def api_demo(condition: str):
         np.savetxt(str(tmp), ecg, fmt="%.6f")
         result = analyze_ecg(str(tmp), fs=500)
         result["demo_condition"] = condition
+        result["source"] = f"Señal sintética de demostración ({condition})"
         return jsonify(result)
     finally:
         try:
@@ -132,6 +135,7 @@ def api_wfdb_analyze():
         if result.get("status") == "ok":
             result["signal_info"]["fs_source"] = f"cabecera WFDB ({rec})"
             result["wfdb"] = info
+            result["source"] = f"PhysioNet WFDB: {rec}"
             result["reference"] = wfdb_import.reference_annotations(
                 d, rec, info["sampfrom"], info["sampto"])
         return jsonify(result)
@@ -208,6 +212,30 @@ def export_report():
     tmp_report.write_text(text, encoding="utf-8")
     return send_file(str(tmp_report), as_attachment=True,
                      download_name="reporte_ecg.txt", mimetype="text/plain")
+
+
+@app.route("/api/export_pdf", methods=["POST"])
+def export_pdf():
+    """Reporte PDF con diagnóstico, métricas, referencia y todas las gráficas."""
+    from datetime import datetime
+    data = request.get_json(silent=True) or {}
+    if data.get("status") != "ok":
+        return jsonify({"status": "error", "message": "No hay un análisis para reportar."}), 400
+    operator = (data.get("operator_name") or "").strip()
+    # Gráficas en tema claro (imprimible) si el análisis sigue en memoria;
+    # si no (p. ej. tras reiniciar el servidor), se usan las de la interfaz.
+    plots = render_plots_for_report(data.get("analysis_id")) or data.get("plots") or {}
+    try:
+        pdf = report_pdf.build_report(data, plots, operator)
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"No se pudo generar el PDF: {e}"}), 500
+    stamp = datetime.now().strftime("%Y%m%d_%H%M")
+    safe = "".join(c for c in (data.get("diagnosis") or "ECG") if c.isalnum()) or "ECG"
+    out = UPLOAD_DIR / f"reporte_cardioscan_{stamp}.pdf"
+    out.write_bytes(pdf)
+    return send_file(str(out), as_attachment=True,
+                     download_name=f"CardioScan_{safe}_{stamp}.pdf",
+                     mimetype="application/pdf")
 
 
 if __name__ == "__main__":

@@ -295,3 +295,23 @@ Sección **📦 Importar PhysioNet (WFDB)** en la interfaz: ya no hace falta con
 
 Detalles: `wfdb_import.py`. Límite de carga 500 MB. El zip se extrae en una carpeta temporal por sesión
 (se borra a las 3 h), solo con extensiones WFDB y con protección contra rutas maliciosas (*zip slip*).
+
+---
+
+## Reporte PDF — v2.3
+
+Botón **📑 Reporte PDF** (tras cualquier análisis: archivo, demo o registro PhysioNet). Genera un PDF de ~5 páginas:
+
+1. **Encabezado:** paciente/operador, fecha, origen de la señal, fs y su fuente, n.º de muestras, ID del análisis
+   (y registro/canal/tramo si viene de PhysioNet).
+2. **Diagnóstico sugerido** con confianza y nivel de riesgo.
+3. **Hallazgos clínicos** y advertencias (fs asumida, LF/HF con registro < 2 min).
+4. **Métricas:** HRV en el tiempo (FC, RR, SDNN, RMSSD, pNN50, CV) y en frecuencia (VLF, LF, HF, LF/HF, n.u.).
+5. **Puntaje por diagnóstico.**
+6. **Referencia PhysioNet** (ritmo anotado y latidos por tipo), si aplica.
+7. **Las 7 gráficas** en fondo blanco (imprimibles) con una **guía de lectura** de cada una.
+8. **Método** (con referencias: Pan & Tompkins 1985, Task Force 1996, Torrence & Compo 1998) y **limitaciones**.
+
+Implementación: `report_pdf.py` (reportlab + fuente DejaVu de matplotlib). Las figuras se regeneran en tema claro a
+partir del análisis en memoria; si el servidor se reinició, se usan las figuras de la interfaz. El reporte TXT se mantiene.
+La gráfica/pestaña "Probabilidades" se renombró a **Puntajes**: son puntajes relativos de las reglas, no probabilidades calibradas.

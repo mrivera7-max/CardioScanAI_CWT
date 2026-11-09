@@ -13,7 +13,8 @@ import matplotlib.colors as mcolors
 from sklearn.ensemble import IsolationForest, RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-import io, base64, json, os, csv, re
+import io, base64, json, os, csv, re, threading, uuid
+from collections import OrderedDict
 from pathlib import Path
 
 # ─── Clases de diagnóstico ────────────────────────────────────────────────────
@@ -507,9 +508,12 @@ def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
 
 
 # ─── 6. GENERACIÓN DE FIGURAS ────────────────────────────────────────────────
+_DPI = 110
+
+
 def _fig_to_b64(fig) -> str:
     buf = io.BytesIO()
-    fig.savefig(buf, format="png", dpi=110, bbox_inches="tight",
+    fig.savefig(buf, format="png", dpi=_DPI, bbox_inches="tight",
                 facecolor=fig.get_facecolor())
     buf.seek(0)
     return base64.b64encode(buf.read()).decode()
@@ -519,6 +523,63 @@ BG = "#0f172a"
 GRID = "#1e293b"
 ACCENT = "#06b6d4"
 TEXT = "#e2e8f0"
+
+# Temas de figuras: oscuro (interfaz) y claro (reporte PDF imprimible)
+_THEMES = {
+    "dark":  {"BG": "#0f172a", "GRID": "#1e293b", "ACCENT": "#06b6d4",
+              "TEXT": "#e2e8f0", "_DPI": 110},
+    "light": {"BG": "#ffffff", "GRID": "#cbd5e1", "ACCENT": "#0e7490",
+              "TEXT": "#0f172a", "_DPI": 170},
+}
+_PLOT_LOCK = threading.Lock()
+
+
+class _theme:
+    """Cambia temporalmente los colores globales de las figuras (thread-safe)."""
+    def __init__(self, name):
+        self.name = name
+
+    def __enter__(self):
+        _PLOT_LOCK.acquire()
+        g = globals()
+        self._prev = {k: g[k] for k in _THEMES["dark"]}
+        g.update(_THEMES[self.name])
+
+    def __exit__(self, *exc):
+        globals().update(self._prev)
+        _PLOT_LOCK.release()
+
+
+# Caché de los últimos análisis (para regenerar figuras en el reporte PDF)
+_ANALYSIS_CACHE: "OrderedDict[str, dict]" = OrderedDict()
+_CACHE_MAX = 20
+
+
+def _cache_put(d: dict) -> str:
+    aid = uuid.uuid4().hex
+    _ANALYSIS_CACHE[aid] = d
+    while len(_ANALYSIS_CACHE) > _CACHE_MAX:
+        _ANALYSIS_CACHE.popitem(last=False)
+    return aid
+
+
+def _render_plots(d: dict, theme: str = "dark") -> dict:
+    with _theme(theme):
+        return {
+            "ecg":         plot_ecg_signal(d["ecg"], d["fs"], d["peaks"]),
+            "spectrogram": plot_spectrogram(d["f"], d["t"], d["Sxx_db"], d["fs"]),
+            "cwt":         plot_scalogram(*d["cwt"]),
+            "compare":     plot_stft_vs_cwt(d["f"], d["t"], d["Sxx_db"], *d["cwt"]),
+            "rr":          plot_rr_intervals(d["ecg"], d["fs"], d["peaks"]),
+            "scores":      plot_scores_bar(d["scores"]),
+            "psd":         plot_frequency_analysis(d["f"], d["Sxx"], d["features"]),
+        }
+
+
+def render_plots_for_report(analysis_id: str) -> dict | None:
+    """Figuras en tema claro para el PDF; None si el análisis ya no está en caché."""
+    d = _ANALYSIS_CACHE.get(analysis_id or "")
+    return _render_plots(d, "light") if d else None
 
 
 def plot_ecg_signal(ecg: np.ndarray, fs: int, peaks: np.ndarray,
@@ -737,7 +798,7 @@ def plot_scores_bar(scores: dict) -> str:
                     f"{v:.1f}%", va="center", color=TEXT, fontsize=8)
 
     ax.set_xlim(0, 100)
-    ax.set_xlabel("Probabilidad (%)", color=TEXT, fontsize=9)
+    ax.set_xlabel("Puntaje relativo (%)", color=TEXT, fontsize=9)
     ax.tick_params(colors=TEXT, labelsize=8)
     for sp in ax.spines.values():
         sp.set_edgecolor(GRID)
@@ -829,6 +890,10 @@ def analyze_ecg(filepath: str, fs: float | None = None,
                          "como referencia y no se usa para diagnosticar.")
         # CWT: solo visualización (opción 1). NO alimenta al clasificador.
         cw_f, cw_t, cw_p, cw_coi = ecg_to_cwt(ecg, fs)
+        cache = {"ecg": ecg, "fs": fs, "peaks": peaks, "f": f, "t": t,
+                 "Sxx_db": Sxx_db, "Sxx": Sxx, "cwt": (cw_f, cw_t, cw_p, cw_coi),
+                 "scores": scores, "features": features}
+        analysis_id = _cache_put(cache)
 
         return {
             "status":    "ok",
@@ -847,15 +912,8 @@ def analyze_ecg(filepath: str, fs: float | None = None,
                 "fs_source": fs_source,
                 "n_samples": len(ecg),
             },
-            "plots": {
-                "ecg":       plot_ecg_signal(ecg, fs, peaks),
-                "spectrogram": plot_spectrogram(f, t, Sxx_db, fs),
-                "cwt":       plot_scalogram(cw_f, cw_t, cw_p, cw_coi),
-                "compare":   plot_stft_vs_cwt(f, t, Sxx_db, cw_f, cw_t, cw_p, cw_coi),
-                "rr":        plot_rr_intervals(ecg, fs, peaks),
-                "scores":    plot_scores_bar(scores),
-                "psd":       plot_frequency_analysis(f, Sxx, features),
-            },
+            "analysis_id": analysis_id,
+            "plots": _render_plots(cache, "dark"),
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}

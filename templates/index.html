@@ -1025,7 +1025,8 @@ function renderResult(data) {
 
   // Actions
   document.getElementById('actionsRow').innerHTML = `
-    <button class="btn btn-outline btn-sm" onclick="exportReport()">📄 Exportar reporte</button>
+    <button class="btn btn-primary btn-sm" id="pdfBtn" onclick="exportPdf()">📑 Reporte PDF</button>
+    <button class="btn btn-outline btn-sm" onclick="exportReport()">📄 Reporte TXT</button>
     <button class="btn btn-outline btn-sm" onclick="downloadScores()">📊 Scores JSON</button>
   `;
 
@@ -1047,7 +1048,7 @@ function renderPlots(plots) {
     { id: 'compare',      label: '⚖️ STFT vs CWT' },
     { id: 'rr',           label: '📈 RR / Poincaré' },
     { id: 'psd',          label: '📡 Frecuencia: ECG + HRV' },
-    { id: 'scores',       label: '🎯 Probabilidades' },
+    { id: 'scores',       label: '🎯 Puntajes' },
   ];
 
   const tabStrip = document.getElementById('tabStrip');
@@ -1073,6 +1074,37 @@ function switchTab(id, btn) {
 }
 
 // ── Export ─────────────────────────────────────────────────────────────────
+async function exportPdf() {
+  if (!lastResult) return;
+  const btn = document.getElementById('pdfBtn');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = '⏳ Generando PDF…';
+  try {
+    const res = await fetch('/api/export_pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...lastResult, operator_name: operatorName }),
+    });
+    if (!res.ok) {
+      let msg = 'Error ' + res.status;
+      try { msg = (await res.json()).message || msg; } catch (_) {}
+      throw new Error(msg);
+    }
+    const blob = await res.blob();
+    const cd = res.headers.get('Content-Disposition') || '';
+    const m = cd.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = m ? decodeURIComponent(m[1]) : 'reporte_cardioscan.pdf';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  } catch (e) {
+    alert('No se pudo generar el PDF: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
 async function exportReport() {
   if (!lastResult) return;
   const payload = { ...lastResult, operator_name: operatorName };
