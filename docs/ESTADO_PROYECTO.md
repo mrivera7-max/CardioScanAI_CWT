@@ -18,7 +18,8 @@ queda **congelada como referencia** y no recibe estas correcciones.
 | `950d60d` | v2.4: **separación de pacientes** (Operador vs Paciente/ID, botón Nuevo paciente, borrado automático al cambiar de señal, reportes con ID y sin escritura en disco) |
 | `eccee6c` | **Validación BUT PDB** (`validar_but_pdb.py`, resultados en `docs/validacion_but_pdb/`): detección Se 94.4 % / +P 99.1 %; diagnóstico 27.3 % estricta / 38.6 % aceptable; FA Se 10/10 pero VPP 32 % |
 | `af95d42` | v2.5: **reglas por patrón de ritmo** + search-back. BUT PDB: exactitud 27.3 → 70.5 %, VPP FA 32 → 73 %, detección Se 96.2 % |
-| _(este)_ | **Prueba independiente** (`validar_independiente.py`): AFDB FA Se 98.7 % / Esp 97.4 %; INCART extrasístoles Se 69.6 % / Esp 83.8 %; latidos Se 94.5 % / +P 99.0 % |
+| `aa63cde` | **Prueba independiente** (`validar_independiente.py`): AFDB FA Se 98.7 % / Esp 97.4 %; INCART extrasístoles Se 69.6 % / Esp 83.8 %; latidos Se 94.5 % / +P 99.0 % |
+| _(este)_ | v2.6 (en validación): ondas P/F con CWT → BAV 1.er/2.º/3.er grado y flutter 2:1. Ver `docs/validacion_v26/LEEME.md` |
 
 Detalle técnico y resultados: ver `README.md`.
 
@@ -35,5 +36,7 @@ python run.py          # → http://localhost:5050
 - [x] Detección de latidos validada en INCART (Se 94.5 %, +P 99.0 %).
 - [ ] (opcional) Correr `python validar_picos_physionet.py` y registrar Se / +P contra anotaciones de cardiólogos.
 - [x] Regla de Bloqueo AV reformulada (RR bimodal ≈ 2:1).
-- [ ] Opción 3: morfología QRS / ondas P-F con CWT para ectopia frecuente, flutter y BAV 1.er/3.er grado.
+- [~] Opción 3: ondas P/F con CWT (v2.6) — BAV 1.er/2.º grado OK en desarrollo; flutter no generaliza; BAV completo sin casos reales.
+- [ ] Terminar AFDB con v2.6 (`python validar_independiente.py afdb <carpeta> --tiempo-max 0`) y comparar con v2.5.
+- [ ] Mostrar PR / onda P / P no conducidas en la interfaz y en el PDF.
 - [ ] Detección de flutter por ondas F (hoy solo diferencial de taquicardia regular 140–160 lpm).

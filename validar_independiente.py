@@ -1,5 +1,5 @@
 """
-Prueba INDEPENDIENTE de CardioScan AI (v2.5) en bases no usadas para ajustar reglas.
+Prueba INDEPENDIENTE de CardioScan AI (v2.5 / v2.6) en bases no usadas para ajustar reglas.
 
     python validar_independiente.py afdb   <carpeta con registros AFDB>   [--salida dir]
     python validar_independiente.py incart <carpeta con registros INCART> [--salida dir]
@@ -56,6 +56,14 @@ def metrics(tp, fp, tn, fn):
     acc = (tp + tn) / max(1, tp + tn + fp + fn)
     return {"TP": tp, "FP": fp, "TN": tn, "FN": fn, "Se": se, "Esp": sp,
             "VPP": ppv, "VPN": npv, "Exactitud": acc}
+
+
+def _num(v, nd=0):
+    """Redondeo seguro (NaN/None → cadena vacía)."""
+    try:
+        return "" if v is None or v != v else round(float(v), nd)
+    except (TypeError, ValueError):
+        return ""
 
 
 def pct(v):
@@ -141,14 +149,15 @@ def run_afdb(folder: Path, out: Path, time_budget: float = 0):
                 dx, conf, f, _ = classify_signal(x, fs)
                 row.update(pred=dx, conf=round(conf, 3), fc=round(f.get("heart_rate", 0), 1),
                            nrmssd=round(f.get("nrmssd_clean", 0), 3),
-                           reg=round(f.get("reg_frac", 0), 3), nprem=f.get("n_prem", 0))
+                           reg=round(f.get("reg_frac", 0), 3), nprem=f.get("n_prem", 0),
+                           half=round(f.get("half_frac", 0), 2), pr=_num(f.get("pr_ms")))
         cf.write_text(json.dumps(rec_rows), encoding="utf-8")
         rows.extend(rec_rows)
         done = [r for r in rows if r["registro"] == rid and r.get("pred")]
         print(f"{rid}: {len(done)} ventanas evaluadas · {time.time() - t0:.0f} s", flush=True)
 
     with open(out / "afdb_ventanas.csv", "w", newline="", encoding="utf-8-sig") as fh:
-        keys = ["registro", "ventana", "inicio_s", "ref", "pred", "conf", "fc", "nrmssd", "reg", "nprem"]
+        keys = ["registro", "ventana", "inicio_s", "ref", "pred", "conf", "fc", "nrmssd", "reg", "nprem", "half", "pr"]
         w = csv.DictWriter(fh, fieldnames=keys, delimiter=";", extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
@@ -192,6 +201,20 @@ def run_afdb(folder: Path, out: Path, time_budget: float = 0):
     sps = [p[4] for p in per if p[3] >= 5]
     L.append(f"\nMediana por registro (≥ 5 ventanas): Se {pct(np.median(ses)) if ses else '—'} · "
              f"Esp {pct(np.median(sps)) if sps else '—'}\n")
+    fl = [r for r in rows if r["ref"] == "FLUTTER" and r.get("pred")]
+    if fl:
+        L.append("\n## Flutter por registro (04936 = desarrollo; resto = prueba)\n")
+        L.append("| Registro | Ventanas flutter | Detectadas como flutter | Rol |\n|---|---|---|---|")
+        for rid in sorted(set(r["registro"] for r in fl)):
+            e = [r for r in fl if r["registro"] == rid]
+            k = sum(r["pred"] == "Flutter Auricular" for r in e)
+            L.append(f"| {rid} | {len(e)} | {k} | {'desarrollo' if rid == '04936' else 'prueba'} |")
+        L.append("")
+    nf = [r for r in ev if r["ref"] == "NO-FA"]
+    for dxn in ("Flutter Auricular", "Bloqueo AV"):
+        k = sum(r["pred"] == dxn for r in nf)
+        L.append(f"Ventanas NO-FA clasificadas como {dxn}: {k}/{len(nf)} ({pct(k / max(1, len(nf)))})")
+    L.append("")
     for k, d in other.items():
         tot = sum(d.values())
         L.append(f"**Ventanas {k} ({tot}):** " + ", ".join(f"{p} {c}" for p, c in
@@ -228,6 +251,7 @@ def run_incart(folder: Path, out: Path, lead: str = "II"):
             rows.append({"registro": rid, "ventana": k, "ectopicos_ref": n_ect, "ref": ref,
                          "pred": dx, "conf": round(conf, 3), "fc": round(f.get("heart_rate", 0), 1),
                          "nprem": f.get("n_prem", 0), "nrmssd": round(f.get("nrmssd_clean", 0), 3),
+                         "pr": _num(f.get("pr_ms")), "p_bloq": f.get("n_blocked_p", 0),
                          "TP": tp, "FN": fn, "FP": fp})
         print(f"{rid}: {sum(r['registro'] == rid for r in rows)} ventanas · {time.time() - t0:.0f} s",
               flush=True)
@@ -266,6 +290,9 @@ def run_incart(folder: Path, out: Path, lead: str = "II"):
          f"{pct(m['Exactitud'])} | {tp} | {fp} | {tn} | {fn} |\n",
          f"Ventanas SIN extrasístoles clasificadas como FA: **{fa_false}/{len(neg)} "
          f"({pct(fa_false / max(1, len(neg)))})**\n",
+         f"Ventanas clasificadas como Flutter: {sum(r['pred'] == 'Flutter Auricular' for r in ev)}/{len(ev)} · "
+         f"como Bloqueo AV: {sum(r['pred'] == 'Bloqueo AV' for r in ev)}/{len(ev)} "
+         "(INCART incluye 3 registros con BAV 2.º grado Mobitz I: I09–I11)\n",
          "## Distribución de diagnósticos\n"]
     for ref, d in dist.items():
         L.append(f"- **{ref}** ({sum(d.values())}): " + ", ".join(

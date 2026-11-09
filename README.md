@@ -370,3 +370,13 @@ Detalle en `docs/validacion_independiente/LEEME.md`. Umbrales **sin modificar** 
 
 Limitaciones: ectopia muy frecuente se confunde con FA; flutter y bloqueos AV de 1.er/3.er grado requieren
 análisis de ondas P/F (línea futura con CWT).
+
+
+---
+
+## Ondas P / F con CWT — v2.6 (en validación)
+
+Ver `docs/validacion_v26/LEEME.md`. Nuevo: detección de onda P con CWT Mexican hat (MAE 7 ms vs. anotaciones manuales),
+PR → **BAV 1.er grado**, **P no conducidas** → BAV 2.º grado, **disociación AV** → BAV completo, **flutter 2:1**.
+BUT PDB: Bloqueo AV 3/4 (antes 2/4), exactitud 72.7 %. Flutter: detecta 14/27 en desarrollo pero 0/16 en prueba
+(no resuelto). BAV completo: solo validado con señales sintéticas. AFDB v2.6 pendiente.

@@ -430,7 +430,328 @@ def rhythm_pattern(rr_ms: np.ndarray) -> dict:
     return out
 
 
-# ─── 4d. EXTRACCIÓN DE CARACTERÍSTICAS ──────────────────────────────────────
+# ─── 4e. ACTIVIDAD AURICULAR: ONDAS P / F CON CWT ────────────────────────────
+# Detección de la onda P en el latido promedio con CWT Mexican hat (σ = 25 ms),
+# PR, P no conducidas, ciclo auricular (flutter 2:1) y disociación AV.
+# Validación de la localización de P contra anotaciones manuales (.pwave) de
+# BUT PDB: error mediano −1 ms, MAE 7 ms (22 registros con P clara).
+
+
+def ricker_cwt(x, fs, sigma_s):
+    """CWT con wavelet Mexican hat (Ricker) a una escala (σ en segundos)."""
+    sig = sigma_s * fs
+    m = int(5 * sig)
+    t = np.arange(-m, m + 1)
+    w = (1 - (t / sig) ** 2) * np.exp(-0.5 * (t / sig) ** 2)
+    w = w - w.mean()
+    w /= np.sqrt(np.sum(w ** 2))
+    return np.convolve(x, w[::-1], mode="same")
+
+def beat_template(ecg, fs, peaks, normal_mask, pre=0.45, post=0.60):
+    a, b = int(pre * fs), int(post * fs)
+    seg = [ecg[p - a:p + b] for p, ok in zip(peaks, normal_mask) if ok and p - a >= 0 and p + b <= len(ecg)]
+    if len(seg) < 5:
+        return None, None
+    S = np.array(seg)
+    return np.median(S, axis=0), S
+
+def qrs_onset(T, fs, a):
+    """Inicio del QRS en el latido promedio: hacia atrás desde R hasta que la
+    pendiente cae por debajo del 5 % de la máxima durante ≥ 10 ms."""
+    d = np.abs(np.gradient(T))
+    m = d[a - int(0.10 * fs):a + int(0.05 * fs)].max()
+    run = max(2, int(0.010 * fs))
+    i = a
+    lim = a - int(0.15 * fs)
+    while i > lim:
+        if np.all(d[i - run:i] < 0.05 * m):
+            return i
+        i -= 1
+    return lim
+
+P_ONSET_TO_PEAK_S = 0.045   # inicio→pico típico de la onda P (Tabla de referencia ECG)
+
+def atrial_analysis(ecg, fs, peaks, normal_mask):
+    out = dict(p_present=False, p_snr=0.0, p_rel=0.0, pr_ms=np.nan, p_peak_to_r_ms=np.nan, qrs_onset_ms=np.nan)
+    T, S = beat_template(ecg, fs, peaks, normal_mask)
+    if T is None:
+        return out, None
+    a = int(0.45 * fs)
+    qon = qrs_onset(T, fs, a)
+    # Borrar QRS (de qon a R+100 ms) con interpolación lineal para que no "contamine" la CWT
+    Tb = T.copy()
+    e = min(len(T) - 1, a + int(0.10 * fs))
+    Tb[qon:e] = np.linspace(T[qon], T[e], e - qon)
+    rr_med = np.median(np.diff(peaks)) if len(peaks) > 2 else 0.8 * fs
+    span = int(min(0.30 * fs, 0.45 * rr_med))
+    lo, hi = max(1, qon - span), qon - int(0.02 * fs)
+    if hi - lo < 5:
+        return out, T
+    base = np.median(T[qon - int(0.02 * fs):qon + 1])
+    r_amp = abs(T[a] - base) + 1e-9
+    # CWT Mexican hat a la escala de la onda P (σ = 25 ms): responde a "jorobas"
+    # del ancho de la P y atenúa pendientes lentas (onda T) y el QRS borrado.
+    R = ricker_cwt(Tb - base, fs, 0.025)
+    seg = np.abs(R[lo:hi])
+    edge = int(0.010 * fs)
+    loc = signal.find_peaks(seg[:max(1, len(seg) - edge)])[0]
+    pc = pp = None
+    for L in sorted(loc, reverse=True):          # la P es la ÚLTIMA onda antes del QRS
+        if seg[L] < 0.25 * seg.max():
+            continue
+        c = lo + int(L)
+        if abs(T[c] - base) >= 0.03 * r_amp:
+            pc = pp = c
+            break
+    if pc is None:
+        pc = pp = lo + int(np.argmax(seg))
+    E = seg
+    amp = T[pp] - base
+    noise = 1.253 * np.median(np.std(S[:, lo:hi], axis=0)) / np.sqrt(len(S))
+    snr = abs(amp) / (noise + 1e-9)
+    rel_r = abs(amp) / r_amp
+    out.update(p_present=bool(snr > 4 and rel_r > 0.03), p_snr=float(snr), p_rel=float(rel_r),
+               pr_ms=float((qon - pp) / fs * 1000 + P_ONSET_TO_PEAK_S * 1000), p_peak_to_r_ms=float((a - pp) / fs * 1000),
+               qrs_onset_ms=float((a - qon) / fs * 1000))
+    return out, T
+
+def qrst_residual(ecg, fs, peaks, normal_mask, T):
+    """ECG − latido promedio en cada latido normal (cancelación QRST por plantilla).
+    Devuelve residuo y máscara de muestras válidas (sin QRS ni latidos ectópicos)."""
+    a = int(0.45 * fs); b = len(T) - a
+    res = ecg.copy()
+    valid = np.ones(len(ecg), bool)
+    for p, ok in zip(peaks, normal_mask):
+        lo, hi = p - a, p + b
+        if lo < 0 or hi > len(ecg):
+            valid[max(0, p - int(0.1 * fs)):min(len(ecg), p + int(0.15 * fs))] = False
+            continue
+        if ok:
+            seg = ecg[lo:hi]
+            # ajuste de amplitud (mínimos cuadrados) para variaciones respiratorias
+            g = np.dot(seg, T) / (np.dot(T, T) + 1e-9)
+            res[lo:hi] = seg - g * T
+            valid[p - int(0.05 * fs):p + int(0.08 * fs)] = False
+        else:
+            valid[max(0, p - int(0.1 * fs)):min(len(ecg), p + int(0.45 * fs))] = False
+    valid[:int(0.5 * fs)] = False; valid[-int(0.5 * fs):] = False
+    return res, valid
+
+def atrial_events(res, valid, fs, sigma=0.025, k=4.0):
+    """Ondas auriculares candidatas en el residuo: picos de la CWT Mexican hat (σ = 25 ms)
+    por encima de k × MAD, separadas ≥ 160 ms."""
+    from scipy.signal import find_peaks
+    r = ricker_cwt(res, fs, sigma)
+    rv = r[valid]
+    if len(rv) < fs:
+        return np.array([], int), r
+    thr = k * 1.4826 * np.median(np.abs(rv - np.median(rv)))
+    best = None
+    for sgn in (1, -1):
+        pk, _ = find_peaks(sgn * r, height=thr, distance=int(0.16 * fs))
+        pk = pk[valid[pk]]
+        if best is None or len(pk) > len(best):
+            best = pk
+    return best, r
+
+def p_wave_scan(ecg, fs, peaks, T, p_info, corr_min=0.75):
+    """Busca la forma de la onda P (plantilla del propio paciente) en cada intervalo RR.
+    Devuelve: P no conducidas (en diástole, sin QRS a ≤ PR+80 ms) y PR latido a latido."""
+    a = int(0.45 * fs)
+    if not p_info.get("p_present") or np.isnan(p_info.get("p_peak_to_r_ms", np.nan)):
+        return dict(n_blocked=0, blocked_frac=0.0, pr_beat_iqr=np.nan, n_pr=0)
+    pp = a - int(p_info["p_peak_to_r_ms"] / 1000 * fs)
+    h = int(0.06 * fs)
+    tpl = T[pp - h:pp + h + 1]
+    tpl = tpl - tpl.mean()
+    nt = np.linalg.norm(tpl) + 1e-9
+    L = len(tpl)
+    # correlación normalizada deslizante
+    x = ecg
+    win = np.lib.stride_tricks.sliding_window_view(x, L)
+    xm = win - win.mean(axis=1, keepdims=True)
+    corr = (xm @ tpl) / (np.linalg.norm(xm, axis=1) * nt + 1e-9)
+    amp_ref = np.ptp(tpl)
+    from scipy.signal import find_peaks
+    cand, _ = find_peaks(corr, height=corr_min, distance=int(0.2 * fs))
+    cand = cand + h                          # centro de la P
+    cand = cand[np.array([0.5 * amp_ref <= np.ptp(x[c - h:c + h + 1]) <= 2.0 * amp_ref for c in cand], bool)] if len(cand) else cand
+    pr_typ = p_info["p_peak_to_r_ms"] / 1000 * fs
+    rr_all = np.diff(peaks)
+    rr_med = np.median(rr_all) if len(rr_all) else 1
+    # Energía de QRS (5–15 Hz) para verificar que tras una "P bloqueada" no haya un QRS
+    # que el detector haya perdido (si lo hay, la P sí se condujo).
+    nyq = fs / 2
+    bq, aq = signal.butter(2, [5.0 / nyq, min(15.0, 0.9 * nyq) / nyq], btype="band")
+    qe = signal.filtfilt(bq, aq, x) ** 2
+    qrs_e = np.median([qe[max(0, p - int(0.05 * fs)):p + int(0.05 * fs)].max() for p in peaks])
+    def conducted(c):
+        lo_q = int(c + pr_typ - 0.06 * fs); hi_q = int(c + pr_typ + 0.10 * fs)
+        if hi_q >= len(qe) or lo_q < 0:
+            return False
+        return qe[lo_q:hi_q].max() > 0.25 * qrs_e
+    blocked_in = np.zeros(len(rr_all), int)
+    mid_in = np.zeros(len(rr_all), int)      # P bloqueada en el punto medio del PP (2:1 fijo)
+    pr_beat = []
+    for i in range(len(peaks) - 1):
+        r0, r1 = peaks[i], peaks[i + 1]
+        # diástole: después de la T (R + 0.40 s) hasta antes del siguiente complejo
+        inside = cand[(cand > r0 + int(0.40 * fs)) & (cand < r1 - int(0.06 * fs))]
+        exp_mid = r1 - pr_typ - (r1 - r0) / 2       # posición esperada si PP = RR/2
+        for c in inside:
+            if r1 - c > pr_typ + int(0.08 * fs) and not conducted(c):   # P sin QRS → no conducida
+                blocked_in[i] += 1
+                if abs(c - exp_mid) <= 0.15 * (r1 - r0) / 2:
+                    mid_in[i] += 1
+        before = cand[(cand > r1 - int(0.40 * fs)) & (cand < r1 - int(0.04 * fs))]
+        if len(before):
+            pr_beat.append((r1 - before[-1]) / fs * 1000)
+    pr_beat = np.array(pr_beat)
+    # Una P no conducida produce una PAUSA: solo cuenta en RR > 1.35 × mediana,
+    # salvo bloqueo 2:1 fijo (P bloqueada en ≥ 70 % de los RR, todos largos).
+    # Además, la pausa NO debe seguir a un latido prematuro: tras una extrasístole la P
+    # sinusal siguiente no se conduce (conducción oculta + pausa compensatoria) y eso no
+    # es un bloqueo AV. (Correcciones motivadas por la prueba en INCART, v2.6b.)
+    # 2:1 fijo: FC < 60, RR regulares y UNA P por ciclo justo en el punto medio del PP
+    # (las ondas f de la FA o las ondas T/U coinciden en cualquier sitio, no solo ahí).
+    hr_w = 60 * fs / rr_med if rr_med else 0
+    rr_reg = np.mean(np.abs(rr_all / rr_med - 1) < 0.12) if len(rr_all) else 0
+    if (len(rr_all) and hr_w < 60 and rr_reg >= 0.90 and np.mean(mid_in == 1) >= 0.70
+            and np.mean(blocked_in) <= 1.3):
+        n_blocked = int(mid_in.sum())
+    else:
+        prev_ok = np.r_[True, rr_all[:-1] >= 0.85 * rr_med]
+        # pausa de 2.º grado: entre 1.35× y 2.3× el RR (una P bloqueada por pausa); pausas
+        # mayores sugieren latidos perdidos por el detector, no bloqueo.
+        pause = (rr_all > 1.35 * rr_med) & (rr_all <= 2.3 * rr_med) & prev_ok
+        n_blocked = int(np.minimum(blocked_in[pause], 1).sum())
+    return dict(n_blocked=n_blocked, blocked_frac=n_blocked / max(1, len(peaks)),
+                pr_beat_iqr=float(np.subtract(*np.percentile(pr_beat, [75, 25]))) if len(pr_beat) > 5 else np.nan,
+                n_pr=int(len(pr_beat)))
+
+def atrial_cycle(ecg, fs, peaks, T, p_info, corr_min=0.70):
+    """
+    Actividad auricular rápida (flutter): busca la onda auricular del propio paciente
+    (la detectada antes del QRS) a lo largo de todo el ciclo, con correlación sin
+    tendencia lineal (tolera que vaya montada sobre la onda T).
+    Devuelve frecuencia auricular, regularidad y fracción de RR con ≥ 2 ondas auriculares.
+    """
+    out = dict(atr_rate=np.nan, atr_cv=np.nan, multi_frac=0.0, n_atr=0, half_frac=0.0)
+    if T is None or np.isnan(p_info.get("p_peak_to_r_ms", np.nan)):
+        return out
+    a = int(0.45 * fs)
+    pp = a - int(p_info["p_peak_to_r_ms"] / 1000 * fs)
+    h = int(0.05 * fs)
+    if pp - h < 0:
+        return out
+    def detr(M):
+        n = M.shape[-1]; t = np.arange(n) - (n - 1) / 2
+        M = M - M.mean(axis=-1, keepdims=True)
+        slope = (M @ t) / (t @ t)
+        return M - np.outer(slope, t) if M.ndim == 2 else M - slope * t
+    tpl = detr(T[pp - h:pp + h + 1].copy())
+    nt = np.linalg.norm(tpl) + 1e-9
+    W = np.lib.stride_tricks.sliding_window_view(ecg, len(tpl))
+    Wd = detr(W)
+    corr = (Wd @ tpl) / (np.linalg.norm(Wd, axis=1) * nt + 1e-9)
+    amp = np.linalg.norm(Wd, axis=1) / nt
+    from scipy.signal import find_peaks
+    cand, _ = find_peaks(corr, height=corr_min, distance=int(0.14 * fs))
+    # Las ondas F del flutter son idénticas entre sí: misma amplitud (0.67–1.5×) y mismo
+    # ANCHO. El ancho se compara con la razón de respuestas CWT Mexican hat a σ = 15 y 45 ms
+    # (la onda T, más ancha que la P, tiene una razón distinta).
+    cand = cand[(amp[cand] > 0.67) & (amp[cand] < 1.5)] + h
+    r15 = np.abs(ricker_cwt(ecg, fs, 0.015)); r45 = np.abs(ricker_cwt(ecg, fs, 0.045))
+    def width_idx(i):
+        return r15[i] / (r45[i] + 1e-9)
+    # referencia: ancho de la onda auricular en cada latido (posición típica antes del R)
+    off = int(p_info["p_peak_to_r_ms"] / 1000 * fs)
+    ref_idx = [width_idx(p - off) for p in peaks if p - off > 0]
+    if len(cand) and ref_idx:
+        w_ref = np.median(ref_idx)
+        cand = cand[np.array([0.5 <= width_idx(c) / (w_ref + 1e-9) <= 2.0 for c in cand], bool)]
+    # fuera del QRS (±60 ms del pico R)
+    if len(cand) == 0:
+        return out
+    dist = np.min(np.abs(cand[:, None] - peaks[None, :]), axis=1)
+    cand = cand[dist > int(0.06 * fs)]
+    if len(cand) < 4:
+        return out
+    d = np.diff(cand) / fs
+    short = d[d < 0.45]
+    counts = np.array([np.sum((cand > peaks[i]) & (cand < peaks[i + 1])) for i in range(len(peaks) - 1)])
+    # Flutter 2:1: en cada RR, dos ondas auriculares iguales separadas RR/2 (±12 %)
+    half = 0
+    for i in range(len(peaks) - 1):
+        rr_i = peaks[i + 1] - peaks[i]
+        ev = cand[(cand > peaks[i] - int(0.06 * fs)) & (cand < peaks[i + 1])]
+        if len(ev) >= 2:
+            dd = np.diff(ev)
+            if np.any(np.abs(dd - rr_i / 2) <= 0.12 * rr_i / 2):
+                half += 1
+    out.update(n_atr=int(len(cand)), multi_frac=float(np.mean(counts >= 2)),
+               half_frac=float(half / max(1, len(peaks) - 1)))
+    if len(short) >= 5:
+        out.update(atr_rate=float(60 / np.median(short)), atr_cv=float(np.std(short) / np.mean(short)))
+    return out
+
+def av_dissociation(ecg, fs, peaks, normal_mask, T, p_info):
+    """
+    Bloqueo AV completo (3.er grado): ondas P regulares que NO guardan relación con el QRS.
+    1. Sin P ligada al QRS en el latido promedio (p_present = False).
+    2. En el residuo (ECG − QRST promedio) aparecen ondas auriculares (CWT Mexican hat)
+       regulares (CV del PP < 0.20) a una frecuencia mayor que la ventricular.
+    """
+    out = dict(diss=False, p_rate=np.nan, pp_cv=np.nan)
+    if T is None or p_info.get("p_present"):
+        return out
+    res, valid = qrst_residual(ecg, fs, peaks, normal_mask, T)
+    ev, _ = atrial_events(res, valid, fs, sigma=0.025, k=5.0)
+    if len(ev) < 6:
+        return out
+    d = np.diff(ev) / fs
+    # PP: intervalos sin huecos (el hueco ocurre cuando la P cae sobre un QRS enmascarado)
+    pp_med = np.median(d)
+    d = d[d < 1.5 * pp_med]
+    if len(d) < 5:
+        return out
+    pp = np.median(d); cv = np.std(d) / np.mean(d)
+    hr = 60 / (np.median(np.diff(peaks)) / fs)
+    p_rate = 60 / pp
+    out.update(p_rate=float(p_rate), pp_cv=float(cv),
+               diss=bool(cv < 0.20 and p_rate > 1.3 * hr and 45 <= p_rate <= 130))
+    return out
+
+
+def atrial_features(ecg: np.ndarray, fs: float, peaks: np.ndarray, rr_ms: np.ndarray) -> dict:
+    """Descriptores auriculares para el clasificador (todas las ventanas)."""
+    out = {"p_present": False, "pr_ms": float("nan"), "p_snr": 0.0, "n_blocked_p": 0,
+           "blocked_p_frac": 0.0, "atr_rate": float("nan"), "half_frac": 0.0,
+           "av_dissociation": False, "p_rate_indep": float("nan")}
+    if len(peaks) < 8:
+        return out
+    pad = np.pad(rr_ms, (3, 3), mode="edge")
+    loc = np.array([np.median(pad[i:i + 7]) for i in range(len(rr_ms))])
+    rel = rr_ms / loc
+    normal = np.ones(len(peaks), bool)
+    normal[1:][rel < 0.85] = False
+    normal[2:][rel[:-1] < 0.85] = False
+    try:
+        info, T = atrial_analysis(ecg, fs, peaks, normal)
+        scan = p_wave_scan(ecg, fs, peaks, T, info) if T is not None else {}
+        cyc = atrial_cycle(ecg, fs, peaks, T, info) if T is not None else {}
+        dis = av_dissociation(ecg, fs, peaks, normal, T, info) if T is not None else {}
+    except Exception:
+        return out
+    out.update(p_present=bool(info.get("p_present")), pr_ms=float(info.get("pr_ms", float("nan"))),
+               p_snr=float(info.get("p_snr", 0.0)),
+               n_blocked_p=int(scan.get("n_blocked", 0)), blocked_p_frac=float(scan.get("blocked_frac", 0.0)),
+               atr_rate=float(cyc.get("atr_rate", float("nan"))), half_frac=float(cyc.get("half_frac", 0.0)),
+               av_dissociation=bool(dis.get("diss", False)), p_rate_indep=float(dis.get("p_rate", float("nan"))))
+    return out
+
+
+# ─── 4f. EXTRACCIÓN DE CARACTERÍSTICAS ──────────────────────────────────────
 def extract_features(ecg: np.ndarray, fs: int, f: np.ndarray,
                      Sxx: np.ndarray) -> dict:
     """Extrae features temporales, HRV (tiempo y frecuencia) y espectrales del ECG."""
@@ -459,11 +780,13 @@ def extract_features(ecg: np.ndarray, fs: int, f: np.ndarray,
         features["pnn50"]        = float(np.sum(np.abs(np.diff(rr)) > 50) / len(rr) * 100)
         features["num_peaks"]    = int(len(peaks))
         features.update(rhythm_pattern(rr))
+        features.update(atrial_features(ecg, fs, peaks, rr))
     else:
         features.update({k: 0.0 for k in [
             "heart_rate","rr_mean","rr_std","rr_cv","sdnn","rmssd","pnn50"]})
         features["num_peaks"] = int(len(peaks))
         features.update(rhythm_pattern(np.array([])))
+        features.update(atrial_features(ecg, fs, peaks, np.array([])))
 
     # ── HRV en frecuencia (tacograma RR, NO el espectro del ECG) ──
     hrv = hrv_frequency_domain(peaks, fs)
@@ -503,6 +826,11 @@ BAV_RATIO = (1.6, 2.3)    # razón entre los dos grupos de RR (≈ 2 → conducc
 BAV_MINOR_MIN = 0.15      # el grupo minoritario debe ser ≥ 15 % de los latidos
 BAV_SPREAD_MAX = 0.10     # cada grupo compacto (CV < 10 %)
 EXT_MIN_PREM = 2          # latidos prematuros mínimos para extrasístoles
+# Reglas auriculares (ondas P/F con CWT, v2.6). Fijadas antes de la evaluación final.
+PR_LONG_MS = 210          # BAV 1.er grado: PR > 200 ms (clínico) + 10 ms de margen de medición
+BLOCKED_P_MIN = 0.15      # BAV 2.º grado: P no conducidas en ≥ 15 % de los latidos
+FLUTTER_HR = (120, 175)   # flutter 2:1: respuesta ventricular regular
+FLUTTER_HALF_MIN = 0.40   # ≥ 40 % de ciclos con onda auricular a RR/2
 
 
 def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
@@ -528,6 +856,12 @@ def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
     bi_r   = features.get("bi_ratio", 0.0)
     bi_m   = features.get("bi_minor", 0.0)
     bi_s   = features.get("bi_spread", 1.0)
+    p_ok   = features.get("p_present", False)
+    pr     = features.get("pr_ms", float("nan"))
+    blk    = features.get("blocked_p_frac", 0.0)
+    nblk   = features.get("n_blocked_p", 0)
+    half   = features.get("half_frac", 0.0)
+    diss   = features.get("av_dissociation", False)
 
     notes = []
     rhythm = {}     # hallazgos de ritmo (prioritarios)
@@ -536,14 +870,31 @@ def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
     if peaks < 8:
         notes.append(f"Solo {peaks} latidos detectados: el análisis de ritmo no es fiable.")
 
-    # ── 1a. Bloqueo AV de 2.º grado (conducción 2:1 intermitente) ──
-    is_bav = (BAV_RATIO[0] <= bi_r <= BAV_RATIO[1] and bi_m >= BAV_MINOR_MIN
-              and bi_s < BAV_SPREAD_MAX)
+    # ── 1a. Bloqueo AV de 2.º grado: RR 2:1 intermitente y/o P no conducidas ──
+    rr_2to1 = (BAV_RATIO[0] <= bi_r <= BAV_RATIO[1] and bi_m >= BAV_MINOR_MIN
+               and bi_s < BAV_SPREAD_MAX)
+    p_blocked = p_ok and blk >= BLOCKED_P_MIN
+    is_bav = rr_2to1 or p_blocked
     if is_bav:
-        rhythm["Bloqueo AV"] = min(0.95, 0.70 + 0.5 * (BAV_SPREAD_MAX - bi_s) / BAV_SPREAD_MAX)
-        notes.append(f"RR agrupados en dos niveles con razón {bi_r:.2f} ({100 * bi_m:.0f} % en el "
-                     "grupo minoritario): compatible con bloqueo AV de 2.º grado con "
-                     "conducción 2:1 intermitente. Confirmar ondas P no conducidas.")
+        score = 0.70
+        if rr_2to1:
+            score += 0.5 * (BAV_SPREAD_MAX - bi_s) / BAV_SPREAD_MAX
+            notes.append(f"RR agrupados en dos niveles con razón {bi_r:.2f} ({100 * bi_m:.0f} % en el "
+                         "grupo minoritario): conducción 2:1 intermitente.")
+        if p_blocked:
+            score += 0.10
+            notes.append(f"{nblk} ondas P no conducidas (P sin QRS, {100 * blk:.0f} % de los latidos), "
+                         "detectadas con la forma de la propia onda P del paciente.")
+        rhythm["Bloqueo AV"] = min(0.95, score)
+        notes.append("Compatible con bloqueo AV de 2.º grado.")
+
+    # ── 1a'. Bloqueo AV completo (3.er grado): P regulares disociadas del QRS ──
+    if not is_bav and diss:
+        rhythm["Bloqueo AV"] = 0.75
+        is_bav = True
+        notes.append(f"Ondas P regulares a {features.get('p_rate_indep', 0):.0f}/min sin relación con el "
+                     f"QRS (FC {hr:.0f} lpm): disociación AV compatible con bloqueo AV completo "
+                     "(3.er grado). Hallazgo crítico: confirmar con ECG de 12 derivaciones.")
 
     # ── 1b. Fibrilación auricular: irregularidad de fondo, sin patrón ──
     if not is_bav and nrm > AF_NRMSSD_MIN and reg < AF_REG_MAX:
@@ -552,8 +903,17 @@ def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
         notes.append(f"Ritmo irregularmente irregular: irregularidad de fondo {nrm:.3f} "
                      f"(> {AF_NRMSSD_MIN}) y solo {100 * reg:.0f} % de RR regulares.")
 
+    # ── 1b'. Flutter auricular 2:1: dos ondas auriculares iguales por ciclo ──
+    if (not is_bav and "Fibrilación Auricular" not in rhythm
+            and FLUTTER_HR[0] <= hr <= FLUTTER_HR[1] and reg >= 0.80 and half >= FLUTTER_HALF_MIN):
+        rhythm["Flutter Auricular"] = min(0.90, 0.60 + 0.4 * half)
+        notes.append(f"Dos ondas auriculares por ciclo separadas RR/2 en el {100 * half:.0f} % de los "
+                     f"latidos: actividad auricular ≈ {2 * hr:.0f}/min con conducción 2:1 (flutter "
+                     "auricular). Confirmar ondas F en derivaciones inferiores.")
+
     # ── 1c. Extrasístoles: ritmo de base regular con latidos prematuros ──
-    if not is_bav and "Fibrilación Auricular" not in rhythm and nprem >= EXT_MIN_PREM:
+    if (not is_bav and "Fibrilación Auricular" not in rhythm and "Flutter Auricular" not in rhythm
+            and nprem >= EXT_MIN_PREM):
         rhythm["Extrasístoles"] = min(0.90, 0.55 + 0.02 * nprem)
         notes.append(f"{nprem} latidos prematuros (RR < 85 % del local) sobre un ritmo de base "
                      f"regular ({100 * reg:.0f} % de RR regulares): compatible con extrasístoles.")
@@ -568,11 +928,22 @@ def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
         if hr < 40 and not rhythm:
             notes.append("Bradicardia marcada y regular: descartar bloqueo AV avanzado (2:1 "
                          "fijo o completo) evaluando las ondas P.")
-    # Flutter: solo como diferencial de taquicardia regular ≈ 150 lpm (2:1)
+    # Flutter sin evidencia auricular: solo como diferencial de taquicardia regular ≈ 150 lpm
     if 140 <= hr <= 160 and rr_cv < 0.05 and not rhythm:
-        rate["Flutter Auricular"] = 0.55
         notes.append(f"Taquicardia regular a {hr:.0f} lpm: considerar flutter auricular con "
-                     "conducción 2:1 (confirmar ondas F).")
+                     "conducción 2:1 si no se identifican ondas P sinusales.")
+
+    # ── BAV 1.er grado: PR prolongado (solo con P ligada al QRS y sin FA/flutter) ──
+    pr_long = (p_ok and pr == pr and pr > PR_LONG_MS and not is_bav
+               and "Fibrilación Auricular" not in rhythm and "Flutter Auricular" not in rhythm)
+    if pr_long:
+        notes.append(f"PR estimado {pr:.0f} ms (> 200 ms): compatible con bloqueo AV de 1.er grado.")
+        if not rhythm:
+            rhythm["Bloqueo AV"] = 0.60
+    elif p_ok and pr == pr and "Fibrilación Auricular" not in rhythm:
+        notes.append(f"Onda P presente antes de cada QRS; PR estimado {pr:.0f} ms.")
+    elif not p_ok and "Fibrilación Auricular" not in rhythm and peaks >= 8:
+        notes.append("No se identifica una onda P consistente antes del QRS.")
 
     # ── Isquemia: solo como hallazgo de HRV en registros ≥ 2 min ──
     if (features.get("hrv_lf_valid", False)
