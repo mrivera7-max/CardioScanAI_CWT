@@ -1,0 +1,51 @@
+﻿registro;codigos;origen;fs;fc_ref;cv_rr_ref;ref_principal;ref_aceptables;cardioscan;confianza;fc_cardioscan;cv_rr_cardioscan;rmssd;pnn50;latidos_ref;latidos_det;TP;FN;FP;Se_%;PP_%;en_alcance;acierto_estricto;acierto_aceptable
+01;BII,R;MIT-BIH Arrhythmia Database 231;360;60.1;0.276;Bloqueo AV;Bloqueo AV;Fibrilación Auricular;100.0;51.5;0.276;176.3;37.3;101;101;101;0;0;100.0;100.0;True;False;False
+02;V,B;MIT-BIH Arrhythmia Database 106;360;64.7;0.374;Extrasístoles;Extrasístoles;Fibrilación Auricular;100.0;68.1;0.38;552.8;76.9;134;134;133;1;1;99.25;99.25;True;False;False
+03;BIII;MIT-BIH Arrhythmia Database 107;360;70.8;0.049;Bloqueo AV;Bloqueo AV;Normal;73.8;69.1;0.131;161.8;11.7;140;136;136;4;0;97.14;100.0;True;False;False
+04;A;MIT-BIH Arrhythmia Database 108;360;58.9;0.118;Extrasístoles;"Bradicardia; Extrasístoles";Bradicardia;5.8;58.3;0.119;192.5;63.5;114;114;114;0;0;100.0;100.0;True;False;True
+05;A,V;MIT-BIH Arrhythmia Database 118;360;69.5;0.109;Extrasístoles;Extrasístoles;Normal;77.8;70.0;0.111;160.8;28.1;138;138;138;0;0;100.0;100.0;True;False;False
+06;NOD,J;MIT-BIH Arrhythmia Database 124;360;56.0;0.07;FUERA DE ALCANCE;;Fibrilación Auricular;100.0;54.6;0.154;229.4;33.3;112;108;105;7;3;93.75;97.22;False;False;False
+07;AFIB,NOD,J;MIT-BIH Arrhythmia Database 201;360;59.8;0.438;Fibrilación Auricular;"Bradicardia; Extrasístoles; Fibrilación Auricular";Fibrilación Auricular;100.0;55.1;0.442;436.7;76.1;113;108;108;5;0;95.58;100.0;True;True;True
+08;AFIB,AFL;MIT-BIH Arrhythmia Database 203;360;94.3;0.316;Fibrilación Auricular;"Fibrilación Auricular; Flutter Auricular";Fibrilación Auricular;100.0;69.6;0.617;753.7;89.8;191;137;135;56;2;70.68;98.54;True;True;True
+09;E,A,SVTA;MIT-BIH Arrhythmia Database 207;360;64.9;0.277;Extrasístoles;"Extrasístoles; Taquicardia";Fibrilación Auricular;100.0;66.5;0.324;189.5;28.8;136;130;121;15;9;88.97;93.08;True;False;False
+10;V,T;MIT-BIH Arrhythmia Database 208;360;108.0;0.126;Extrasístoles;"Extrasístoles; Taquicardia";Fibrilación Auricular;100.0;95.9;0.437;378.5;37.7;206;188;187;19;1;90.78;99.47;True;False;False
+11;SVTA;MIT-BIH Arrhythmia Database 209;360;93.9;0.092;Taquicardia;Taquicardia;Normal;81.6;95.4;0.092;68.7;21.1;188;188;188;0;0;100.0;100.0;True;False;False
+12;PREX;MIT-BIH Arrhythmia Database 230;360;64.1;0.057;FUERA DE ALCANCE;;Normal;88.6;64.7;0.057;42.6;21.7;128;128;128;0;0;100.0;100.0;False;False;False
+13;BII,R;MIT-BIH Arrhythmia Database 231;360;37.1;0.266;Bloqueo AV;"Bloqueo AV; Bradicardia";Fibrilación Auricular;92.4;44.3;0.266;101.3;35.2;87;87;87;0;0;100.0;100.0;True;False;False
+14;V,B;MIT-BIH Arrhythmia Database 233;360;100.9;0.218;Extrasístoles;"Extrasístoles; Taquicardia";Fibrilación Auricular;100.0;101.3;0.244;254.2;69.3;199;199;199;0;0;100.0;100.0;True;False;False
+15;J;MIT-BIH Arrhythmia Database 234;360;91.9;0.134;Extrasístoles;Extrasístoles;Normal;73.2;96.2;0.134;53.8;6.8;189;189;189;0;0;100.0;100.0;True;False;False
+16;A;MIT-BIH Arrhythmia Database 101;360;62.1;0.035;Extrasístoles;Extrasístoles;Normal;93.0;62.1;0.035;36.8;18.7;122;122;122;0;0;100.0;100.0;True;False;False
+17;A;MIT-BIH Arrhythmia Database 112;360;86.4;0.051;Extrasístoles;Extrasístoles;Extrasístoles;60.0;85.9;0.05;44.3;3.5;168;168;168;0;0;100.0;100.0;True;True;True
+18;A;MIT-BIH Arrhythmia Database 114;360;67.7;0.049;Extrasístoles;Extrasístoles;Fibrilación Auricular;100.0;61.7;0.282;389.4;38.5;132;121;120;12;1;90.91;99.17;True;False;False
+19;P,F,V;MIT-BIH Arrhythmia Database 104;360;73.7;0.045;FUERA DE ALCANCE;;Bradicardia;100.0;29.9;0.842;2900.4;89.8;145;58;58;87;0;40.0;100.0;False;False;False
+20;V;MIT-BIH Arrhythmia Database 105;360;87.8;0.098;Extrasístoles;Extrasístoles;Fibrilación Auricular;98.3;87.0;0.177;189.6;9.8;172;171;166;6;5;96.51;97.08;True;False;False
+21;L,V;MIT-BIH Arrhythmia Database 109;360;81.2;0.052;Extrasístoles;Extrasístoles;Normal;88.6;81.4;0.057;59.0;9.9;160;160;160;0;0;100.0;100.0;True;False;False
+22;L,BI;MIT-BIH Arrhythmia Database 111;360;70.5;0.042;Bloqueo AV;Bloqueo AV;Normal;76.0;69.4;0.12;148.4;18.1;139;137;137;2;0;98.56;100.0;True;False;False
+23;a;MIT-BIH Arrhythmia Database 113;360;60.8;0.092;Extrasístoles;Extrasístoles;Normal;81.6;61.6;0.092;111.1;58.5;121;121;121;0;0;100.0;100.0;True;False;False
+24;NA;MIT-BIH Arrhythmia Database 115;360;66.9;0.114;Normal;Normal;Normal;77.2;64.6;0.114;80.5;37.5;127;127;127;0;0;100.0;100.0;True;True;True
+25;V,VP;MIT-BIH Arrhythmia Database 116;360;82.4;0.1;Extrasístoles;Extrasístoles;Fibrilación Auricular;100.0;81.6;0.178;197.6;13.0;162;160;160;2;0;98.77;100.0;True;False;False
+26;R,A;MIT-BIH Arrhythmia Database 118;360;69.7;0.132;Extrasístoles;Extrasístoles;Normal;73.4;70.0;0.133;182.0;30.9;138;138;138;0;0;100.0;100.0;True;False;False
+27;V,B,T;MIT-BIH Arrhythmia Database 119;360;67.9;0.314;Extrasístoles;Extrasístoles;Fibrilación Auricular;100.0;66.7;0.312;509.1;80.5;131;131;131;0;0;100.0;100.0;True;False;False
+28;A,V;MIT-BIH Arrhythmia Database 121;360;59.4;0.072;Extrasístoles;"Bradicardia; Extrasístoles";Bradicardia;2.4;59.3;0.076;135.5;5.1;117;117;117;0;0;100.0;100.0;True;False;True
+29;V;MIT-BIH Arrhythmia Database 123;360;49.1;0.128;Extrasístoles;"Bradicardia; Extrasístoles";Bradicardia;35.0;49.5;0.106;107.6;65.3;98;97;97;1;0;98.98;100.0;True;False;True
+30;P,IVR,T,V,F;MIT-BIH Arrhythmia Database 124;360;51.4;0.11;FUERA DE ALCANCE;;Fibrilación Auricular;100.0;49.6;0.196;350.8;37.4;102;98;98;4;0;96.08;100.0;False;False;False
+31;V,F,VT;MIT-BIH Arrhythmia Database 205;360;82.0;0.186;Extrasístoles;"Extrasístoles; Taquicardia";Fibrilación Auricular;95.4;84.9;0.192;168.7;17.9;169;167;166;3;1;98.22;99.4;True;False;False
+32;V,F,VT;MIT-BIH Arrhythmia Database 205;360;92.7;0.173;Extrasístoles;"Extrasístoles; Taquicardia";Fibrilación Auricular;72.2;95.5;0.161;115.1;10.0;191;188;188;3;0;98.43;100.0;True;False;False
+33;V,VFL;MIT-BIH Arrhythmia Database 207;360;60.5;1.289;FUERA DE ALCANCE;;Fibrilación Auricular;100.0;50.3;0.613;663.7;69.0;97;98;61;36;37;62.89;62.24;False;False;False
+34;R;MIT-BIH Arrhythmia Database 212;360;88.2;0.075;FUERA DE ALCANCE;;Normal;84.9;86.8;0.075;32.0;8.1;171;171;171;0;0;100.0;100.0;False;False;False
+35;V,A;MIT-BIH Arrhythmia Database 213;360;105.9;0.069;Extrasístoles;"Extrasístoles; Taquicardia";Taquicardia;10.8;105.4;0.1;86.7;5.2;208;207;207;1;0;99.52;100.0;True;False;True
+36;V,L;MIT-BIH Arrhythmia Database 214;360;76.3;0.198;Extrasístoles;Extrasístoles;Fibrilación Auricular;100.0;76.2;0.199;243.2;38.4;151;151;151;0;0;100.0;100.0;True;False;False
+37;A,FIB;MIT-BIH Arrhythmia Database 219;360;70.0;0.31;Fibrilación Auricular;"Extrasístoles; Fibrilación Auricular";Fibrilación Auricular;100.0;63.7;0.313;285.8;54.0;127;125;125;2;0;98.43;100.0;True;True;True
+38;NOD,AFL,A;MIT-BIH Arrhythmia Database 222;360;86.1;0.373;Flutter Auricular;"Extrasístoles; Flutter Auricular";Fibrilación Auricular;100.0;70.4;0.435;428.6;77.5;163;139;139;24;0;85.28;100.0;True;False;False
+39;V,A;MIT-BIH Supraventricular Arrhythmia Database 801;128;102.4;0.159;Extrasístoles;"Extrasístoles; Taquicardia";Fibrilación Auricular;100.0;47.3;0.465;847.1;53.2;195;93;92;103;1;47.18;98.92;True;False;False
+40;V,A;MIT-BIH Supraventricular Arrhythmia Database 802;128;50.2;0.114;Extrasístoles;"Bradicardia; Extrasístoles";Bradicardia;30.6;50.8;0.117;189.3;43.6;100;100;100;0;0;100.0;100.0;True;False;True
+41;L,A,V;MIT-BIH Supraventricular Arrhythmia Database 886;128;67.4;0.085;Extrasístoles;Extrasístoles;Fibrilación Auricular;100.0;64.6;0.291;375.7;10.9;133;127;127;6;0;95.49;100.0;True;False;False
+42;V;MIT-BIH Supraventricular Arrhythmia Database 851;128;81.7;0.26;Extrasístoles;Extrasístoles;Fibrilación Auricular;100.0;87.3;0.262;238.3;63.0;171;171;171;0;0;100.0;100.0;True;False;False
+43;A,SVTA;MIT-BIH Supraventricular Arrhythmia Database 811;128;52.8;0.202;Extrasístoles;"Bradicardia; Extrasístoles; Taquicardia";Fibrilación Auricular;71.5;53.6;0.203;80.7;31.1;105;105;105;0;0;100.0;100.0;True;False;False
+44;AFIB;Long Term AF Database 101;128;60.5;0.199;Fibrilación Auricular;Fibrilación Auricular;Fibrilación Auricular;87.2;66.8;0.199;135.9;34.1;131;131;131;0;0;100.0;100.0;True;True;True
+45;AFIB;Long Term AF Database 120;128;89.3;0.151;Fibrilación Auricular;Fibrilación Auricular;Fibrilación Auricular;77.1;91.4;0.169;125.7;19.9;180;180;179;1;1;99.44;99.44;True;True;True
+46;AFIB;Long Term AF Database 55;128;132.4;0.282;Fibrilación Auricular;"Fibrilación Auricular; Taquicardia";Fibrilación Auricular;100.0;121.0;0.281;130.2;40.4;237;237;237;0;0;100.0;100.0;True;True;True
+47;AFIB;Long Term AF Database 56;128;97.2;0.224;Fibrilación Auricular;Fibrilación Auricular;Fibrilación Auricular;100.0;90.1;0.469;469.3;72.2;193;178;175;18;3;90.67;98.31;True;True;True
+48;AFIB;Long Term AF Database 62;128;80.0;0.29;Fibrilación Auricular;Fibrilación Auricular;Fibrilación Auricular;100.0;69.8;0.291;344.1;76.1;137;137;137;0;0;100.0;100.0;True;True;True
+49;AFIB;Long Term AF Database 102;128;65.1;0.338;Fibrilación Auricular;Fibrilación Auricular;Fibrilación Auricular;100.0;79.5;0.337;204.1;38.4;157;157;157;0;0;100.0;100.0;True;True;True
+50;AFIB;Long Term AF Database 117;128;139.6;0.55;Fibrilación Auricular;"Fibrilación Auricular; Taquicardia";Fibrilación Auricular;100.0;112.8;0.55;347.0;68.2;221;221;221;0;0;100.0;100.0;True;True;True
