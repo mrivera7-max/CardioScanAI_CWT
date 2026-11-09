@@ -17,6 +17,22 @@ import numpy as np
 import wfdb_import
 import report_pdf
 
+
+def _clean_json(o):
+    """Convierte NaN/±inf (no válidos en JSON) en None, recursivamente.
+    v2.6 produce NaN en descriptores auriculares cuando no hay onda P/F."""
+    if isinstance(o, dict):
+        return {k: _clean_json(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_clean_json(v) for v in o]
+    if isinstance(o, (float, np.floating)):
+        return None if not np.isfinite(o) else float(o)
+    if isinstance(o, np.integer):
+        return int(o)
+    if isinstance(o, np.bool_):
+        return bool(o)
+    return o
+
 def _get_base_dir():
     """Funciona tanto en ejecución normal como empaquetada con PyInstaller."""
     if getattr(sys, "frozen", False):
@@ -65,7 +81,7 @@ def api_analyze():
                                 "message": f"fs no válida: '{fs_txt}'"}), 400
         result = analyze_ecg(str(tmp), fs=fs_user, original_name=f.filename)
         result["source"] = f"Archivo: {f.filename}"
-        return jsonify(result)
+        return jsonify(_clean_json(result))
     finally:
         try:
             tmp.unlink()
@@ -86,7 +102,7 @@ def api_demo(condition: str):
         result = analyze_ecg(str(tmp), fs=500)
         result["demo_condition"] = condition
         result["source"] = f"Señal sintética de demostración ({condition})"
-        return jsonify(result)
+        return jsonify(_clean_json(result))
     finally:
         try:
             tmp.unlink()
@@ -138,7 +154,7 @@ def api_wfdb_analyze():
             result["source"] = f"PhysioNet WFDB: {rec}"
             result["reference"] = wfdb_import.reference_annotations(
                 d, rec, info["sampfrom"], info["sampto"])
-        return jsonify(result)
+        return jsonify(_clean_json(result))
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
 
