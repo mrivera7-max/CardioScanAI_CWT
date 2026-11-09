@@ -578,6 +578,11 @@ body {
           </div>
         </div>
         <div class="file-selected" id="fileSelected">📄 <span id="fileName"></span></div>
+        <div class="fs-row" style="display:flex;align-items:center;gap:.5rem;margin:.6rem 0;font-size:.8rem;color:var(--text-muted)">
+          <label for="fsInput" title="Frecuencia de muestreo del archivo. Vacío = auto (cabecera '# fs=', nombre mitdb_/afdb_/nsrdb_ o 500 Hz)">Frecuencia de muestreo (Hz):</label>
+          <input type="number" id="fsInput" min="50" max="20000" step="any" placeholder="auto"
+                 style="width:6.5rem;padding:.3rem .45rem;border-radius:6px;border:1px solid #334155;background:#0f172a;color:var(--text)">
+        </div>
         <button class="btn btn-primary" id="analyzeBtn" disabled onclick="analyzeFile()">
           🔬 Analizar ECG
         </button>
@@ -745,6 +750,8 @@ async function analyzeFile() {
   if (!file) return;
   const fd = new FormData();
   fd.append('file', file);
+  const fsVal = document.getElementById('fsInput').value.trim();
+  if (fsVal) fd.append('fs', fsVal);
   await runAnalysis(() =>
     fetch('/api/analyze', { method: 'POST', body: fd }).then(r => r.json())
   );
@@ -851,7 +858,10 @@ function renderResult(data) {
 
   const si = data.signal_info;
   document.getElementById('info-duration').textContent = si.duration_sec + ' s';
-  document.getElementById('info-fs').textContent = si.fs_hz + ' Hz';
+  const fsEl = document.getElementById('info-fs');
+  fsEl.textContent = si.fs_hz + ' Hz';
+  fsEl.title = 'Fuente: ' + (si.fs_source || '—');
+  fsEl.style.color = (si.fs_source || '').startsWith('ASUMIDA') ? '#f59e0b' : '';
   document.getElementById('info-samples').textContent = si.n_samples.toLocaleString();
 
   // Actions
@@ -874,7 +884,7 @@ function renderPlots(plots) {
     { id: 'cwt',          label: '🌊 Escalograma CWT' },
     { id: 'compare',      label: '⚖️ STFT vs CWT' },
     { id: 'rr',           label: '📈 RR / Poincaré' },
-    { id: 'psd',          label: '📡 Análisis Frecuencial' },
+    { id: 'psd',          label: '📡 Frecuencia: ECG + HRV' },
     { id: 'scores',       label: '🎯 Probabilidades' },
   ];
 

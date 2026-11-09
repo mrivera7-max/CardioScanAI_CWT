@@ -53,7 +53,15 @@ def api_analyze():
     tmp = UPLOAD_DIR / f"ecg_{os.getpid()}_{f.filename}"
     try:
         f.save(str(tmp))
-        result = analyze_ecg(str(tmp))
+        fs_user = None
+        fs_txt = (request.form.get("fs") or "").strip().replace(",", ".")
+        if fs_txt:
+            try:
+                fs_user = float(fs_txt)
+            except ValueError:
+                return jsonify({"status": "error",
+                                "message": f"fs no válida: '{fs_txt}'"}), 400
+        result = analyze_ecg(str(tmp), fs=fs_user, original_name=f.filename)
         return jsonify(result)
     finally:
         try:
@@ -72,7 +80,7 @@ def api_demo(condition: str):
     tmp = UPLOAD_DIR / f"demo_{condition}_{os.getpid()}.csv"
     try:
         np.savetxt(str(tmp), ecg, fmt="%.6f")
-        result = analyze_ecg(str(tmp))
+        result = analyze_ecg(str(tmp), fs=500)
         result["demo_condition"] = condition
         return jsonify(result)
     finally:

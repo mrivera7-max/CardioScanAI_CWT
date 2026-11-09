@@ -128,7 +128,10 @@ def convertir_registro(registro: str, db: str = "mitdb",
     if salida is None:
         salida = f"{db}_{registro}_canal{canal}.csv"
 
-    np.savetxt(salida, señal, fmt="%.6f")
+    # La primera línea guarda la fs: CardioScan AI la lee automáticamente
+    np.savetxt(salida, señal, fmt="%.6f",
+               header=f"fs={fs:g} Hz | {db}/{registro} canal {canal} | {record.sig_name[canal]}",
+               comments="# ")
     print(f"\n💾 Guardado como: {salida}")
     print(f"   Listo para subir a CardioScan AI (http://localhost:5050)")
 

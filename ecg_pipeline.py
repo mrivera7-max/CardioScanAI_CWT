@@ -13,7 +13,7 @@ import matplotlib.colors as mcolors
 from sklearn.ensemble import IsolationForest, RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-import io, base64, json, os, csv
+import io, base64, json, os, csv, re
 from pathlib import Path
 
 # ─── Clases de diagnóstico ────────────────────────────────────────────────────
@@ -30,56 +30,107 @@ DIAGNOSES = {
 
 
 # ─── 1. CARGA DE SEÑAL ECG ───────────────────────────────────────────────────
-def load_ecg(filepath: str) -> tuple[np.ndarray, int]:
+DEFAULT_FS = 500
+
+# Frecuencias de muestreo nativas de las bases PhysioNet usadas en el proyecto
+PHYSIONET_FS = {
+    "mitdb": 360,   # MIT-BIH Arrhythmia
+    "afdb": 250,    # MIT-BIH Atrial Fibrillation
+    "nsrdb": 128,   # MIT-BIH Normal Sinus Rhythm
+    "ltafdb": 128,  # Long-Term AF
+    "svdb": 128,    # MIT-BIH Supraventricular Arrhythmia
+    "nstdb": 360,   # Noise Stress Test
+    "edb": 250,     # European ST-T
+    "incartdb": 257,
+}
+
+_FS_HEADER_RE = re.compile(r"fs\s*[=:]\s*([0-9]+(?:\.[0-9]+)?)", re.IGNORECASE)
+_FS_NAME_RE = re.compile(r"(?:^|[_\-.])fs([0-9]+(?:\.[0-9]+)?)(?:hz)?(?:[_\-.]|$)",
+                         re.IGNORECASE)
+
+
+def _fs_from_filename(filepath: str):
+    """fs a partir del nombre: token '_fs360' o prefijo de base PhysioNet."""
+    stem = Path(filepath).stem.lower()
+    m = _FS_NAME_RE.search(stem)
+    if m:
+        return float(m.group(1)), f"nombre de archivo (fs{m.group(1)})"
+    for db, fs in PHYSIONET_FS.items():
+        if re.search(rf"(?:^|_){db}_", stem):
+            return float(fs), f"base PhysioNet '{db}' detectada en el nombre"
+    return None, None
+
+
+def _read_text_signal(filepath: str):
+    """Lee CSV/TXT: primera columna numérica. Detecta cabecera '# fs=360'."""
+    rows, fs_header = [], None
+    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        for line in f:
+            s = line.strip()
+            if not s:
+                continue
+            if s.startswith("#") or not (s[0].isdigit() or s[0] in "+-."):
+                m = _FS_HEADER_RE.search(s)
+                if m and fs_header is None:
+                    fs_header = float(m.group(1))
+                continue  # comentario o cabecera de columnas
+            for cell in re.split(r"[,;\t ]+", s):
+                try:
+                    rows.append(float(cell))
+                    break
+                except ValueError:
+                    continue
+    if not rows:
+        raise ValueError("No se encontraron datos numéricos en el archivo.")
+    return np.array(rows), fs_header
+
+
+def load_ecg(filepath: str, fs: float | None = None) -> tuple[np.ndarray, float, str]:
     """
     Carga ECG desde: .csv, .txt, .wav, .dat (texto), .npy
-    Retorna (señal_1D, frecuencia_muestreo)
+
+    La frecuencia de muestreo (fs) se resuelve con esta prioridad:
+      1. Parámetro explícito `fs` (lo que el usuario escribe en la interfaz)
+      2. Cabecera del archivo:  '# fs=360'  (o fs nativa del .wav)
+      3. Nombre del archivo:    'registro_fs360.csv' o prefijo PhysioNet
+                                (mitdb_ → 360, afdb_ → 250, nsrdb_ → 128 …)
+      4. 500 Hz por defecto  → se reporta como ASUMIDA (advertencia)
+
+    Retorna (señal_1D, fs, fuente_de_fs)
     """
     ext = Path(filepath).suffix.lower()
+    fs_file, data = None, None
 
-    if ext in (".wav",):
-        fs, data = wavfile.read(filepath)
+    if ext == ".wav":
+        fs_file, data = wavfile.read(filepath)
         if data.ndim > 1:
             data = data[:, 0]
-        return data.astype(float), fs
-
-    elif ext in (".npy",):
+        fs_file = float(fs_file)
+    elif ext == ".npy":
         data = np.load(filepath)
         if data.ndim > 1:
             data = data[:, 0]
-        return data.astype(float), 500
-
-    elif ext in (".csv", ".txt"):
-        rows = []
-        with open(filepath, "r") as f:
-            sample = f.read(2048)
-            f.seek(0)
-            has_header = csv.Sniffer().has_header(sample)
-            reader = csv.reader(f)
-            if has_header:
-                next(reader)
-            for row in reader:
-                for cell in row:
-                    try:
-                        rows.append(float(cell.strip()))
-                        break
-                    except ValueError:
-                        continue
-        if not rows:
-            raise ValueError("No se encontraron datos numéricos en el archivo.")
-        return np.array(rows), 500
-
-    elif ext in (".dat", ""):
-        try:
-            data = np.loadtxt(filepath)
-            if data.ndim > 1:
-                data = data[:, 0]
-            return data.astype(float), 500
-        except Exception:
-            raise ValueError(f"Formato de archivo no reconocido: {ext}")
-
+    elif ext in (".csv", ".txt", ".dat", ""):
+        data, fs_file = _read_text_signal(filepath)
     else:
         raise ValueError(f"Formato no soportado: {ext}. Use .csv, .txt, .wav, .npy, .dat")
+
+    data = np.asarray(data, dtype=float)
+
+    if fs is not None and fs > 0:
+        fs_val, src = float(fs), "indicada por el usuario"
+    elif fs_file:
+        fs_val, src = float(fs_file), "cabecera del archivo"
+    else:
+        fs_val, src = _fs_from_filename(filepath)
+        if fs_val is None:
+            fs_val, src = float(DEFAULT_FS), f"ASUMIDA ({DEFAULT_FS} Hz por defecto)"
+
+    if not (50 <= fs_val <= 20000):
+        raise ValueError(f"Frecuencia de muestreo fuera de rango: {fs_val} Hz")
+    if fs_val == int(fs_val):
+        fs_val = int(fs_val)
+    return data, fs_val, src
 
 
 # ─── 2. PREPROCESAMIENTO ──────────────────────────────────────────────────────
@@ -111,7 +162,10 @@ def ecg_to_spectrogram(ecg: np.ndarray, fs: int) -> tuple[np.ndarray, np.ndarray
     STFT → espectrograma en dB.
     Retorna (frecuencias, tiempos, Sxx_dB, Sxx_raw)
     """
-    nperseg = min(256, len(ecg) // 8)
+    # Ventana fija en TIEMPO (0.5 s), no en muestras: así la resolución
+    # tiempo-frecuencia no cambia con la fs (antes 256 muestras = 0.5 s a
+    # 500 Hz pero 2 s a 128 Hz).
+    nperseg = int(min(round(0.5 * fs), len(ecg) // 8))
     noverlap = nperseg * 3 // 4
     f, t, Zxx = signal.stft(ecg, fs=fs, nperseg=nperseg, noverlap=noverlap)
     Sxx = np.abs(Zxx) ** 2
@@ -186,10 +240,125 @@ def ecg_to_cwt(ecg: np.ndarray, fs: int, n_freqs: int = 80,
     return freqs, t, power, coi
 
 
-# ─── 4. EXTRACCIÓN DE CARACTERÍSTICAS ───────────────────────────────────────
+# ─── 4a. DETECCIÓN DE PICOS R (Pan-Tompkins simplificado) ────────────────────
+def detect_r_peaks(ecg: np.ndarray, fs: float) -> np.ndarray:
+    """
+    Detector de complejos QRS inspirado en Pan & Tompkins (1985):
+      pasa-banda 5–15 Hz → derivada → cuadrado → integración 150 ms
+      → picos con periodo refractario de 250 ms (FC máx. detectable 240 lpm)
+      → umbral adaptativo (mediana local de la envolvente)
+      → refinamiento al máximo real del QRS en ±75 ms, con polaridad automática.
+    Reemplaza a find_peaks(distance=0.5 s), que limitaba la FC a 120 lpm.
+    """
+    nyq = fs / 2
+    hi = min(15.0, nyq * 0.9)
+    b, a = signal.butter(2, [5.0 / nyq, hi / nyq], btype="band")
+    bp = signal.filtfilt(b, a, ecg)
+
+    der = np.gradient(bp) * fs
+    sq = der ** 2
+    win = max(1, int(0.150 * fs))
+    integ = np.convolve(sq, np.ones(win) / win, mode="same")
+
+    refractory = int(0.25 * fs)
+    # umbral adaptativo: fracción del percentil alto en ventanas de ~2 s
+    seg = int(2 * fs)
+    thr = np.empty_like(integ)
+    for i in range(0, len(integ), seg):
+        chunk = integ[max(0, i - seg): i + 2 * seg]
+        thr[i:i + seg] = 0.3 * np.percentile(chunk, 98)
+    cand, _ = signal.find_peaks(integ, distance=refractory)
+    cand = cand[integ[cand] > thr[cand]]
+    if len(cand) == 0:
+        return cand
+
+    # Polaridad dominante del QRS (derivaciones con R negativa)
+    half = int(0.075 * fs)
+    pos = np.median([ecg[max(0, c - half): c + half].max() for c in cand])
+    neg = np.median([-ecg[max(0, c - half): c + half].min() for c in cand])
+    sig_ref = ecg if pos >= neg else -ecg
+
+    # La integración retrasa ~win/2: buscar el pico real hacia atrás y adelante
+    peaks = []
+    for c in cand:
+        lo, hi_i = max(0, c - win), min(len(ecg), c + half)
+        p = lo + int(np.argmax(sig_ref[lo:hi_i]))
+        if not peaks or p - peaks[-1] >= refractory:
+            peaks.append(p)
+        elif sig_ref[p] > sig_ref[peaks[-1]]:
+            peaks[-1] = p
+    return np.array(peaks, dtype=int)
+
+
+# ─── 4b. HRV EN FRECUENCIA (sobre el tacograma RR) ───────────────────────────
+HRV_MIN_DURATION_LF = 120.0   # s — mínimo para estimar LF (Task Force, 1996)
+HRV_MIN_DURATION_HF = 60.0    # s — mínimo para estimar HF
+
+
+def hrv_frequency_domain(peaks: np.ndarray, fs: float, fs_interp: float = 4.0) -> dict:
+    """
+    Análisis espectral de la variabilidad de la frecuencia cardíaca.
+
+    Las bandas VLF (0.0033–0.04 Hz), LF (0.04–0.15 Hz) y HF (0.15–0.4 Hz)
+    se definen sobre la SERIE DE INTERVALOS RR (tacograma), no sobre el ECG.
+    Procedimiento: RR(t) → interpolación cúbica a 4 Hz → sin tendencia →
+    Welch (Hann). Recomendación Task Force ESC/NASPE (1996).
+
+    Retorna dict con potencias (ms²), razones, PSD y validez según duración.
+    """
+    out = {"vlf_power": 0.0, "lf_power": 0.0, "hf_power": 0.0,
+           "vlf_ratio": 0.0, "lf_ratio": 0.0, "hf_ratio": 0.0,
+           "lf_hf_ratio": 0.0, "lf_nu": 0.0, "hf_nu": 0.0,
+           "hrv_duration_sec": 0.0, "hrv_lf_valid": False, "hrv_hf_valid": False,
+           "_psd_f": None, "_psd": None}
+    if len(peaks) < 4:
+        return out
+
+    t_beats = peaks / fs
+    rr = np.diff(t_beats) * 1000.0                    # ms
+    t_rr = t_beats[1:]
+    # Excluir RR fisiológicamente imposibles (artefactos de detección)
+    ok = (rr > 250) & (rr < 2500)
+    t_rr, rr = t_rr[ok], rr[ok]
+    if len(rr) < 4:
+        return out
+
+    from scipy.interpolate import CubicSpline
+    t_u = np.arange(t_rr[0], t_rr[-1], 1.0 / fs_interp)
+    if len(t_u) < 16:
+        return out
+    rr_u = CubicSpline(t_rr, rr)(t_u)
+    rr_u = signal.detrend(rr_u, type="linear")
+
+    nperseg = min(len(rr_u), int(256 * fs_interp / 4))
+    f_h, psd = signal.welch(rr_u, fs=fs_interp, window="hann",
+                            nperseg=nperseg, noverlap=nperseg // 2,
+                            detrend=False, scaling="density")
+
+    def band(lo, hi):
+        m = (f_h >= lo) & (f_h < hi)
+        return float(np.trapezoid(psd[m], f_h[m])) if m.sum() > 1 else 0.0
+
+    vlf, lf, hf = band(0.0033, 0.04), band(0.04, 0.15), band(0.15, 0.40)
+    tot = vlf + lf + hf + 1e-12
+    dur = float(t_rr[-1] - t_rr[0])
+    out.update({
+        "vlf_power": vlf, "lf_power": lf, "hf_power": hf,
+        "vlf_ratio": vlf / tot, "lf_ratio": lf / tot, "hf_ratio": hf / tot,
+        "lf_hf_ratio": lf / (hf + 1e-12),
+        "lf_nu": 100 * lf / (lf + hf + 1e-12), "hf_nu": 100 * hf / (lf + hf + 1e-12),
+        "hrv_duration_sec": dur,
+        "hrv_lf_valid": dur >= HRV_MIN_DURATION_LF,
+        "hrv_hf_valid": dur >= HRV_MIN_DURATION_HF,
+        "_psd_f": f_h, "_psd": psd,
+    })
+    return out
+
+
+# ─── 4c. EXTRACCIÓN DE CARACTERÍSTICAS ──────────────────────────────────────
 def extract_features(ecg: np.ndarray, fs: int, f: np.ndarray,
                      Sxx: np.ndarray) -> dict:
-    """Extrae features temporales, frecuenciales y espectrales."""
+    """Extrae features temporales, HRV (tiempo y frecuencia) y espectrales del ECG."""
     features = {}
 
     # ── Temporales ──
@@ -201,9 +370,7 @@ def extract_features(ecg: np.ndarray, fs: int, f: np.ndarray,
     features["kurtosis"]        = float(_kurtosis(ecg))
 
     # ── Detección de picos R ──
-    min_dist = int(0.5 * fs)  # al menos 500 ms entre latidos
-    height_th = np.mean(ecg) + 0.5 * np.std(ecg)
-    peaks, props = signal.find_peaks(ecg, distance=min_dist, height=height_th)
+    peaks = detect_r_peaks(ecg, fs)
 
     if len(peaks) >= 2:
         rr = np.diff(peaks) / fs * 1000  # ms
@@ -221,23 +388,13 @@ def extract_features(ecg: np.ndarray, fs: int, f: np.ndarray,
             "heart_rate","rr_mean","rr_std","rr_cv","sdnn","rmssd","pnn50"]})
         features["num_peaks"] = int(len(peaks))
 
-    # ── Espectrales ──
-    band_masks = {
-        "vlf": (f >= 0.003) & (f < 0.04),
-        "lf":  (f >= 0.04)  & (f < 0.15),
-        "hf":  (f >= 0.15)  & (f < 0.4),
-    }
-    total_power = np.sum(Sxx) + 1e-12
-    for band, mask in band_masks.items():
-        bp = float(np.sum(Sxx[mask, :]))
-        features[f"{band}_power"] = bp
-        features[f"{band}_ratio"] = bp / total_power
+    # ── HRV en frecuencia (tacograma RR, NO el espectro del ECG) ──
+    hrv = hrv_frequency_domain(peaks, fs)
+    features["_hrv_psd_f"] = hrv.pop("_psd_f")
+    features["_hrv_psd"] = hrv.pop("_psd")
+    features.update(hrv)
 
-    lf = features["lf_power"] + 1e-12
-    hf = features["hf_power"] + 1e-12
-    features["lf_hf_ratio"] = lf / hf
-
-    # Frecuencia dominante
+    # ── Espectrales del ECG (STFT) ──
     psd_mean = np.mean(Sxx, axis=1)
     features["dominant_freq"] = float(f[np.argmax(psd_mean)])
 
@@ -298,9 +455,15 @@ def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
         notes.append(f"Alta variabilidad RR: CV={rr_cv:.3f}, RMSSD={rmssd:.1f} ms")
 
     # ── Flutter Auricular ──
-    if 250 <= hr <= 350 or (0.3 <= df <= 8.0 and rr_cv < 0.1):
-        candidates["Flutter Auricular"] = 0.65
-        notes.append("Patrón de flutter: frecuencia auricular elevada y regular")
+    # El flutter típico tiene ondas F a ~300/min con conducción 2:1 → respuesta
+    # ventricular REGULAR ≈ 150 lpm. Sin análisis de ondas F (pendiente), solo
+    # se puede plantear como diagnóstico diferencial de la taquicardia regular.
+    # (La regla anterior usaba la frecuencia dominante del ECG 0.3–8 Hz, banda
+    #  donde siempre cae la energía del QRS → se activaba con cualquier ritmo regular.)
+    if 140 <= hr <= 160 and rr_cv < 0.05:
+        candidates["Flutter Auricular"] = 0.55
+        notes.append(f"Taquicardia regular a {hr:.0f} lpm: considerar flutter "
+                     "auricular con conducción 2:1 (confirmar ondas F)")
 
     # ── Bloqueo AV (RR muy largo o irregular sin FA) ──
     if features.get("rr_mean", 0) > 1200 and rr_cv < 0.1:
@@ -313,7 +476,9 @@ def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
         notes.append("Variabilidad RR moderada compatible con latidos ectópicos")
 
     # ── Isquemia (alteraciones espectrales en baja frecuencia) ──
-    if lf_hf > 4.0 and features.get("lf_ratio", 0) > 0.7:
+    # Solo si el registro es suficientemente largo para estimar LF (≥ 2 min)
+    if (features.get("hrv_lf_valid", False)
+            and lf_hf > 4.0 and features.get("lf_ratio", 0) > 0.7):
         score = min(1.0, lf_hf / 8.0)
         candidates["Isquemia Miocárdica"] = score
         notes.append(f"Dominio LF marcado (ratio LF/HF = {lf_hf:.2f}) - posible isquemia")
@@ -410,13 +575,8 @@ def plot_spectrogram(f: np.ndarray, t: np.ndarray,
     cb.set_label("Potencia (dB)", color=TEXT, fontsize=9)
     cb.ax.yaxis.set_tick_params(color=TEXT, labelcolor=TEXT, labelsize=8)
 
-    # bandas HRV
-    for freq, label, col in [(0.04, "LF", "#22d3ee"), (0.15, "HF", "#a78bfa"),
-                               (0.4, "", "#6ee7b7")]:
-        if freq < f_plot[-1]:
-            ax.axhline(freq, color=col, linewidth=0.8, linestyle="--", alpha=0.7)
-            if label:
-                ax.text(t[-1] * 0.01, freq + 0.005, label, color=col, fontsize=7)
+    # (Las bandas HRV LF/HF ya no se dibujan aquí: pertenecen al tacograma RR,
+    #  no al espectro del ECG. Ver pestaña "HRV frecuencial".)
 
     ax.set_xlabel("Tiempo (s)", color=TEXT, fontsize=9)
     ax.set_ylabel("Frecuencia (Hz)", color=TEXT, fontsize=9)
@@ -429,7 +589,18 @@ def plot_spectrogram(f: np.ndarray, t: np.ndarray,
     return b64
 
 
+def _decimate_cols(t, power, coi, max_cols=1000):
+    """Reduce columnas para graficar (máximo por bloque: conserva picos QRS)."""
+    k = int(np.ceil(power.shape[1] / max_cols))
+    if k <= 1:
+        return t, power, coi
+    n = (power.shape[1] // k) * k
+    p = power[:, :n].reshape(power.shape[0], -1, k).max(axis=2)
+    return t[:n:k], p, coi[:n:k]
+
+
 def _plot_scalogram_ax(fig, ax, freqs, t, power, coi):
+    t, power, coi = _decimate_cols(t, power, coi)
     P_db = 10 * np.log10(power + 1e-12)
     vmin, vmax = np.percentile(P_db, [5, 99.5])
     im = ax.pcolormesh(t, freqs, P_db, shading="gouraud",
@@ -576,28 +747,51 @@ def plot_scores_bar(scores: dict) -> str:
     return b64
 
 
-def plot_frequency_analysis(f: np.ndarray, Sxx: np.ndarray) -> str:
+def plot_frequency_analysis(f: np.ndarray, Sxx: np.ndarray,
+                            features: dict | None = None) -> str:
+    """
+    Izq.: PSD del ECG (0–40 Hz, contenido de la onda).
+    Der.: PSD de la HRV sobre el tacograma RR con bandas VLF/LF/HF.
+    """
+    features = features or {}
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(11, 3.2), facecolor=BG)
+
+    # ── PSD del ECG ──
     psd = np.mean(Sxx, axis=1)
     mask = f <= 40
-
-    fig, ax = plt.subplots(figsize=(7, 3.2), facecolor=BG)
     ax.set_facecolor(BG)
     ax.fill_between(f[mask], psd[mask], alpha=0.3, color=ACCENT)
     ax.plot(f[mask], psd[mask], color=ACCENT, linewidth=1.2)
-
-    # bandas
-    bands = [("VLF", 0, 0.04, "#f59e0b"), ("LF", 0.04, 0.15, "#22d3ee"),
-             ("HF", 0.15, 0.4, "#a78bfa")]
-    for name, lo, hi, c in bands:
-        m = (f >= lo) & (f <= hi) & mask
-        if m.any():
-            ax.fill_between(f[m], psd[m], alpha=0.35, color=c, label=name)
-    ax.legend(fontsize=8, facecolor=BG, labelcolor=TEXT, framealpha=0.7)
+    ax.set_title("Espectro del ECG (STFT promedio)", color=TEXT, fontsize=9, pad=4)
     ax.set_xlabel("Frecuencia (Hz)", color=TEXT, fontsize=9)
     ax.set_ylabel("PSD", color=TEXT, fontsize=9)
-    ax.tick_params(colors=TEXT, labelsize=8)
-    for sp in ax.spines.values():
-        sp.set_edgecolor(GRID)
+
+    # ── PSD de la HRV ──
+    ax2.set_facecolor(BG)
+    fh, ph = features.get("_hrv_psd_f"), features.get("_hrv_psd")
+    if fh is not None and len(fh) > 2:
+        m = fh <= 0.5
+        ax2.plot(fh[m], ph[m], color=TEXT, linewidth=1.0)
+        for name, lo, hi, c in [("VLF", 0.0033, 0.04, "#f59e0b"),
+                                ("LF", 0.04, 0.15, "#22d3ee"),
+                                ("HF", 0.15, 0.40, "#a78bfa")]:
+            mb = (fh >= lo) & (fh <= hi)
+            if mb.any():
+                ax2.fill_between(fh[mb], ph[mb], alpha=0.45, color=c, label=name)
+        ax2.legend(fontsize=8, facecolor=BG, labelcolor=TEXT, framealpha=0.7)
+        dur = features.get("hrv_duration_sec", 0)
+        warn = "" if features.get("hrv_lf_valid") else f"  ⚠ {dur:.0f} s < 120 s: LF/HF no fiable"
+        ax2.set_title(f"HRV — tacograma RR (Welch){warn}", color=TEXT, fontsize=9, pad=4)
+    else:
+        ax2.text(0.5, 0.5, "Latidos insuficientes para HRV espectral",
+                 ha="center", va="center", color=TEXT, transform=ax2.transAxes)
+    ax2.set_xlabel("Frecuencia (Hz)", color=TEXT, fontsize=9)
+    ax2.set_ylabel("PSD (ms²/Hz)", color=TEXT, fontsize=9)
+
+    for a_ in (ax, ax2):
+        a_.tick_params(colors=TEXT, labelsize=8)
+        for sp in a_.spines.values():
+            sp.set_edgecolor(GRID)
     fig.tight_layout()
     b64 = _fig_to_b64(fig)
     plt.close(fig)
@@ -605,10 +799,19 @@ def plot_frequency_analysis(f: np.ndarray, Sxx: np.ndarray) -> str:
 
 
 # ─── 7. FUNCIÓN PRINCIPAL ────────────────────────────────────────────────────
-def analyze_ecg(filepath: str) -> dict:
-    """Pipeline completo. Retorna dict JSON-serializable."""
+def analyze_ecg(filepath: str, fs: float | None = None,
+                original_name: str | None = None) -> dict:
+    """
+    Pipeline completo. Retorna dict JSON-serializable.
+    fs: frecuencia de muestreo indicada por el usuario (opcional).
+    original_name: nombre original del archivo subido (para inferir fs).
+    """
     try:
-        ecg_raw, fs = load_ecg(filepath)
+        ecg_raw, fs, fs_source = load_ecg(filepath, fs)
+        if fs_source.startswith("ASUMIDA") and original_name:
+            fs_n, src_n = _fs_from_filename(original_name)
+            if fs_n:
+                fs, fs_source = (int(fs_n) if fs_n == int(fs_n) else fs_n), src_n
         if len(ecg_raw) < fs * 2:
             raise ValueError("La señal es demasiado corta (mín. 2 segundos).")
 
@@ -616,6 +819,14 @@ def analyze_ecg(filepath: str) -> dict:
         f, t, Sxx_db, Sxx = ecg_to_spectrogram(ecg, fs)
         features, peaks = extract_features(ecg, fs, f, Sxx)
         diagnosis, confidence, notes, scores = classify_ecg(features)
+        if fs_source.startswith("ASUMIDA"):
+            notes.insert(0, f"⚠ Frecuencia de muestreo {fs_source}. Si no es la real, "
+                            "FC, intervalos RR y frecuencias quedan mal escalados: "
+                            "indíquela en el campo 'fs'.")
+        if features.get("num_peaks", 0) >= 4 and not features.get("hrv_lf_valid"):
+            notes.append(f"Registro de {features.get('hrv_duration_sec', 0):.0f} s: "
+                         "LF/HF requiere ≥ 2 min (Task Force, 1996); se reporta "
+                         "como referencia y no se usa para diagnosticar.")
         # CWT: solo visualización (opción 1). NO alimenta al clasificador.
         cw_f, cw_t, cw_p, cw_coi = ecg_to_cwt(ecg, fs)
 
@@ -627,12 +838,13 @@ def analyze_ecg(filepath: str) -> dict:
             "icon":      DIAGNOSES[diagnosis]["icon"],
             "color":     DIAGNOSES[diagnosis]["color"],
             "notes":     notes,
-            "features":  {k: round(v, 4) if isinstance(v, float) else v
-                          for k, v in features.items()},
+            "features":  {k: (round(v, 4) if isinstance(v, float) else v)
+                          for k, v in features.items() if not k.startswith("_")},
             "scores":    {k: round(v * 100, 2) for k, v in scores.items()},
             "signal_info": {
                 "duration_sec": round(len(ecg) / fs, 2),
                 "fs_hz": fs,
+                "fs_source": fs_source,
                 "n_samples": len(ecg),
             },
             "plots": {
@@ -642,7 +854,7 @@ def analyze_ecg(filepath: str) -> dict:
                 "compare":   plot_stft_vs_cwt(f, t, Sxx_db, cw_f, cw_t, cw_p, cw_coi),
                 "rr":        plot_rr_intervals(ecg, fs, peaks),
                 "scores":    plot_scores_bar(scores),
-                "psd":       plot_frequency_analysis(f, Sxx),
+                "psd":       plot_frequency_analysis(f, Sxx, features),
             },
         }
     except Exception as e:

@@ -241,3 +241,39 @@ validación cruzada sobre PhysioNet antes de afirmar cualquier mejora.
 **Por qué CWT además de STFT:** la STFT usa una ventana fija (misma resolución en todas las frecuencias). La CWT adapta
 la ventana a la escala: ventanas cortas a alta frecuencia (localiza el complejo QRS) y largas a baja frecuencia
 (mejor resolución en ondas P/T y ritmo).
+
+---
+
+## Correcciones metodológicas (v2.1)
+
+Errores heredados de la versión STFT, detectados y corregidos en esta versión:
+
+| # | Problema | Efecto | Corrección |
+|---|---|---|---|
+| 1 | `load_ecg()` asumía **fs = 500 Hz** para todo CSV/TXT/NPY | Registros PhysioNet (mitdb 360, afdb 250, nsrdb 128 Hz) con FC, RR y ejes de frecuencia mal escalados. `nsrdb_16265` (ritmo sinusal normal) salía **Fibrilación Auricular** | fs por prioridad: campo en la interfaz → cabecera `# fs=360` → nombre (`_fs360`, `mitdb_`, `afdb_`, `nsrdb_`…) → 500 Hz **con advertencia visible**. `physionet_converter.py` ahora escribe la cabecera |
+| 2 | `find_peaks(distance=0.5 s)` | FC máx. detectable **120 lpm**: la demo de taquicardia (130 lpm) salía Normal a 72 lpm | Detector tipo **Pan-Tompkins** (pasa-banda 5–15 Hz, derivada, cuadrado, integración 150 ms, refractario 250 ms → hasta 240 lpm, umbral adaptativo, polaridad automática) |
+| 3 | Bandas VLF/LF/HF calculadas sobre el espectro **del ECG** | LF/HF sin significado fisiológico (las bandas HRV se definen sobre el tacograma RR) | HRV espectral sobre el **tacograma RR** (spline cúbico a 4 Hz + Welch), Task Force ESC/NASPE 1996. LF/HF solo se usa para diagnosticar si el registro dura **≥ 2 min** |
+| 4 | Regla de Flutter: frecuencia dominante del ECG entre 0.3 y 8 Hz | Se activaba con **cualquier ritmo regular** (ahí cae siempre la energía del QRS). Estaba enmascarado por el error 1 | Flutter solo como diferencial de **taquicardia regular 140–160 lpm** (conducción 2:1). Detección real requiere análisis de ondas F (pendiente) |
+| 5 | Ventana STFT fija en 256 **muestras** | Duración de la ventana variaba con fs (0.5 s a 500 Hz, 2 s a 128 Hz) | Ventana fija en **0.5 s** |
+
+**Resultados sobre los registros incluidos**
+
+| Registro | Antes | Ahora | FC |
+|---|---|---|---|
+| afdb_04015 | Fibrilación Auricular | Fibrilación Auricular | 92 |
+| mitdb_100 | Extrasístoles | **Normal** | 74 |
+| mitdb_221 | Fibrilación Auricular | Fibrilación Auricular | 77 |
+| nsrdb_16265 | Fibrilación Auricular ❌ | **Normal** | 95 |
+
+Demos sintéticas (5 repeticiones c/u): normal → Normal, tachy → Taquicardia (130 lpm), afib → FA en 3/5, brady → Bloqueo AV (42 lpm, la regla de Bloqueo AV se activa con RR > 1200 ms y prevalece sobre Bradicardia: limitación de las reglas a revisar).
+
+**Detector de picos R:** Se = +P = 100 % en 36 señales sintéticas (fs 128–500 Hz, 40–200 lpm, R negativa, T alta).
+Para validarlo contra las anotaciones de cardiólogos de PhysioNet (requiere internet):
+
+```
+python validar_picos_physionet.py
+```
+
+**Limitaciones abiertas:** el clasificador sigue siendo por reglas con umbrales no validados; los 4 registros
+y las demos no constituyen una validación. Siguiente paso: validación cruzada sobre bases PhysioNet completas
+(opción 3 del plan, incluyendo features wavelet).
