@@ -963,6 +963,19 @@ def plot_frequency_analysis(f: np.ndarray, Sxx: np.ndarray,
 
 
 # ─── 7. FUNCIÓN PRINCIPAL ────────────────────────────────────────────────────
+def classify_signal(x: np.ndarray, fs: float):
+    """
+    Clasificación rápida (sin figuras ni CWT) para validación masiva.
+    Usa exactamente el mismo preprocesamiento, detector, features y reglas
+    que analyze_ecg. Retorna (diagnóstico, confianza, features, picos).
+    """
+    ecg = preprocess_ecg(np.asarray(x, float), fs)
+    f, _t, _Sxx_db, Sxx = ecg_to_spectrogram(ecg, fs)
+    features, peaks = extract_features(ecg, fs, f, Sxx)
+    dx, conf, _notes, _scores = classify_ecg(features)
+    return dx, conf, features, peaks
+
+
 def analyze_ecg(filepath: str, fs: float | None = None,
                 original_name: str | None = None) -> dict:
     """

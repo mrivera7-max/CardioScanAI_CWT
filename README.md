@@ -354,3 +354,19 @@ Resultados completos y comparación v1/v2 en `docs/validacion_but_pdb/LEEME.md`.
 - "Isquemia" queda como hallazgo secundario inespecífico (requiere análisis del segmento ST).
 
 ⚠ Umbrales ajustados en BUT PDB → cifras optimistas. Falta la prueba independiente (AFDB + INCART).
+
+
+---
+
+## Prueba independiente — v2.5 (AFDB + INCART)
+
+Detalle en `docs/validacion_independiente/LEEME.md`. Umbrales **sin modificar** respecto a BUT PDB.
+
+| Base | Tarea | Sensibilidad | Especificidad | VPP |
+|---|---|---|---|---|
+| AFDB (23 reg. × 10 h, 6 639 ventanas de 2 min) | Fibrilación auricular | **98.7 %** | **97.4 %** | 96.1 % |
+| INCART (75 reg., 1 044 ventanas) | Extrasístoles | 69.6 % | 83.8 % | 92.4 % |
+| INCART (172 978 latidos) | Detección de latidos | 94.5 % | — | 99.0 % (+P) |
+
+Limitaciones: ectopia muy frecuente se confunde con FA; flutter y bloqueos AV de 1.er/3.er grado requieren
+análisis de ondas P/F (línea futura con CWT).

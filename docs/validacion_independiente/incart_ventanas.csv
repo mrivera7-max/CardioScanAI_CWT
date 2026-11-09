@@ -1,0 +1,1126 @@
+﻿registro;ventana;ectopicos_ref;ref;pred;conf;fc;nprem;nrmssd;TP;FN;FP
+I01;0;21;CON_EXT;Extrasístoles;0.9;97.2;32;0.029;187;0;5
+I01;1;42;CON_EXT;Extrasístoles;0.9;87.7;43;0.051;171;0;1
+I01;2;23;CON_EXT;Extrasístoles;0.9;91.9;28;0.071;177;2;4
+I01;3;10;CON_EXT;Fibrilación Auricular;0.93;96.8;48;0.231;157;36;33
+I01;4;0;SIN_EXT;Fibrilación Auricular;0.871;104.5;53;0.205;163;30;42
+I01;5;19;CON_EXT;Fibrilación Auricular;0.944;78.4;33;0.252;130;59;24
+I01;6;31;CON_EXT;Extrasístoles;0.9;85.2;28;0.012;168;3;0
+I01;7;34;CON_EXT;Extrasístoles;0.9;88.7;35;0.099;170;6;5
+I01;8;23;CON_EXT;Extrasístoles;0.9;94.3;39;0.062;171;8;15
+I01;9;20;CON_EXT;Extrasístoles;0.9;89.8;19;0.01;177;0;0
+I01;10;25;CON_EXT;Extrasístoles;0.9;92.1;33;0.098;167;6;13
+I01;11;9;CON_EXT;Fibrilación Auricular;0.637;103.6;36;0.129;181;11;23
+I01;12;23;CON_EXT;Extrasístoles;0.85;87.3;15;0.038;171;7;0
+I01;13;28;CON_EXT;Fibrilación Auricular;0.751;90.6;38;0.169;158;21;20
+I01;14;36;CON_EXT;Extrasístoles;0.9;87.2;31;0.01;171;4;0
+I02;0;21;CON_EXT;Extrasístoles;0.9;92.2;28;0.033;181;0;0
+I02;1;13;CON_EXT;Extrasístoles;0.81;93.5;13;0.013;184;0;0
+I02;2;12;CON_EXT;Extrasístoles;0.79;95.3;12;0.027;188;0;0
+I02;3;3;CON_EXT;Extrasístoles;0.9;99.5;20;0.012;186;4;10
+I02;4;6;CON_EXT;Extrasístoles;0.79;94.5;12;0.072;179;20;7
+I02;5;15;CON_EXT;Extrasístoles;0.89;92.7;17;0.042;182;1;1
+I02;6;35;CON_EXT;Extrasístoles;0.9;96.0;58;0.042;189;1;0
+I02;7;26;CON_EXT;Extrasístoles;0.9;94.3;36;0.062;185;0;0
+I02;8;26;CON_EXT;Bloqueo AV;0.798;93.2;48;0.038;183;1;0
+I02;9;34;CON_EXT;Bloqueo AV;0.88;92.6;67;0.036;182;1;0
+I02;10;24;CON_EXT;Bloqueo AV;0.842;85.4;43;0.05;168;3;0
+I02;11;4;CON_EXT;Extrasístoles;0.67;74.7;6;0.013;145;1;1
+I02;12;6;CON_EXT;Extrasístoles;0.73;78.1;9;0.015;153;1;1
+I02;13;2;CON_EXT;Extrasístoles;0.63;74.4;4;0.013;145;1;1
+I02;14;2;CON_EXT;Extrasístoles;0.63;73.7;4;0.013;145;0;0
+I03;0;14;CON_EXT;Extrasístoles;0.59;78.6;2;0.081;154;15;0
+I03;1;5;CON_EXT;Extrasístoles;0.73;86.0;9;0.036;162;9;4
+I03;2;8;CON_EXT;Extrasístoles;0.83;79.1;14;0.091;146;21;10
+I03;3;32;CON_EXT;Fibrilación Auricular;0.944;55.1;8;0.313;105;56;1
+I03;4;4;CON_EXT;Fibrilación Auricular;0.617;84.4;22;0.15;150;13;16
+I03;5;15;CON_EXT;Fibrilación Auricular;0.95;62.7;13;0.357;116;53;7
+I03;6;8;CON_EXT;Extrasístoles;0.75;78.0;10;0.109;147;14;6
+I03;7;14;CON_EXT;Extrasístoles;0.79;78.3;12;0.091;151;13;3
+I03;8;4;CON_EXT;Extrasístoles;0.61;79.1;3;0.051;153;3;0
+I03;9;3;CON_EXT;Extrasístoles;0.61;76.0;3;0.092;148;4;1
+I03;10;6;CON_EXT;Extrasístoles;0.63;73.9;4;0.048;145;10;0
+I03;11;4;CON_EXT;Extrasístoles;0.65;84.0;5;0.055;159;5;5
+I03;12;0;SIN_EXT;Normal;0.95;79.1;0;0.034;156;0;0
+I03;13;7;CON_EXT;Extrasístoles;0.67;73.4;6;0.188;144;8;0
+I03;14;3;CON_EXT;Extrasístoles;0.61;76.3;3;0.03;150;0;0
+I04;0;0;SIN_EXT;Normal;0.95;63.5;0;0.043;125;0;0
+I04;1;3;CON_EXT;Extrasístoles;0.61;45.5;3;0.034;88;1;1
+I04;2;4;CON_EXT;Extrasístoles;0.65;42.6;5;0.096;80;1;3
+I04;3;5;CON_EXT;Fibrilación Auricular;0.659;56.1;19;0.15;83;10;27
+I04;4;11;CON_EXT;Fibrilación Auricular;0.95;92.2;44;0.277;121;65;61
+I04;5;6;CON_EXT;Extrasístoles;0.67;94.4;6;0.027;181;23;4
+I04;6;2;CON_EXT;Normal;0.788;94.5;1;0.197;186;10;0
+I04;7;1;ambigua;Normal;0.95;95.6;1;0.007;188;0;0
+I04;8;4;CON_EXT;Extrasístoles;0.63;92.3;4;0.01;182;3;0
+I04;9;33;CON_EXT;Fibrilación Auricular;0.896;54.7;16;0.241;107;73;0
+I04;10;47;CON_EXT;Fibrilación Auricular;0.638;26.9;9;0.138;53;125;0
+I04;11;13;CON_EXT;Extrasístoles;0.63;69.8;4;0.183;136;38;0
+I04;12;0;SIN_EXT;Normal;0.95;86.8;0;0.007;171;0;0
+I04;13;6;CON_EXT;Extrasístoles;0.63;55.8;4;0.078;106;61;3
+I04;14;2;CON_EXT;Extrasístoles;0.63;79.8;4;0.021;153;14;1
+I05;0;17;CON_EXT;Fibrilación Auricular;0.645;45.9;7;0.16;90;23;0
+I05;1;14;CON_EXT;Extrasístoles;0.89;59.3;17;0.07;99;19;17
+I05;2;8;CON_EXT;Fibrilación Auricular;0.95;88.2;75;0.187;92;24;81
+I05;3;15;CON_EXT;Fibrilación Auricular;0.95;80.2;60;0.209;89;37;68
+I05;4;3;CON_EXT;Fibrilación Auricular;0.95;97.5;84;0.177;99;19;92
+I05;5;11;CON_EXT;Fibrilación Auricular;0.95;63.2;50;0.588;69;44;54
+I05;6;3;CON_EXT;Fibrilación Auricular;0.95;98.6;91;0.218;102;10;91
+I05;7;13;CON_EXT;Fibrilación Auricular;0.95;65.3;48;0.26;72;40;56
+I05;8;90;CON_EXT;Fibrilación Auricular;0.95;70.9;31;0.462;114;36;25
+I05;9;21;CON_EXT;Fibrilación Auricular;0.95;88.3;74;0.262;99;18;74
+I05;10;6;CON_EXT;Fibrilación Auricular;0.95;80.0;65;0.3;89;21;68
+I05;11;9;CON_EXT;Fibrilación Auricular;0.95;79.5;70;0.392;83;25;73
+I05;12;9;CON_EXT;Fibrilación Auricular;0.95;73.3;61;0.638;78;32;66
+I05;13;5;CON_EXT;Fibrilación Auricular;0.95;89.5;81;0.359;87;21;87
+I05;14;23;CON_EXT;Fibrilación Auricular;0.95;79.9;63;0.227;92;22;64
+I06;0;4;CON_EXT;Extrasístoles;0.65;81.1;5;0.057;160;0;0
+I06;1;4;CON_EXT;Extrasístoles;0.63;79.9;4;0.033;157;0;0
+I06;2;2;CON_EXT;Extrasístoles;0.61;80.7;3;0.053;159;0;0
+I06;3;5;CON_EXT;Extrasístoles;0.67;81.7;6;0.057;161;0;0
+I06;4;3;CON_EXT;Extrasístoles;0.59;80.7;2;0.057;159;0;0
+I06;5;10;CON_EXT;Extrasístoles;0.75;81.3;10;0.054;160;0;0
+I06;6;6;CON_EXT;Extrasístoles;0.65;82.2;5;0.049;162;0;0
+I06;7;0;SIN_EXT;Normal;0.946;81.6;1;0.049;160;0;0
+I06;8;2;CON_EXT;Extrasístoles;0.61;87.1;3;0.033;172;0;0
+I06;9;1;ambigua;Extrasístoles;0.59;86.6;2;0.025;170;0;0
+I06;10;1;ambigua;Normal;0.95;87.8;1;0.018;172;0;0
+I06;11;5;CON_EXT;Extrasístoles;0.67;85.7;6;0.03;169;0;0
+I06;12;6;CON_EXT;Extrasístoles;0.71;83.7;8;0.045;164;0;0
+I06;13;3;CON_EXT;Extrasístoles;0.61;82.5;3;0.035;163;0;0
+I06;14;5;CON_EXT;Extrasístoles;0.67;84.0;6;0.045;166;0;0
+I07;0;3;CON_EXT;Extrasístoles;0.59;83.6;2;0.042;164;0;0
+I07;1;3;CON_EXT;Extrasístoles;0.61;87.4;3;0.056;172;0;0
+I07;2;2;CON_EXT;Extrasístoles;0.59;82.6;2;0.054;162;0;0
+I07;3;1;ambigua;Extrasístoles;0.59;86.1;2;0.064;169;0;0
+I07;4;5;CON_EXT;Extrasístoles;0.65;90.3;5;0.028;178;0;0
+I07;5;5;CON_EXT;Extrasístoles;0.65;95.6;5;0.023;188;0;0
+I07;6;11;CON_EXT;Extrasístoles;0.77;94.0;11;0.035;185;0;0
+I07;7;8;CON_EXT;Extrasístoles;0.71;89.6;8;0.029;176;0;0
+I07;8;4;CON_EXT;Extrasístoles;0.63;85.9;4;0.023;169;0;0
+I07;9;5;CON_EXT;Extrasístoles;0.65;87.0;5;0.042;171;0;0
+I07;10;0;SIN_EXT;Normal;0.95;94.2;0;0.026;185;0;0
+I07;11;3;CON_EXT;Extrasístoles;0.61;96.8;3;0.022;190;0;0
+I07;12;5;CON_EXT;Extrasístoles;0.65;99.7;5;0.043;196;0;0
+I07;13;8;CON_EXT;Extrasístoles;0.69;90.9;7;0.061;179;0;0
+I07;14;3;CON_EXT;Extrasístoles;0.61;89.1;3;0.03;176;0;0
+I08;0;14;CON_EXT;Extrasístoles;0.63;65.7;4;0.063;130;2;0
+I08;1;12;CON_EXT;Extrasístoles;0.85;63.6;15;0.099;123;2;1
+I08;2;6;CON_EXT;Extrasístoles;0.73;61.9;9;0.089;122;0;0
+I08;3;7;CON_EXT;Extrasístoles;0.71;56.3;8;0.027;111;1;0
+I08;4;28;CON_EXT;Extrasístoles;0.83;51.5;14;0.112;100;20;1
+I08;5;31;CON_EXT;Extrasístoles;0.9;55.4;22;0.109;109;8;0
+I08;6;12;CON_EXT;Extrasístoles;0.79;75.8;12;0.056;147;2;2
+I08;7;36;CON_EXT;Extrasístoles;0.9;78.1;37;0.068;149;5;5
+I08;8;22;CON_EXT;Fibrilación Auricular;0.632;60.9;20;0.122;118;4;2
+I08;9;5;CON_EXT;Extrasístoles;0.61;77.5;3;0.03;152;0;0
+I08;10;66;CON_EXT;Extrasístoles;0.9;94.1;62;0.081;175;11;10
+I08;11;23;CON_EXT;Extrasístoles;0.9;88.6;22;0.059;173;2;1
+I08;12;53;CON_EXT;Fibrilación Auricular;0.928;81.2;49;0.203;153;9;7
+I08;13;20;CON_EXT;Extrasístoles;0.89;69.9;17;0.097;135;4;2
+I08;14;18;CON_EXT;Extrasístoles;0.89;65.8;17;0.062;126;3;3
+I09;0;1;ambigua;Extrasístoles;0.65;81.7;5;0.13;156;14;4
+I09;1;4;CON_EXT;Extrasístoles;0.65;87.0;5;0.116;171;12;0
+I09;2;2;CON_EXT;Normal;0.9;91.7;0;0.076;181;9;0
+I09;3;4;CON_EXT;Fibrilación Auricular;0.661;89.5;7;0.168;175;16;0
+I09;4;0;SIN_EXT;Taquicardia;0.765;126.5;0;0.029;249;0;0
+I09;5;8;CON_EXT;Extrasístoles;0.59;74.5;2;0.136;146;43;0
+I09;6;2;CON_EXT;Extrasístoles;0.67;93.4;6;0.105;166;11;14
+I09;7;0;SIN_EXT;Extrasístoles;0.77;90.6;11;0.14;167;10;11
+I09;8;0;SIN_EXT;Extrasístoles;0.73;100.4;9;0.143;172;6;26
+I09;9;0;SIN_EXT;Fibrilación Auricular;0.648;99.8;21;0.146;174;7;23
+I09;10;3;CON_EXT;Normal;0.88;96.7;0;0.093;190;30;0
+I09;11;2;CON_EXT;Taquicardia;0.65;115.0;1;0.163;226;10;0
+I09;12;4;CON_EXT;Extrasístoles;0.59;91.4;2;0.128;177;27;0
+I09;13;4;CON_EXT;Extrasístoles;0.59;89.1;2;0.055;175;29;0
+I09;14;7;CON_EXT;Fibrilación Auricular;0.757;81.2;6;0.216;158;41;1
+I10;0;1;ambigua;Taquicardia;0.71;121.0;0;0.018;238;0;0
+I10;1;1;ambigua;Taquicardia;0.708;120.8;0;0.017;237;5;0
+I10;2;0;SIN_EXT;Taquicardia;0.807;130.7;0;0.02;257;0;0
+I10;3;0;SIN_EXT;Taquicardia;0.756;125.6;0;0.014;247;1;0
+I10;4;11;CON_EXT;Extrasístoles;0.61;83.9;3;0.279;165;74;0
+I10;5;8;CON_EXT;Extrasístoles;0.61;83.3;3;0.103;161;73;0
+I10;6;13;CON_EXT;Extrasístoles;0.63;83.7;4;0.364;160;86;1
+I10;7;10;CON_EXT;Extrasístoles;0.61;61.1;3;0.338;119;117;0
+I10;8;7;CON_EXT;Extrasístoles;0.59;78.3;2;0.033;153;85;0
+I10;9;8;CON_EXT;Extrasístoles;0.59;86.3;2;0.026;169;75;0
+I10;10;5;CON_EXT;Extrasístoles;0.77;100.0;11;0.072;197;47;0
+I10;11;7;CON_EXT;Extrasístoles;0.69;84.6;7;0.137;165;74;1
+I10;12;2;CON_EXT;Extrasístoles;0.75;99.1;10;0.078;193;45;2
+I10;13;2;CON_EXT;Extrasístoles;0.73;104.7;9;0.076;205;34;0
+I10;14;8;CON_EXT;Normal;0.95;83.9;0;0.015;164;76;0
+I11;0;0;SIN_EXT;Extrasístoles;0.77;63.3;11;0.12;124;0;0
+I11;1;1;ambigua;Fibrilación Auricular;0.771;55.1;18;0.184;108;0;0
+I11;2;1;ambigua;Fibrilación Auricular;0.825;66.2;12;0.204;130;0;0
+I11;3;1;ambigua;Fibrilación Auricular;0.723;67.3;5;0.192;133;0;0
+I11;4;0;SIN_EXT;Extrasístoles;0.63;72.8;4;0.176;143;0;1
+I11;5;0;SIN_EXT;Normal;0.763;73.0;1;0.159;143;0;0
+I11;6;0;SIN_EXT;Normal;0.946;78.5;0;0.049;154;0;0
+I11;7;0;SIN_EXT;Normal;0.801;74.3;0;0.139;146;0;0
+I11;8;0;SIN_EXT;Fibrilación Auricular;0.726;71.2;1;0.184;139;0;0
+I11;9;0;SIN_EXT;Fibrilación Auricular;0.74;72.5;3;0.187;142;0;0
+I11;10;0;SIN_EXT;Fibrilación Auricular;0.756;64.8;8;0.216;127;0;0
+I11;11;1;ambigua;Fibrilación Auricular;0.735;70.5;2;0.191;138;0;0
+I11;12;0;SIN_EXT;Normal;0.95;78.7;0;0.044;155;0;0
+I11;13;0;SIN_EXT;Normal;0.885;75.2;0;0.094;148;0;0
+I11;14;0;SIN_EXT;Fibrilación Auricular;0.718;70.9;0;0.193;140;0;0
+I12;0;0;SIN_EXT;Normal;0.95;82.8;0;0.027;162;0;0
+I12;1;0;SIN_EXT;Normal;0.95;80.6;0;0.031;158;0;0
+I12;2;0;SIN_EXT;Normal;0.95;78.4;0;0.025;154;0;0
+I12;3;0;SIN_EXT;Normal;0.95;78.1;0;0.025;153;0;0
+I12;4;0;SIN_EXT;Normal;0.95;78.4;0;0.026;154;0;0
+I12;5;0;SIN_EXT;Normal;0.95;81.3;0;0.021;160;0;0
+I12;6;0;SIN_EXT;Normal;0.95;83.8;0;0.02;165;0;0
+I12;7;0;SIN_EXT;Normal;0.95;92.9;0;0.017;182;0;0
+I12;8;0;SIN_EXT;Taquicardia;0.676;117.6;0;0.009;231;0;0
+I12;9;6;CON_EXT;Extrasístoles;0.59;128.8;2;0.013;253;0;0
+I12;10;0;SIN_EXT;Taquicardia;0.611;111.1;0;0.013;219;0;0
+I12;11;1;ambigua;Taquicardia;0.567;106.7;1;0.016;210;1;0
+I12;12;0;SIN_EXT;Normal;0.95;97.6;0;0.021;192;0;0
+I12;13;0;SIN_EXT;Normal;0.95;94.4;0;0.023;186;0;0
+I12;14;0;SIN_EXT;Normal;0.95;92.0;0;0.024;181;0;0
+I13;0;15;CON_EXT;Extrasístoles;0.9;64.4;28;0.083;126;0;0
+I13;1;19;CON_EXT;Extrasístoles;0.9;66.1;37;0.079;130;0;0
+I13;2;28;CON_EXT;Extrasístoles;0.9;70.9;55;0.102;140;0;0
+I13;3;10;CON_EXT;Bloqueo AV;0.703;61.9;20;0.046;122;0;0
+I13;4;12;CON_EXT;Extrasístoles;0.9;62.8;24;0.058;124;0;0
+I13;5;19;CON_EXT;Extrasístoles;0.9;66.2;35;0.082;130;0;0
+I13;6;18;CON_EXT;Extrasístoles;0.9;65.7;35;0.075;129;0;0
+I13;7;17;CON_EXT;Extrasístoles;0.9;65.5;32;0.072;128;0;0
+I13;8;17;CON_EXT;Extrasístoles;0.9;68.4;33;0.084;134;0;0
+I13;9;19;CON_EXT;Bloqueo AV;0.713;72.4;37;0.095;142;0;0
+I13;10;9;CON_EXT;Extrasístoles;0.85;69.7;15;0.042;138;0;0
+I13;11;18;CON_EXT;Bloqueo AV;0.822;72.2;41;0.068;142;0;0
+I13;12;16;CON_EXT;Bloqueo AV;0.718;70.2;33;0.068;138;0;0
+I13;13;9;CON_EXT;Extrasístoles;0.9;68.9;18;0.056;135;0;0
+I13;14;4;CON_EXT;Extrasístoles;0.73;65.9;9;0.032;130;0;0
+I14;0;6;CON_EXT;Extrasístoles;0.81;64.1;13;0.055;126;0;0
+I14;1;16;CON_EXT;Bloqueo AV;0.756;66.2;33;0.055;131;0;0
+I14;2;12;CON_EXT;Bloqueo AV;0.82;65.1;24;0.059;128;0;0
+I14;3;12;CON_EXT;Extrasístoles;0.9;65.5;24;0.054;128;1;0
+I14;4;3;CON_EXT;Extrasístoles;0.67;58.9;6;0.044;116;0;0
+I14;5;3;CON_EXT;Extrasístoles;0.67;60.2;6;0.036;118;0;0
+I14;6;0;SIN_EXT;Bradicardia;0.508;59.5;0;0.023;117;0;0
+I14;7;0;SIN_EXT;Bradicardia;0.515;59.1;0;0.028;116;0;0
+I14;8;0;SIN_EXT;Bradicardia;0.546;57.2;0;0.033;113;0;0
+I14;9;0;SIN_EXT;Normal;0.95;60.4;0;0.024;118;0;0
+I14;10;0;SIN_EXT;Normal;0.95;66.4;0;0.026;131;0;0
+I14;11;6;CON_EXT;Extrasístoles;0.79;65.8;12;0.048;130;0;0
+I14;12;5;CON_EXT;Extrasístoles;0.77;65.5;11;0.043;129;0;0
+I14;13;0;SIN_EXT;Normal;0.95;61.1;0;0.04;120;0;0
+I14;14;1;ambigua;Extrasístoles;0.59;58.0;2;0.039;114;0;0
+I15;0;0;SIN_EXT;Normal;0.95;85.7;0;0.03;168;0;0
+I15;1;0;SIN_EXT;Normal;0.95;82.1;0;0.017;161;0;0
+I15;2;0;SIN_EXT;Normal;0.95;87.1;0;0.02;172;0;0
+I15;3;0;SIN_EXT;Taquicardia;0.521;102.1;0;0.016;201;0;0
+I15;4;0;SIN_EXT;Normal;0.95;99.0;0;0.016;195;0;0
+I15;5;0;SIN_EXT;Normal;0.95;87.9;0;0.032;173;0;0
+I15;6;0;SIN_EXT;Normal;0.95;86.0;0;0.025;169;0;0
+I15;7;1;ambigua;Normal;0.95;85.5;0;0.027;168;1;0
+I15;8;0;SIN_EXT;Extrasístoles;0.59;88.5;2;0.023;173;0;1
+I15;9;0;SIN_EXT;Normal;0.95;85.4;0;0.026;168;0;0
+I15;10;1;ambigua;Normal;0.95;81.2;1;0.031;160;0;0
+I15;11;1;ambigua;Normal;0.95;82.0;1;0.017;161;0;0
+I15;12;0;SIN_EXT;Normal;0.95;82.4;0;0.018;162;0;0
+I15;13;0;SIN_EXT;Taquicardia;0.501;100.1;0;0.014;197;0;0
+I15;14;0;SIN_EXT;Normal;0.95;82.3;0;0.041;162;0;0
+I16;0;0;SIN_EXT;Bradicardia;0.725;46.5;0;0.045;91;0;0
+I16;1;0;SIN_EXT;Bradicardia;0.682;49.1;0;0.047;96;0;0
+I16;2;1;ambigua;Bradicardia;0.683;49.0;1;0.033;96;6;1
+I16;3;0;SIN_EXT;Bradicardia;0.65;51.0;0;0.031;100;0;1
+I16;4;0;SIN_EXT;Extrasístoles;0.59;53.4;2;0.042;104;0;1
+I16;5;0;SIN_EXT;Extrasístoles;0.59;53.0;2;0.033;103;0;1
+I16;6;0;SIN_EXT;Extrasístoles;0.63;53.1;4;0.034;102;0;2
+I16;7;1;ambigua;Bradicardia;0.651;50.9;0;0.036;100;4;0
+I16;8;0;SIN_EXT;Bradicardia;0.647;51.2;0;0.04;101;0;0
+I16;9;0;SIN_EXT;Bradicardia;0.668;49.9;0;0.033;99;0;0
+I16;10;0;SIN_EXT;Bradicardia;0.67;49.8;0;0.037;98;0;0
+I16;11;0;SIN_EXT;Bradicardia;0.661;50.4;0;0.026;99;0;0
+I16;12;0;SIN_EXT;Bradicardia;0.66;50.4;0;0.043;99;0;0
+I16;13;0;SIN_EXT;Extrasístoles;0.59;51.5;2;0.037;102;0;0
+I16;14;0;SIN_EXT;Bradicardia;0.686;48.8;0;0.038;96;0;0
+I17;0;0;SIN_EXT;Bradicardia;0.632;52.1;0;0.044;102;1;0
+I17;1;0;SIN_EXT;Bradicardia;0.647;51.2;0;0.045;100;0;0
+I17;2;0;SIN_EXT;Bradicardia;0.653;50.8;0;0.042;100;0;0
+I17;3;0;SIN_EXT;Bradicardia;0.648;51.1;0;0.042;100;0;0
+I17;4;7;CON_EXT;Bradicardia;0.721;46.8;0;0.144;92;23;0
+I17;5;3;CON_EXT;Bradicardia;0.515;59.1;1;0.035;116;13;0
+I17;6;0;SIN_EXT;Bradicardia;0.529;58.2;0;0.033;114;0;0
+I17;7;3;CON_EXT;Bradicardia;0.53;58.2;1;0.068;114;14;0
+I17;8;0;SIN_EXT;Bradicardia;0.59;54.6;0;0.027;107;0;0
+I17;9;1;ambigua;Bradicardia;0.662;50.3;0;0.033;99;6;0
+I17;10;6;CON_EXT;Bradicardia;0.749;45.1;1;0.093;88;29;0
+I17;11;0;SIN_EXT;Bradicardia;0.603;53.8;0;0.024;106;0;0
+I17;12;0;SIN_EXT;Bradicardia;0.648;51.1;0;0.044;100;1;0
+I17;13;1;ambigua;Bradicardia;0.699;48.1;0;0.046;94;6;0
+I17;14;6;CON_EXT;Bradicardia;0.732;46.1;0;0.04;91;28;0
+I18;0;37;CON_EXT;Fibrilación Auricular;0.615;94.8;21;0.124;186;0;0
+I18;1;26;CON_EXT;Extrasístoles;0.87;101.2;16;0.078;199;0;0
+I18;2;28;CON_EXT;Fibrilación Auricular;0.65;99.3;15;0.162;194;0;1
+I18;3;35;CON_EXT;Extrasístoles;0.9;108.1;19;0.085;212;0;0
+I18;4;29;CON_EXT;Extrasístoles;0.81;102.0;13;0.113;201;0;0
+I18;5;24;CON_EXT;Extrasístoles;0.69;105.7;7;0.085;208;0;0
+I18;6;10;CON_EXT;Extrasístoles;0.59;120.0;2;0.046;236;0;0
+I18;7;3;CON_EXT;Extrasístoles;0.59;124.8;2;0.027;245;0;0
+I18;8;0;SIN_EXT;Taquicardia;0.779;127.9;0;0.011;252;0;0
+I18;9;16;CON_EXT;Extrasístoles;0.71;115.9;8;0.085;227;1;0
+I18;10;11;CON_EXT;Extrasístoles;0.63;114.6;4;0.056;222;2;0
+I18;11;30;CON_EXT;Fibrilación Auricular;0.752;88.2;13;0.194;173;4;0
+I18;12;41;CON_EXT;Fibrilación Auricular;0.829;83.2;16;0.217;164;0;0
+I18;13;38;CON_EXT;Fibrilación Auricular;0.822;76.6;26;0.193;151;0;0
+I18;14;38;CON_EXT;Fibrilación Auricular;0.85;78.6;23;0.209;154;1;0
+I19;0;51;CON_EXT;Fibrilación Auricular;0.935;55.1;30;0.225;108;32;0
+I19;1;54;CON_EXT;Fibrilación Auricular;0.895;55.7;37;0.188;109;27;0
+I19;2;61;CON_EXT;Fibrilación Auricular;0.873;50.5;32;0.196;99;31;0
+I19;3;65;CON_EXT;Fibrilación Auricular;0.723;43.5;24;0.172;86;44;0
+I19;4;66;CON_EXT;Fibrilación Auricular;0.822;43.6;26;0.194;86;43;0
+I19;5;66;CON_EXT;Fibrilación Auricular;0.922;42.6;23;0.222;84;45;0
+I19;6;65;CON_EXT;Fibrilación Auricular;0.95;45.5;28;0.265;89;40;0
+I19;7;62;CON_EXT;Fibrilación Auricular;0.95;49.9;36;0.23;98;35;0
+I19;8;64;CON_EXT;Fibrilación Auricular;0.95;45.9;28;0.254;89;40;0
+I19;9;49;CON_EXT;Fibrilación Auricular;0.95;64.0;37;0.236;126;21;0
+I19;10;47;CON_EXT;Fibrilación Auricular;0.95;61.1;40;0.218;120;21;0
+I19;11;51;CON_EXT;Fibrilación Auricular;0.95;52.1;41;0.218;102;32;0
+I19;12;52;CON_EXT;Fibrilación Auricular;0.936;47.6;40;0.179;94;40;0
+I19;13;47;CON_EXT;Fibrilación Auricular;0.909;62.9;37;0.209;124;19;0
+I19;14;50;CON_EXT;Fibrilación Auricular;0.849;53.1;37;0.15;104;35;0
+I20;0;38;CON_EXT;Extrasístoles;0.83;72.2;14;0.129;143;0;0
+I20;1;11;CON_EXT;Extrasístoles;0.77;67.8;11;0.049;133;0;0
+I20;2;13;CON_EXT;Extrasístoles;0.81;74.3;13;0.077;147;0;0
+I20;3;11;CON_EXT;Extrasístoles;0.79;73.2;12;0.041;144;0;0
+I20;4;14;CON_EXT;Extrasístoles;0.83;80.1;14;0.082;157;0;0
+I20;5;4;CON_EXT;Extrasístoles;0.63;111.4;4;0.018;219;0;0
+I20;6;15;CON_EXT;Extrasístoles;0.79;83.5;12;0.047;164;1;0
+I20;7;23;CON_EXT;Extrasístoles;0.9;83.1;21;0.062;163;2;0
+I20;8;22;CON_EXT;Extrasístoles;0.83;88.4;14;0.073;173;4;0
+I20;9;18;CON_EXT;Extrasístoles;0.83;95.1;14;0.031;188;3;0
+I20;10;29;CON_EXT;Extrasístoles;0.9;94.4;19;0.038;185;9;0
+I20;11;21;CON_EXT;Extrasístoles;0.87;95.6;16;0.019;188;8;0
+I20;12;21;CON_EXT;Extrasístoles;0.73;87.6;9;0.041;172;12;0
+I20;13;29;CON_EXT;Extrasístoles;0.89;92.6;17;0.032;182;10;0
+I20;14;21;CON_EXT;Extrasístoles;0.9;102.1;18;0.049;201;0;0
+I21;0;7;CON_EXT;Extrasístoles;0.69;72.0;7;0.032;142;0;0
+I21;1;14;CON_EXT;Extrasístoles;0.79;70.4;12;0.053;138;0;0
+I21;2;7;CON_EXT;Extrasístoles;0.71;69.3;8;0.044;136;0;0
+I21;3;2;CON_EXT;Extrasístoles;0.59;69.4;2;0.024;137;0;0
+I21;4;9;CON_EXT;Extrasístoles;0.73;73.2;9;0.091;144;0;0
+I21;5;6;CON_EXT;Extrasístoles;0.75;68.4;10;0.042;135;0;0
+I21;6;4;CON_EXT;Extrasístoles;0.63;67.5;4;0.03;133;0;0
+I21;7;7;CON_EXT;Extrasístoles;0.69;72.2;7;0.025;141;0;0
+I21;8;4;CON_EXT;Extrasístoles;0.63;67.5;4;0.036;133;0;0
+I21;9;3;CON_EXT;Extrasístoles;0.63;86.2;4;0.069;170;0;0
+I21;10;18;CON_EXT;Extrasístoles;0.87;77.0;16;0.053;152;0;0
+I21;11;6;CON_EXT;Extrasístoles;0.67;72.3;6;0.021;142;1;0
+I21;12;15;CON_EXT;Extrasístoles;0.79;80.1;12;0.077;157;0;0
+I21;13;2;CON_EXT;Extrasístoles;0.59;72.7;2;0.021;143;0;0
+I21;14;8;CON_EXT;Extrasístoles;0.75;74.1;10;0.051;146;0;0
+I22;0;12;CON_EXT;Extrasístoles;0.73;92.5;9;0.061;182;3;0
+I22;1;9;CON_EXT;Extrasístoles;0.65;86.6;5;0.087;171;2;0
+I22;2;12;CON_EXT;Extrasístoles;0.67;89.2;6;0.056;176;5;0
+I22;3;12;CON_EXT;Extrasístoles;0.61;86.4;3;0.084;170;4;0
+I22;4;12;CON_EXT;Extrasístoles;0.63;101.7;4;0.057;200;5;0
+I22;5;13;CON_EXT;Extrasístoles;0.69;108.2;7;0.044;212;5;0
+I22;6;25;CON_EXT;Extrasístoles;0.89;122.0;17;0.048;239;2;0
+I22;7;32;CON_EXT;Extrasístoles;0.9;112.7;24;0.052;221;4;0
+I22;8;34;CON_EXT;Extrasístoles;0.85;91.8;15;0.077;180;13;0
+I22;9;18;CON_EXT;Extrasístoles;0.69;91.4;7;0.044;179;7;0
+I22;10;22;CON_EXT;Extrasístoles;0.77;91.9;11;0.042;181;9;0
+I22;11;20;CON_EXT;Extrasístoles;0.73;99.2;9;0.026;195;9;0
+I22;12;21;CON_EXT;Extrasístoles;0.73;111.8;9;0.058;220;4;0
+I22;13;39;CON_EXT;Extrasístoles;0.9;121.2;32;0.055;239;0;0
+I22;14;28;CON_EXT;Extrasístoles;0.9;119.9;22;0.056;236;1;0
+I23;0;0;SIN_EXT;Normal;0.95;64.5;0;0.029;127;0;0
+I23;1;3;CON_EXT;Extrasístoles;0.61;67.8;3;0.034;132;1;1
+I23;2;1;ambigua;Normal;0.95;66.9;1;0.025;132;0;0
+I23;3;0;SIN_EXT;Normal;0.95;78.5;0;0.027;155;0;0
+I23;4;3;CON_EXT;Extrasístoles;0.61;77.6;3;0.025;153;0;0
+I23;5;1;ambigua;Normal;0.95;79.9;1;0.028;157;0;0
+I23;6;3;CON_EXT;Extrasístoles;0.63;79.6;4;0.044;157;0;0
+I23;7;1;ambigua;Normal;0.95;78.6;1;0.027;155;0;0
+I23;8;0;SIN_EXT;Normal;0.95;74.1;0;0.029;146;0;0
+I23;9;0;SIN_EXT;Normal;0.95;75.9;0;0.026;149;0;0
+I23;10;0;SIN_EXT;Normal;0.95;74.8;0;0.022;148;0;0
+I23;11;0;SIN_EXT;Normal;0.95;75.2;0;0.025;148;0;0
+I23;12;1;ambigua;Normal;0.95;75.5;1;0.032;149;0;0
+I23;13;0;SIN_EXT;Normal;0.95;70.2;0;0.031;138;0;0
+I23;14;0;SIN_EXT;Normal;0.95;63.7;0;0.03;125;1;0
+I24;0;0;SIN_EXT;Taquicardia;0.513;101.3;0;0.021;199;0;0
+I24;1;0;SIN_EXT;Taquicardia;0.503;100.3;0;0.022;197;0;0
+I24;2;0;SIN_EXT;Normal;0.95;85.8;0;0.04;169;0;0
+I24;3;1;ambigua;Normal;0.95;96.0;1;0.023;189;0;0
+I24;4;0;SIN_EXT;Normal;0.95;91.8;0;0.027;181;0;0
+I24;5;0;SIN_EXT;Normal;0.95;83.2;0;0.027;163;0;0
+I24;6;1;ambigua;Normal;0.95;79.0;1;0.031;155;0;0
+I24;7;0;SIN_EXT;Normal;0.95;79.2;0;0.029;156;0;0
+I24;8;0;SIN_EXT;Normal;0.95;85.9;1;0.025;169;0;0
+I24;9;0;SIN_EXT;Normal;0.95;77.2;0;0.043;152;0;0
+I24;10;2;CON_EXT;Extrasístoles;0.59;76.5;2;0.026;151;0;0
+I24;11;0;SIN_EXT;Normal;0.95;76.5;0;0.022;150;0;0
+I24;12;2;CON_EXT;Extrasístoles;0.59;75.3;2;0.026;148;0;0
+I24;13;0;SIN_EXT;Normal;0.95;88.5;0;0.028;174;0;0
+I24;14;0;SIN_EXT;Normal;0.95;88.5;0;0.036;174;0;0
+I25;0;0;SIN_EXT;Normal;0.95;61.1;0;0.038;120;0;0
+I25;1;0;SIN_EXT;Bradicardia;0.584;55.0;0;0.027;108;0;0
+I25;2;0;SIN_EXT;Bradicardia;0.558;56.5;0;0.027;111;0;0
+I25;3;5;CON_EXT;Bradicardia;0.548;57.1;0;0.078;112;0;0
+I25;4;0;SIN_EXT;Bradicardia;0.577;55.4;0;0.023;109;0;0
+I25;5;0;SIN_EXT;Bradicardia;0.596;54.2;0;0.026;107;0;0
+I25;6;1;ambigua;Bradicardia;0.579;55.3;1;0.019;109;0;0
+I25;7;0;SIN_EXT;Normal;0.95;63.0;0;0.048;123;0;0
+I25;8;0;SIN_EXT;Normal;0.95;79.4;0;0.014;157;0;0
+I25;9;0;SIN_EXT;Extrasístoles;0.59;62.7;2;0.04;122;0;1
+I25;10;0;SIN_EXT;Bradicardia;0.613;53.2;0;0.049;105;0;0
+I25;11;0;SIN_EXT;Bradicardia;0.653;50.8;0;0.048;100;0;0
+I25;12;0;SIN_EXT;Bradicardia;0.634;52.0;0;0.027;103;0;0
+I25;13;0;SIN_EXT;Bradicardia;0.632;52.1;0;0.023;103;0;0
+I25;14;1;ambigua;Bradicardia;0.678;49.3;1;0.037;97;0;0
+I26;0;0;SIN_EXT;Bradicardia;0.78;43.2;0;0.036;85;0;0
+I26;1;0;SIN_EXT;Bradicardia;0.622;52.7;0;0.032;104;0;0
+I26;2;0;SIN_EXT;Normal;0.95;60.3;0;0.026;119;0;0
+I26;3;5;CON_EXT;Extrasístoles;0.59;60.5;2;0.047;119;0;0
+I26;4;0;SIN_EXT;Normal;0.95;60.2;0;0.033;118;0;0
+I26;5;0;SIN_EXT;Normal;0.95;62.5;0;0.021;123;0;0
+I26;6;0;SIN_EXT;Bradicardia;0.694;48.3;0;0.041;95;0;0
+I26;7;0;SIN_EXT;Bradicardia;0.629;52.2;0;0.036;103;0;0
+I26;8;0;SIN_EXT;Bradicardia;0.741;45.6;0;0.035;89;0;0
+I26;9;0;SIN_EXT;Bradicardia;0.755;44.7;0;0.031;88;0;0
+I26;10;0;SIN_EXT;Bradicardia;0.756;44.6;0;0.03;88;0;0
+I26;11;0;SIN_EXT;Bradicardia;0.741;45.5;0;0.031;90;0;0
+I26;12;0;SIN_EXT;Bradicardia;0.767;44.0;0;0.028;86;0;0
+I26;13;0;SIN_EXT;Bradicardia;0.76;44.4;0;0.033;87;0;0
+I26;14;6;CON_EXT;Extrasístoles;0.61;45.3;3;0.092;90;1;0
+I27;0;58;CON_EXT;Fibrilación Auricular;0.902;86.3;56;0.19;170;7;0
+I27;1;58;CON_EXT;Fibrilación Auricular;0.95;55.3;26;0.254;109;71;0
+I27;2;32;CON_EXT;Bradicardia;0.639;51.7;1;0.19;101;67;0
+I27;3;17;CON_EXT;Extrasístoles;0.69;73.2;7;0.296;143;23;0
+I27;4;58;CON_EXT;Extrasístoles;0.9;87.3;56;0.077;171;1;0
+I27;5;59;CON_EXT;Extrasístoles;0.9;87.1;58;0.056;172;0;0
+I27;6;54;CON_EXT;Extrasístoles;0.9;87.6;55;0.044;172;0;0
+I27;7;53;CON_EXT;Extrasístoles;0.9;88.8;52;0.06;175;0;0
+I27;8;53;CON_EXT;Extrasístoles;0.9;87.2;53;0.018;171;0;0
+I27;9;48;CON_EXT;Extrasístoles;0.9;90.9;48;0.077;180;1;0
+I27;10;38;CON_EXT;Extrasístoles;0.9;82.9;37;0.086;163;1;1
+I27;11;40;CON_EXT;Fibrilación Auricular;0.949;77.1;35;0.25;151;13;0
+I27;12;53;CON_EXT;Fibrilación Auricular;0.873;79.5;50;0.178;156;8;0
+I27;13;48;CON_EXT;Fibrilación Auricular;0.822;81.4;44;0.171;159;9;0
+I27;14;51;CON_EXT;Fibrilación Auricular;0.851;77.9;45;0.179;153;14;0
+I28;0;0;SIN_EXT;Bradicardia;0.517;59.0;0;0.072;116;0;0
+I28;1;0;SIN_EXT;Extrasístoles;0.61;58.3;3;0.097;115;0;0
+I28;2;1;ambigua;Extrasístoles;0.63;59.5;4;0.083;117;0;0
+I28;3;0;SIN_EXT;Extrasístoles;0.59;53.0;2;0.104;104;0;0
+I28;4;0;SIN_EXT;Bradicardia;0.61;53.4;0;0.084;105;0;0
+I28;5;0;SIN_EXT;Extrasístoles;0.61;53.1;3;0.088;105;0;0
+I28;6;0;SIN_EXT;Extrasístoles;0.59;54.2;2;0.094;107;0;0
+I28;7;0;SIN_EXT;Bradicardia;0.57;55.8;0;0.088;110;0;0
+I28;8;0;SIN_EXT;Normal;0.932;61.2;0;0.062;120;0;0
+I28;9;0;SIN_EXT;Bradicardia;0.503;59.8;0;0.077;117;0;0
+I28;10;0;SIN_EXT;Bradicardia;0.528;58.3;0;0.071;114;0;0
+I28;11;0;SIN_EXT;Bradicardia;0.514;59.2;0;0.056;116;0;0
+I28;12;3;CON_EXT;Fibrilación Auricular;0.564;61.1;9;0.123;118;4;2
+I28;13;0;SIN_EXT;Bradicardia;0.551;56.9;1;0.087;112;0;0
+I28;14;0;SIN_EXT;Bradicardia;0.591;54.6;1;0.089;107;0;0
+I29;0;30;CON_EXT;Fibrilación Auricular;0.906;56.2;22;0.241;111;17;0
+I29;1;39;CON_EXT;Fibrilación Auricular;0.95;60.3;40;0.279;118;6;0
+I29;2;26;CON_EXT;Fibrilación Auricular;0.764;60.0;18;0.197;118;13;0
+I29;3;7;CON_EXT;Fibrilación Auricular;0.661;89.7;24;0.161;164;17;12
+I29;4;108;CON_EXT;Fibrilación Auricular;0.95;72.4;38;0.345;142;79;0
+I29;5;72;CON_EXT;Fibrilación Auricular;0.95;76.6;39;0.267;151;63;0
+I29;6;116;CON_EXT;Fibrilación Auricular;0.95;71.5;27;0.292;141;83;0
+I29;7;62;CON_EXT;Fibrilación Auricular;0.95;83.0;42;0.304;162;26;1
+I29;8;60;CON_EXT;Fibrilación Auricular;0.95;79.5;40;0.254;155;27;1
+I29;9;65;CON_EXT;Fibrilación Auricular;0.944;55.5;24;0.242;107;65;1
+I29;10;64;CON_EXT;Fibrilación Auricular;0.884;63.9;30;0.223;126;43;0
+I29;11;26;CON_EXT;Extrasístoles;0.9;76.1;19;0.12;148;12;0
+I29;12;45;CON_EXT;Fibrilación Auricular;0.95;54.9;32;0.376;107;39;0
+I29;13;31;CON_EXT;Fibrilación Auricular;0.652;64.8;17;0.155;127;35;0
+I29;14;32;CON_EXT;Fibrilación Auricular;0.665;77.5;17;0.169;151;23;1
+I30;0;36;CON_EXT;Fibrilación Auricular;0.908;49.5;25;0.223;95;27;1
+I30;1;25;CON_EXT;Fibrilación Auricular;0.834;52.2;15;0.23;101;21;1
+I30;2;19;CON_EXT;Fibrilación Auricular;0.619;74.3;18;0.144;146;6;0
+I30;3;121;CON_EXT;Fibrilación Auricular;0.938;95.0;15;0.287;187;17;0
+I30;4;67;CON_EXT;Fibrilación Auricular;0.845;63.4;19;0.234;125;68;0
+I30;5;48;CON_EXT;Fibrilación Auricular;0.901;73.4;33;0.23;144;24;0
+I30;6;58;CON_EXT;Fibrilación Auricular;0.95;72.8;34;0.273;142;34;0
+I30;7;54;CON_EXT;Fibrilación Auricular;0.95;62.5;38;0.456;123;23;0
+I30;8;58;CON_EXT;Fibrilación Auricular;0.95;56.9;28;0.264;110;56;1
+I30;9;22;CON_EXT;Extrasístoles;0.77;71.9;11;0.246;140;26;0
+I30;10;37;CON_EXT;Fibrilación Auricular;0.706;68.6;16;0.188;134;28;0
+I30;11;56;CON_EXT;Fibrilación Auricular;0.95;74.3;34;0.368;146;23;0
+I30;12;54;CON_EXT;Fibrilación Auricular;0.95;56.9;36;0.33;111;47;0
+I30;13;52;CON_EXT;Fibrilación Auricular;0.95;49.8;27;0.329;98;52;0
+I30;14;49;CON_EXT;Fibrilación Auricular;0.95;60.4;25;0.273;118;47;0
+I31;0;80;CON_EXT;Fibrilación Auricular;0.95;80.9;41;0.389;158;79;0
+I31;1;78;CON_EXT;Fibrilación Auricular;0.95;86.7;36;0.324;171;82;0
+I31;2;88;CON_EXT;Fibrilación Auricular;0.95;77.3;41;0.283;150;95;1
+I31;3;87;CON_EXT;Fibrilación Auricular;0.8;60.5;22;0.199;118;89;1
+I31;4;85;CON_EXT;Fibrilación Auricular;0.699;61.0;20;0.165;120;83;0
+I31;5;81;CON_EXT;Fibrilación Auricular;0.864;65.7;30;0.226;129;72;0
+I31;6;105;CON_EXT;Fibrilación Auricular;0.902;66.2;30;0.228;129;78;1
+I31;7;136;CON_EXT;Fibrilación Auricular;0.95;89.6;43;0.377;177;42;0
+I31;8;131;CON_EXT;Fibrilación Auricular;0.95;71.1;38;0.348;138;80;0
+I31;9;87;CON_EXT;Fibrilación Auricular;0.924;69.6;30;0.252;136;71;0
+I31;10;75;CON_EXT;Fibrilación Auricular;0.933;69.6;27;0.252;137;62;0
+I31;11;91;CON_EXT;Fibrilación Auricular;0.87;66.5;31;0.207;131;72;0
+I31;12;76;CON_EXT;Fibrilación Auricular;0.95;71.5;48;0.322;141;45;0
+I31;13;87;CON_EXT;Fibrilación Auricular;0.95;73.0;42;0.343;143;50;0
+I31;14;78;CON_EXT;Fibrilación Auricular;0.95;73.0;43;0.3;143;37;0
+I32;0;5;CON_EXT;Extrasístoles;0.59;47.9;2;0.097;94;5;0
+I32;1;0;SIN_EXT;Bradicardia;0.684;49.0;0;0.055;96;0;0
+I32;2;8;CON_EXT;Bradicardia;0.746;45.2;0;0.124;87;19;0
+I32;3;0;SIN_EXT;Bradicardia;0.649;51.0;0;0.052;100;0;0
+I32;4;22;CON_EXT;Extrasístoles;0.63;48.8;4;0.062;96;19;0
+I32;5;1;ambigua;Extrasístoles;0.59;49.6;2;0.056;97;0;0
+I32;6;0;SIN_EXT;Bradicardia;0.557;56.6;0;0.029;111;0;0
+I32;7;0;SIN_EXT;Normal;0.95;61.5;0;0.012;121;0;0
+I32;8;19;CON_EXT;Extrasístoles;0.9;64.1;28;0.111;126;0;1
+I32;9;0;SIN_EXT;Bradicardia;0.574;55.6;0;0.044;110;0;0
+I32;10;1;ambigua;Extrasístoles;0.59;54.5;2;0.046;108;0;0
+I32;11;0;SIN_EXT;Bradicardia;0.61;53.4;0;0.057;105;0;0
+I32;12;0;SIN_EXT;Bradicardia;0.592;54.5;0;0.046;107;0;0
+I32;13;0;SIN_EXT;Bradicardia;0.706;47.6;0;0.07;94;0;0
+I32;14;1;ambigua;Extrasístoles;0.63;49.8;4;0.075;98;0;0
+I33;0;40;CON_EXT;Fibrilación Auricular;0.748;59.8;39;0.12;118;0;0
+I33;1;43;CON_EXT;Extrasístoles;0.9;61.1;43;0.093;120;0;0
+I33;2;31;CON_EXT;Fibrilación Auricular;0.693;64.1;29;0.139;125;0;0
+I33;3;41;CON_EXT;Extrasístoles;0.9;61.9;42;0.097;121;0;0
+I33;4;43;CON_EXT;Extrasístoles;0.9;63.4;43;0.114;124;0;0
+I33;5;41;CON_EXT;Fibrilación Auricular;0.746;64.9;40;0.123;128;1;0
+I33;6;36;CON_EXT;Extrasístoles;0.9;54.3;36;0.116;107;0;0
+I33;7;40;CON_EXT;Fibrilación Auricular;0.867;55.1;39;0.17;108;0;0
+I33;8;34;CON_EXT;Fibrilación Auricular;0.754;53.6;32;0.139;105;0;0
+I33;9;41;CON_EXT;Bloqueo AV;0.71;55.3;42;0.125;109;0;0
+I33;10;40;CON_EXT;Fibrilación Auricular;0.811;59.2;32;0.17;116;2;0
+I33;11;37;CON_EXT;Extrasístoles;0.9;68.7;40;0.094;135;0;0
+I33;12;42;CON_EXT;Extrasístoles;0.9;65.8;41;0.09;129;0;0
+I33;13;41;CON_EXT;Bloqueo AV;0.702;64.1;40;0.111;126;0;0
+I33;14;42;CON_EXT;Extrasístoles;0.9;66.2;39;0.12;130;0;0
+I34;0;5;CON_EXT;Extrasístoles;0.65;58.8;5;0.037;116;0;0
+I34;1;8;CON_EXT;Extrasístoles;0.61;61.1;3;0.037;120;1;0
+I34;2;39;CON_EXT;Extrasístoles;0.9;73.5;28;0.082;145;11;0
+I34;3;19;CON_EXT;Extrasístoles;0.87;61.1;16;0.119;121;4;0
+I34;4;25;CON_EXT;Extrasístoles;0.9;63.7;25;0.067;125;0;0
+I34;5;44;CON_EXT;Extrasístoles;0.9;65.7;43;0.101;129;0;0
+I34;6;52;CON_EXT;Extrasístoles;0.9;64.2;50;0.081;126;0;0
+I34;7;46;CON_EXT;Extrasístoles;0.9;63.6;45;0.111;125;0;0
+I34;8;45;CON_EXT;Extrasístoles;0.9;65.2;43;0.075;128;0;0
+I34;9;43;CON_EXT;Extrasístoles;0.9;66.6;43;0.099;131;0;0
+I34;10;43;CON_EXT;Extrasístoles;0.9;65.4;42;0.102;128;0;0
+I34;11;43;CON_EXT;Extrasístoles;0.9;64.0;44;0.064;126;0;0
+I34;12;45;CON_EXT;Extrasístoles;0.9;65.4;44;0.091;129;0;0
+I34;13;43;CON_EXT;Extrasístoles;0.9;66.3;42;0.112;129;1;0
+I34;14;36;CON_EXT;Extrasístoles;0.9;70.6;34;0.105;138;2;0
+I35;0;52;CON_EXT;Fibrilación Auricular;0.683;101.4;30;0.14;199;0;0
+I35;1;14;CON_EXT;Extrasístoles;0.59;121.9;2;0.042;240;0;0
+I35;2;26;CON_EXT;Extrasístoles;0.65;129.7;5;0.043;255;0;0
+I35;3;25;CON_EXT;Extrasístoles;0.63;125.9;4;0.044;248;0;0
+I35;4;27;CON_EXT;Extrasístoles;0.67;127.6;6;0.048;251;0;0
+I35;5;26;CON_EXT;Taquicardia;0.896;139.6;1;0.041;275;0;0
+I35;6;14;CON_EXT;Extrasístoles;0.59;131.2;2;0.041;258;0;0
+I35;7;39;CON_EXT;Extrasístoles;0.79;112.8;12;0.112;222;0;0
+I35;8;64;CON_EXT;Fibrilación Auricular;0.844;95.7;34;0.185;188;0;0
+I35;9;64;CON_EXT;Fibrilación Auricular;0.778;95.6;32;0.171;187;0;0
+I35;10;20;CON_EXT;Taquicardia;0.829;132.9;1;0.04;262;0;0
+I35;11;21;CON_EXT;Extrasístoles;0.59;140.7;2;0.029;277;0;0
+I35;12;22;CON_EXT;Extrasístoles;0.59;129.8;2;0.072;255;0;0
+I35;13;19;CON_EXT;Extrasístoles;0.65;128.1;5;0.06;251;0;0
+I35;14;24;CON_EXT;Extrasístoles;0.77;125.0;11;0.058;245;0;0
+I36;0;7;CON_EXT;Taquicardia;0.95;160.3;0;0.024;316;0;0
+I36;1;45;CON_EXT;Extrasístoles;0.63;152.3;4;0.089;300;1;0
+I36;2;8;CON_EXT;Taquicardia;0.95;166.5;0;0.023;328;0;0
+I36;3;3;CON_EXT;Taquicardia;0.95;170.2;0;0.013;335;0;0
+I36;4;43;CON_EXT;Extrasístoles;0.67;142.5;6;0.086;280;1;0
+I36;5;40;CON_EXT;Extrasístoles;0.69;129.0;7;0.077;254;0;0
+I36;6;31;CON_EXT;Extrasístoles;0.75;129.0;10;0.057;253;0;0
+I36;7;27;CON_EXT;Extrasístoles;0.61;132.7;3;0.055;261;0;0
+I36;8;32;CON_EXT;Extrasístoles;0.61;131.0;3;0.053;257;0;0
+I36;9;19;CON_EXT;Extrasístoles;0.67;125.9;6;0.059;248;0;0
+I36;10;32;CON_EXT;Extrasístoles;0.71;110.9;8;0.09;218;0;0
+I36;11;40;CON_EXT;Extrasístoles;0.73;106.6;9;0.093;209;0;0
+I36;12;36;CON_EXT;Fibrilación Auricular;0.587;100.7;19;0.121;197;0;0
+I36;13;47;CON_EXT;Fibrilación Auricular;0.632;98.6;20;0.14;194;0;0
+I36;14;40;CON_EXT;Fibrilación Auricular;0.604;98.4;12;0.142;194;0;0
+I37;0;31;CON_EXT;Extrasístoles;0.9;80.0;28;0.056;157;0;0
+I37;1;31;CON_EXT;Extrasístoles;0.9;80.2;30;0.045;157;0;0
+I37;2;16;CON_EXT;Extrasístoles;0.85;81.1;15;0.024;159;0;0
+I37;3;32;CON_EXT;Extrasístoles;0.9;81.6;31;0.056;161;0;0
+I37;4;30;CON_EXT;Extrasístoles;0.9;81.4;25;0.055;159;0;0
+I37;5;33;CON_EXT;Extrasístoles;0.9;85.9;31;0.056;168;0;0
+I37;6;26;CON_EXT;Extrasístoles;0.9;80.6;24;0.064;158;0;0
+I37;7;37;CON_EXT;Extrasístoles;0.9;79.4;33;0.08;156;0;0
+I37;8;43;CON_EXT;Fibrilación Auricular;0.712;78.9;37;0.125;156;0;0
+I37;9;36;CON_EXT;Extrasístoles;0.9;80.1;34;0.066;158;0;0
+I37;10;26;CON_EXT;Extrasístoles;0.9;81.1;23;0.059;159;0;0
+I37;11;32;CON_EXT;Extrasístoles;0.9;84.0;26;0.075;165;0;0
+I37;12;25;CON_EXT;Extrasístoles;0.9;84.5;24;0.037;166;0;0
+I37;13;19;CON_EXT;Extrasístoles;0.87;86.4;16;0.04;170;0;0
+I37;14;35;CON_EXT;Extrasístoles;0.9;85.7;28;0.101;168;0;0
+I38;0;51;CON_EXT;Fibrilación Auricular;0.692;94.7;28;0.139;186;0;0
+I38;1;30;CON_EXT;Extrasístoles;0.9;91.2;22;0.063;179;1;0
+I38;2;39;CON_EXT;Extrasístoles;0.9;91.0;36;0.061;179;0;0
+I38;3;24;CON_EXT;Extrasístoles;0.9;91.0;21;0.067;179;0;0
+I38;4;38;CON_EXT;Extrasístoles;0.9;89.7;34;0.056;176;0;0
+I38;5;30;CON_EXT;Extrasístoles;0.9;88.3;25;0.08;174;1;0
+I38;6;35;CON_EXT;Extrasístoles;0.9;91.7;30;0.051;180;0;0
+I38;7;35;CON_EXT;Extrasístoles;0.9;92.3;21;0.116;181;1;0
+I38;8;32;CON_EXT;Extrasístoles;0.9;88.9;29;0.05;175;0;0
+I38;9;38;CON_EXT;Extrasístoles;0.9;91.5;28;0.073;181;0;0
+I38;10;41;CON_EXT;Extrasístoles;0.9;88.2;36;0.062;173;0;0
+I38;11;40;CON_EXT;Extrasístoles;0.9;88.4;32;0.09;174;0;0
+I38;12;35;CON_EXT;Extrasístoles;0.9;84.4;30;0.046;165;9;1
+I38;13;41;CON_EXT;Extrasístoles;0.9;86.4;34;0.078;169;1;0
+I38;14;36;CON_EXT;Extrasístoles;0.9;86.8;31;0.095;172;0;0
+I39;0;18;CON_EXT;Extrasístoles;0.9;76.8;18;0.059;151;0;0
+I39;1;40;CON_EXT;Extrasístoles;0.9;81.6;34;0.067;160;0;0
+I39;2;31;CON_EXT;Extrasístoles;0.9;75.1;29;0.074;147;0;0
+I39;3;24;CON_EXT;Extrasístoles;0.9;69.3;22;0.042;137;0;0
+I39;4;24;CON_EXT;Extrasístoles;0.9;55.3;23;0.062;109;0;0
+I39;5;17;CON_EXT;Extrasístoles;0.87;52.5;16;0.076;103;0;0
+I39;6;17;CON_EXT;Extrasístoles;0.89;51.6;17;0.042;101;0;0
+I39;7;27;CON_EXT;Extrasístoles;0.9;56.2;27;0.065;110;0;0
+I39;8;23;CON_EXT;Extrasístoles;0.9;53.7;22;0.072;106;0;0
+I39;9;24;CON_EXT;Extrasístoles;0.9;54.8;22;0.112;107;0;0
+I39;10;15;CON_EXT;Extrasístoles;0.83;53.4;14;0.062;104;0;0
+I39;11;15;CON_EXT;Extrasístoles;0.85;52.9;15;0.052;104;0;0
+I39;12;18;CON_EXT;Extrasístoles;0.9;52.0;18;0.04;102;0;0
+I39;13;13;CON_EXT;Extrasístoles;0.81;51.6;13;0.029;101;0;0
+I39;14;7;CON_EXT;Extrasístoles;0.67;50.9;6;0.096;99;0;1
+I40;0;0;SIN_EXT;Extrasístoles;0.59;79.2;2;0.011;155;0;1
+I40;1;1;ambigua;Extrasístoles;0.9;88.1;27;0.055;155;4;19
+I40;2;1;ambigua;Extrasístoles;0.59;76.0;2;0.067;147;4;2
+I40;3;0;SIN_EXT;Normal;0.95;79.3;0;0.025;156;0;0
+I40;4;0;SIN_EXT;Extrasístoles;0.63;80.9;4;0.028;157;0;2
+I40;5;0;SIN_EXT;Extrasístoles;0.69;81.7;7;0.024;157;13;4
+I40;6;0;SIN_EXT;Extrasístoles;0.81;81.8;13;0.036;153;12;7
+I40;7;3;CON_EXT;Extrasístoles;0.9;88.3;18;0.082;163;17;11
+I40;8;12;CON_EXT;Extrasístoles;0.71;93.1;8;0.105;178;23;5
+I40;9;57;CON_EXT;Bloqueo AV;0.95;68.7;1;0.049;135;60;0
+I40;10;22;CON_EXT;Extrasístoles;0.69;84.4;7;0.11;165;26;0
+I40;11;1;ambigua;Fibrilación Auricular;0.628;88.4;15;0.148;167;20;6
+I40;12;1;ambigua;Extrasístoles;0.73;89.5;9;0.056;173;13;3
+I40;13;0;SIN_EXT;Extrasístoles;0.9;97.8;26;0.076;181;8;11
+I40;14;0;SIN_EXT;Extrasístoles;0.79;93.9;12;0.028;178;2;7
+I41;0;0;SIN_EXT;Fibrilación Auricular;0.556;50.8;6;0.12;99;0;0
+I41;1;0;SIN_EXT;Fibrilación Auricular;0.681;51.2;16;0.14;101;0;0
+I41;2;2;CON_EXT;Fibrilación Auricular;0.595;58.2;5;0.134;113;1;1
+I41;3;0;SIN_EXT;Extrasístoles;0.61;55.0;3;0.097;108;0;0
+I41;4;0;SIN_EXT;Extrasístoles;0.69;51.6;7;0.136;101;0;0
+I41;5;1;ambigua;Extrasístoles;0.77;52.7;11;0.098;104;0;0
+I41;6;1;ambigua;Fibrilación Auricular;0.592;52.6;6;0.129;104;0;0
+I41;7;0;SIN_EXT;Extrasístoles;0.69;53.1;7;0.14;104;0;0
+I41;8;1;ambigua;Extrasístoles;0.73;53.1;9;0.134;104;0;0
+I41;9;0;SIN_EXT;Fibrilación Auricular;0.621;53.3;9;0.132;105;0;0
+I41;10;1;ambigua;Fibrilación Auricular;0.588;58.3;11;0.126;113;0;2
+I41;11;0;SIN_EXT;Bradicardia;0.536;57.8;0;0.064;114;0;0
+I41;12;0;SIN_EXT;Bradicardia;0.58;55.2;0;0.07;109;0;0
+I41;13;0;SIN_EXT;Extrasístoles;0.65;57.2;5;0.11;111;0;2
+I41;14;0;SIN_EXT;Bradicardia;0.549;57.1;0;0.049;112;0;0
+I42;0;83;CON_EXT;Bradicardia;0.806;41.6;0;0.024;81;82;0
+I42;1;80;CON_EXT;Bradicardia;0.835;39.9;0;0.02;78;79;0
+I42;2;81;CON_EXT;Extrasístoles;0.67;40.6;6;0.026;79;78;0
+I42;3;103;CON_EXT;Extrasístoles;0.65;56.4;5;0.132;109;88;0
+I42;4;184;CON_EXT;Extrasístoles;0.75;99.1;10;0.228;194;80;0
+I42;5;83;CON_EXT;Fibrilación Auricular;0.797;49.3;16;0.201;96;113;0
+I42;6;99;CON_EXT;Extrasístoles;0.85;55.2;15;0.076;109;104;0
+I42;7;107;CON_EXT;Extrasístoles;0.73;58.4;9;0.101;114;105;0
+I42;8;105;CON_EXT;Extrasístoles;0.61;54.1;3;0.042;107;107;0
+I42;9;101;CON_EXT;Extrasístoles;0.77;54.4;11;0.098;107;102;0
+I42;10;105;CON_EXT;Extrasístoles;0.61;53.4;3;0.068;105;104;0
+I42;11;109;CON_EXT;Extrasístoles;0.59;54.9;2;0.017;108;106;0
+I42;12;111;CON_EXT;Bradicardia;0.578;55.3;0;0.015;109;109;0
+I42;13;99;CON_EXT;Extrasístoles;0.65;50.8;5;0.071;99;98;1
+I42;14;104;CON_EXT;Extrasístoles;0.71;56.2;8;0.097;111;94;0
+I43;0;76;CON_EXT;Bradicardia;0.869;37.8;1;0.1;73;74;0
+I43;1;78;CON_EXT;Extrasístoles;0.73;39.2;9;0.06;77;72;0
+I43;2;79;CON_EXT;Extrasístoles;0.63;39.0;4;0.044;77;76;0
+I43;3;76;CON_EXT;Bradicardia;0.873;37.6;1;0.051;74;73;0
+I43;4;80;CON_EXT;Extrasístoles;0.65;41.6;5;0.06;82;74;0
+I43;5;79;CON_EXT;Extrasístoles;0.73;39.1;9;0.092;77;73;0
+I43;6;76;CON_EXT;Extrasístoles;0.59;36.7;2;0.038;73;73;0
+I43;7;72;CON_EXT;Extrasístoles;0.59;36.1;2;0.034;71;69;0
+I43;8;71;CON_EXT;Bradicardia;0.914;35.1;0;0.045;69;69;0
+I43;9;70;CON_EXT;Bradicardia;0.913;35.2;0;0.031;70;69;0
+I43;10;74;CON_EXT;Extrasístoles;0.61;36.6;3;0.041;72;70;0
+I43;11;73;CON_EXT;Extrasístoles;0.67;36.7;6;0.029;72;69;0
+I43;12;71;CON_EXT;Bradicardia;0.908;35.5;0;0.025;70;70;0
+I43;13;72;CON_EXT;Extrasístoles;0.59;36.3;2;0.027;72;70;0
+I43;14;73;CON_EXT;Extrasístoles;0.63;36.6;4;0.023;72;70;0
+I44;0;54;CON_EXT;Extrasístoles;0.9;83.8;52;0.076;164;1;0
+I44;1;53;CON_EXT;Extrasístoles;0.9;83.8;49;0.083;165;0;0
+I44;2;48;CON_EXT;Fibrilación Auricular;0.737;82.9;41;0.133;163;3;0
+I44;3;47;CON_EXT;Extrasístoles;0.9;86.8;35;0.112;171;0;0
+I44;4;34;CON_EXT;Extrasístoles;0.9;97.2;23;0.068;192;0;0
+I44;5;38;CON_EXT;Fibrilación Auricular;0.676;84.9;28;0.141;167;6;0
+I44;6;51;CON_EXT;Fibrilación Auricular;0.938;72.3;42;0.213;143;21;0
+I44;7;50;CON_EXT;Fibrilación Auricular;0.95;74.3;43;0.234;146;14;0
+I44;8;50;CON_EXT;Fibrilación Auricular;0.844;76.5;45;0.166;151;7;0
+I44;9;50;CON_EXT;Extrasístoles;0.9;78.7;49;0.081;154;3;1
+I44;10;44;CON_EXT;Fibrilación Auricular;0.796;75.3;39;0.165;148;9;0
+I44;11;51;CON_EXT;Fibrilación Auricular;0.87;76.4;49;0.175;150;7;0
+I44;12;43;CON_EXT;Fibrilación Auricular;0.833;75.0;39;0.18;148;8;0
+I44;13;43;CON_EXT;Fibrilación Auricular;0.767;75.9;39;0.153;149;7;0
+I44;14;35;CON_EXT;Fibrilación Auricular;0.925;70.4;22;0.257;138;20;0
+I45;0;43;CON_EXT;Extrasístoles;0.9;66.5;42;0.068;131;0;0
+I45;1;35;CON_EXT;Extrasístoles;0.9;64.8;33;0.058;127;0;0
+I45;2;36;CON_EXT;Extrasístoles;0.9;64.8;36;0.057;128;0;0
+I45;3;35;CON_EXT;Extrasístoles;0.9;66.7;32;0.065;131;0;0
+I45;4;31;CON_EXT;Extrasístoles;0.9;65.7;28;0.065;129;0;0
+I45;5;40;CON_EXT;Extrasístoles;0.9;67.6;40;0.056;133;0;0
+I45;6;29;CON_EXT;Extrasístoles;0.9;63.7;28;0.068;125;0;0
+I45;7;34;CON_EXT;Extrasístoles;0.9;64.9;33;0.08;128;0;0
+I45;8;28;CON_EXT;Extrasístoles;0.9;64.2;28;0.045;127;0;0
+I45;9;26;CON_EXT;Extrasístoles;0.9;62.0;26;0.071;122;0;0
+I45;10;17;CON_EXT;Extrasístoles;0.89;60.6;17;0.026;119;0;0
+I45;11;32;CON_EXT;Extrasístoles;0.9;62.7;32;0.036;124;0;0
+I45;12;22;CON_EXT;Extrasístoles;0.9;61.3;21;0.063;120;0;0
+I45;13;40;CON_EXT;Extrasístoles;0.9;64.3;39;0.066;126;0;0
+I45;14;43;CON_EXT;Extrasístoles;0.9;65.0;43;0.073;128;0;0
+I46;0;25;CON_EXT;Extrasístoles;0.9;72.9;25;0.05;144;0;0
+I46;1;27;CON_EXT;Extrasístoles;0.9;72.2;26;0.09;142;0;0
+I46;2;24;CON_EXT;Extrasístoles;0.9;77.7;19;0.066;152;0;0
+I46;3;23;CON_EXT;Extrasístoles;0.9;74.2;19;0.077;146;0;0
+I46;4;26;CON_EXT;Extrasístoles;0.9;72.6;23;0.082;143;0;0
+I46;5;26;CON_EXT;Extrasístoles;0.81;85.4;13;0.084;169;0;0
+I46;6;20;CON_EXT;Extrasístoles;0.81;86.9;13;0.045;171;0;0
+I46;7;30;CON_EXT;Extrasístoles;0.87;90.2;16;0.095;177;0;1
+I46;8;30;CON_EXT;Extrasístoles;0.9;94.6;20;0.094;186;0;0
+I46;9;27;CON_EXT;Extrasístoles;0.89;101.5;17;0.074;200;0;0
+I46;10;38;CON_EXT;Extrasístoles;0.85;100.7;15;0.106;198;0;0
+I46;11;28;CON_EXT;Extrasístoles;0.85;102.5;15;0.079;201;0;0
+I46;12;35;CON_EXT;Extrasístoles;0.9;95.8;22;0.091;188;0;0
+I46;13;34;CON_EXT;Extrasístoles;0.77;104.0;11;0.096;205;0;0
+I46;14;30;CON_EXT;Extrasístoles;0.9;98.2;23;0.067;193;0;0
+I47;0;6;CON_EXT;Fibrilación Auricular;0.566;63.8;8;0.127;126;2;0
+I47;1;9;CON_EXT;Extrasístoles;0.75;61.2;10;0.07;120;5;0
+I47;2;6;CON_EXT;Extrasístoles;0.61;61.0;3;0.153;120;2;0
+I47;3;4;CON_EXT;Extrasístoles;0.65;59.6;5;0.097;118;2;0
+I47;4;3;CON_EXT;Extrasístoles;0.71;59.6;8;0.122;117;0;0
+I47;5;10;CON_EXT;Fibrilación Auricular;0.777;63.9;21;0.173;125;1;0
+I47;6;10;CON_EXT;Fibrilación Auricular;0.787;60.4;10;0.198;119;6;0
+I47;7;8;CON_EXT;Fibrilación Auricular;0.663;63.7;17;0.138;126;2;0
+I47;8;5;CON_EXT;Extrasístoles;0.73;63.7;9;0.104;125;2;0
+I47;9;3;CON_EXT;Extrasístoles;0.79;71.2;12;0.103;140;0;0
+I47;10;1;ambigua;Extrasístoles;0.9;66.4;21;0.119;130;2;0
+I47;11;4;CON_EXT;Fibrilación Auricular;0.624;66.2;11;0.138;130;1;0
+I47;12;7;CON_EXT;Fibrilación Auricular;0.689;67.8;16;0.141;134;2;0
+I47;13;8;CON_EXT;Fibrilación Auricular;0.739;65.7;24;0.153;128;4;0
+I47;14;10;CON_EXT;Fibrilación Auricular;0.718;64.4;24;0.141;127;5;0
+I48;0;16;CON_EXT;Fibrilación Auricular;0.575;79.8;14;0.124;157;1;0
+I48;1;22;CON_EXT;Fibrilación Auricular;0.628;77.9;22;0.123;152;8;1
+I48;2;24;CON_EXT;Fibrilación Auricular;0.685;73.0;26;0.147;144;5;0
+I48;3;21;CON_EXT;Fibrilación Auricular;0.604;78.7;20;0.122;155;3;0
+I48;4;18;CON_EXT;Fibrilación Auricular;0.712;82.0;18;0.176;161;4;0
+I48;5;20;CON_EXT;Fibrilación Auricular;0.779;73.3;19;0.192;144;11;0
+I48;6;25;CON_EXT;Fibrilación Auricular;0.724;75.3;30;0.147;149;8;0
+I48;7;20;CON_EXT;Fibrilación Auricular;0.71;75.4;20;0.155;148;10;0
+I48;8;20;CON_EXT;Extrasístoles;0.9;78.4;19;0.11;153;4;0
+I48;9;20;CON_EXT;Fibrilación Auricular;0.606;79.7;7;0.143;157;5;0
+I48;10;15;CON_EXT;Extrasístoles;0.9;77.6;22;0.103;153;1;0
+I48;11;6;CON_EXT;Extrasístoles;0.81;73.8;13;0.097;144;2;0
+I48;12;7;CON_EXT;Extrasístoles;0.73;74.3;9;0.104;146;0;0
+I48;13;2;CON_EXT;Extrasístoles;0.61;74.0;3;0.083;146;3;0
+I48;14;1;ambigua;Extrasístoles;0.65;74.6;5;0.084;147;0;0
+I49;0;0;SIN_EXT;Normal;0.876;72.0;1;0.099;142;0;0
+I49;1;0;SIN_EXT;Extrasístoles;0.59;71.7;2;0.114;141;0;0
+I49;2;0;SIN_EXT;Extrasístoles;0.63;69.3;4;0.157;136;0;0
+I49;3;1;ambigua;Fibrilación Auricular;0.562;70.0;6;0.124;138;0;0
+I49;4;1;ambigua;Extrasístoles;0.69;73.4;7;0.142;144;0;0
+I49;5;3;CON_EXT;Extrasístoles;0.63;77.7;4;0.117;152;1;1
+I49;6;4;CON_EXT;Extrasístoles;0.67;72.5;6;0.136;142;0;0
+I49;7;1;ambigua;Extrasístoles;0.59;71.9;2;0.166;142;0;0
+I49;8;3;CON_EXT;Fibrilación Auricular;0.653;69.7;8;0.163;137;0;0
+I49;9;1;ambigua;Extrasístoles;0.59;69.9;2;0.137;136;1;1
+I49;10;3;CON_EXT;Extrasístoles;0.63;71.5;4;0.081;140;0;0
+I49;11;3;CON_EXT;Extrasístoles;0.65;69.0;5;0.074;136;0;0
+I49;12;2;CON_EXT;Extrasístoles;0.63;70.7;4;0.087;139;0;0
+I49;13;3;CON_EXT;Extrasístoles;0.65;74.6;5;0.101;147;0;0
+I49;14;2;CON_EXT;Extrasístoles;0.65;70.8;5;0.108;139;0;0
+I50;0;0;SIN_EXT;Normal;0.839;84.2;1;0.125;166;0;0
+I50;1;0;SIN_EXT;Extrasístoles;0.59;105.9;2;0.082;208;0;0
+I50;2;0;SIN_EXT;Taquicardia;0.565;106.5;0;0.082;210;0;0
+I50;3;1;ambigua;Taquicardia;0.598;109.8;0;0.087;216;0;0
+I50;4;0;SIN_EXT;Taquicardia;0.581;108.1;0;0.069;213;0;0
+I50;5;1;ambigua;Taquicardia;0.606;110.6;0;0.071;217;1;0
+I50;6;0;SIN_EXT;Taquicardia;0.616;111.6;0;0.101;219;0;0
+I50;7;0;SIN_EXT;Extrasístoles;0.73;100.8;9;0.118;198;0;0
+I50;8;0;SIN_EXT;Extrasístoles;0.69;95.3;7;0.111;188;0;0
+I50;9;0;SIN_EXT;Extrasístoles;0.59;96.4;2;0.097;189;0;0
+I50;10;0;SIN_EXT;Extrasístoles;0.61;95.9;3;0.106;189;0;0
+I50;11;0;SIN_EXT;Extrasístoles;0.61;92.6;3;0.117;183;0;0
+I50;12;1;ambigua;Extrasístoles;0.59;92.8;2;0.099;182;0;0
+I50;13;1;ambigua;Extrasístoles;0.65;92.4;5;0.142;182;0;0
+I50;14;0;SIN_EXT;Extrasístoles;0.63;95.8;4;0.117;188;0;0
+I51;0;81;CON_EXT;Bloqueo AV;0.914;81.9;78;0.293;161;0;0
+I51;1;75;CON_EXT;Bloqueo AV;0.812;77.4;73;0.203;152;0;0
+I51;2;66;CON_EXT;Fibrilación Auricular;0.887;75.4;63;0.128;149;0;0
+I51;3;71;CON_EXT;Fibrilación Auricular;0.95;73.5;67;0.299;144;0;0
+I51;4;65;CON_EXT;Extrasístoles;0.9;82.2;63;0.108;161;1;0
+I51;5;83;CON_EXT;Extrasístoles;0.9;84.7;82;0.0;166;0;0
+I51;6;80;CON_EXT;Fibrilación Auricular;0.95;85.6;69;0.228;169;0;0
+I51;7;11;CON_EXT;Taquicardia;0.903;140.3;0;0.034;276;0;0
+I51;8;1;ambigua;Taquicardia;0.832;133.2;1;0.02;262;0;0
+I51;9;0;SIN_EXT;Normal;0.933;95.6;0;0.058;188;0;0
+I51;10;2;CON_EXT;Extrasístoles;0.59;86.2;2;0.04;170;0;0
+I51;11;0;SIN_EXT;Normal;0.95;83.5;1;0.038;164;0;0
+I51;12;76;CON_EXT;Bloqueo AV;0.83;93.9;74;0.058;185;0;0
+I51;13;102;CON_EXT;Bloqueo AV;0.943;102.3;98;0.0;200;0;0
+I51;14;93;CON_EXT;Extrasístoles;0.9;93.2;91;0.0;184;0;0
+I52;0;0;SIN_EXT;Bradicardia;0.601;53.9;0;0.077;106;0;0
+I52;1;28;CON_EXT;Extrasístoles;0.9;59.0;26;0.093;116;0;0
+I52;2;60;CON_EXT;Fibrilación Auricular;0.95;64.0;58;0.184;125;0;0
+I52;3;0;SIN_EXT;Bradicardia;0.583;55.0;0;0.068;108;0;0
+I52;4;41;CON_EXT;Extrasístoles;0.9;68.8;39;0.072;135;0;0
+I52;5;8;CON_EXT;Extrasístoles;0.67;62.1;6;0.05;123;0;0
+I52;6;0;SIN_EXT;Normal;0.95;60.7;0;0.036;119;0;0
+I52;7;0;SIN_EXT;Bradicardia;0.522;58.7;0;0.045;115;0;0
+I52;8;0;SIN_EXT;Bradicardia;0.537;57.8;0;0.042;114;0;0
+I52;9;0;SIN_EXT;Bradicardia;0.533;58.0;0;0.044;114;0;0
+I52;10;0;SIN_EXT;Bradicardia;0.588;54.7;0;0.044;107;0;0
+I52;11;0;SIN_EXT;Bradicardia;0.554;56.8;0;0.07;112;0;0
+I52;12;0;SIN_EXT;Bradicardia;0.578;55.3;0;0.064;109;0;0
+I52;13;0;SIN_EXT;Bradicardia;0.589;54.6;0;0.057;108;0;0
+I52;14;0;SIN_EXT;Bradicardia;0.591;54.6;0;0.052;107;0;0
+I53;0;81;CON_EXT;Extrasístoles;0.9;81.1;77;0.0;159;0;0
+I53;1;75;CON_EXT;Extrasístoles;0.9;74.8;68;0.027;146;0;0
+I53;2;70;CON_EXT;Extrasístoles;0.9;69.7;63;0.013;136;0;0
+I53;3;71;CON_EXT;Extrasístoles;0.9;71.4;67;0.0;140;0;0
+I53;4;70;CON_EXT;Extrasístoles;0.9;69.6;66;0.0;136;0;0
+I53;5;69;CON_EXT;Extrasístoles;0.9;69.7;65;0.0;137;0;0
+I53;6;70;CON_EXT;Extrasístoles;0.9;70.2;66;0.0;137;0;0
+I53;7;68;CON_EXT;Extrasístoles;0.9;68.3;66;0.0;134;0;0
+I53;8;74;CON_EXT;Extrasístoles;0.9;73.2;71;0.0;144;0;0
+I53;9;69;CON_EXT;Fibrilación Auricular;0.95;72.2;67;0.197;143;0;0
+I53;10;75;CON_EXT;Extrasístoles;0.9;75.0;72;0.0;148;0;0
+I53;11;63;CON_EXT;Extrasístoles;0.9;71.6;61;0.096;140;0;0
+I53;12;82;CON_EXT;Bloqueo AV;0.702;89.6;82;0.057;177;0;0
+I53;13;86;CON_EXT;Bloqueo AV;0.749;85.9;85;0.0;170;0;0
+I53;14;88;CON_EXT;Fibrilación Auricular;0.95;89.8;85;0.143;176;0;1
+I54;0;0;SIN_EXT;Extrasístoles;0.65;74.3;5;0.052;142;0;4
+I54;1;3;CON_EXT;Extrasístoles;0.61;70.0;3;0.011;137;0;0
+I54;2;0;SIN_EXT;Extrasístoles;0.69;75.4;7;0.049;143;1;5
+I54;3;2;CON_EXT;Normal;0.95;71.9;1;0.012;142;1;0
+I54;4;0;SIN_EXT;Extrasístoles;0.83;80.9;14;0.075;144;5;15
+I54;5;2;CON_EXT;Extrasístoles;0.9;88.3;21;0.122;159;1;15
+I54;6;2;CON_EXT;Normal;0.95;72.3;1;0.014;142;1;0
+I54;7;0;SIN_EXT;Extrasístoles;0.61;79.4;3;0.055;152;0;4
+I54;8;0;SIN_EXT;Extrasístoles;0.9;84.2;18;0.072;153;1;13
+I54;9;8;CON_EXT;Extrasístoles;0.73;78.4;9;0.025;151;1;3
+I54;10;0;SIN_EXT;Extrasístoles;0.81;87.9;13;0.091;164;6;9
+I54;11;0;SIN_EXT;Extrasístoles;0.69;87.0;7;0.06;166;2;5
+I54;12;3;CON_EXT;Extrasístoles;0.75;93.3;10;0.019;180;0;4
+I54;13;3;CON_EXT;Extrasístoles;0.75;93.6;10;0.063;178;1;6
+I54;14;0;SIN_EXT;Extrasístoles;0.63;75.3;4;0.037;143;8;6
+I55;0;1;ambigua;Normal;0.95;74.3;0;0.014;147;1;0
+I55;1;1;ambigua;Normal;0.95;76.7;1;0.017;151;0;0
+I55;2;1;ambigua;Normal;0.95;77.3;1;0.014;152;1;1
+I55;3;1;ambigua;Normal;0.95;74.5;1;0.019;147;0;0
+I55;4;2;CON_EXT;Extrasístoles;0.59;74.5;2;0.018;146;1;0
+I55;5;0;SIN_EXT;Normal;0.95;71.5;0;0.019;140;0;0
+I55;6;2;CON_EXT;Extrasístoles;0.59;66.3;2;0.015;130;0;0
+I55;7;0;SIN_EXT;Normal;0.95;66.8;0;0.013;131;0;0
+I55;8;5;CON_EXT;Extrasístoles;0.59;70.2;2;0.03;138;0;0
+I55;9;1;ambigua;Normal;0.95;81.2;1;0.014;160;0;0
+I55;10;0;SIN_EXT;Extrasístoles;0.59;73.5;2;0.023;143;0;1
+I55;11;0;SIN_EXT;Normal;0.95;68.7;0;0.016;136;0;0
+I55;12;1;ambigua;Normal;0.95;67.2;0;0.018;132;1;0
+I55;13;1;ambigua;Extrasístoles;0.59;70.1;2;0.015;137;1;1
+I55;14;2;CON_EXT;Normal;0.95;69.6;1;0.013;136;1;0
+I56;0;0;SIN_EXT;Normal;0.95;61.9;0;0.047;122;0;0
+I56;1;0;SIN_EXT;Normal;0.925;68.5;0;0.073;134;0;0
+I56;2;1;ambigua;Normal;0.88;62.3;1;0.097;122;0;0
+I56;3;0;SIN_EXT;Normal;0.903;69.6;0;0.088;136;0;0
+I56;4;3;CON_EXT;Extrasístoles;0.61;72.3;3;0.073;142;0;0
+I56;5;0;SIN_EXT;Bradicardia;0.622;52.7;0;0.048;103;0;0
+I56;6;1;ambigua;Bradicardia;0.648;51.1;1;0.02;100;0;0
+I56;7;1;ambigua;Bradicardia;0.646;51.3;0;0.102;100;1;0
+I56;8;2;CON_EXT;Extrasístoles;0.59;52.1;2;0.017;103;0;0
+I56;9;2;CON_EXT;Extrasístoles;0.59;51.8;2;0.014;101;0;0
+I56;10;3;CON_EXT;Extrasístoles;0.61;51.2;3;0.015;101;0;0
+I56;11;2;CON_EXT;Bradicardia;0.626;52.5;1;0.056;104;0;0
+I56;12;6;CON_EXT;Extrasístoles;0.67;52.1;6;0.014;103;0;0
+I56;13;7;CON_EXT;Extrasístoles;0.69;51.2;7;0.025;101;0;0
+I56;14;5;CON_EXT;Extrasístoles;0.65;52.1;5;0.02;102;0;0
+I57;0;5;CON_EXT;Extrasístoles;0.59;97.5;2;0.026;192;0;0
+I57;1;2;CON_EXT;Normal;0.95;99.0;1;0.012;195;2;0
+I57;2;0;SIN_EXT;Normal;0.95;92.0;0;0.014;181;0;0
+I57;3;1;ambigua;Taquicardia;0.734;123.4;0;0.014;243;0;0
+I57;4;0;SIN_EXT;Extrasístoles;0.59;111.5;2;0.011;217;10;2
+I57;5;3;CON_EXT;Normal;0.95;97.3;0;0.021;191;0;0
+I57;6;2;CON_EXT;Normal;0.95;98.8;1;0.029;194;0;0
+I57;7;1;ambigua;Taquicardia;0.525;102.5;0;0.013;202;0;0
+I57;8;3;CON_EXT;Taquicardia;0.525;102.5;1;0.026;202;0;0
+I57;9;1;ambigua;Normal;0.95;98.8;1;0.018;194;0;0
+I57;10;3;CON_EXT;Extrasístoles;0.63;94.7;4;0.029;185;0;1
+I57;11;3;CON_EXT;Extrasístoles;0.61;78.2;3;0.02;152;1;1
+I57;12;0;SIN_EXT;Normal;0.95;83.4;0;0.015;164;0;0
+I57;13;0;SIN_EXT;Normal;0.95;74.1;0;0.015;145;0;0
+I57;14;0;SIN_EXT;Normal;0.95;77.1;0;0.013;152;0;0
+I58;0;3;CON_EXT;Extrasístoles;0.61;74.3;3;0.036;146;1;1
+I58;1;2;CON_EXT;Normal;0.95;73.7;1;0.026;145;0;0
+I58;2;0;SIN_EXT;Normal;0.95;73.3;0;0.016;145;0;0
+I58;3;0;SIN_EXT;Normal;0.95;78.1;0;0.018;154;0;0
+I58;4;1;ambigua;Extrasístoles;0.59;73.5;2;0.021;143;1;2
+I58;5;1;ambigua;Normal;0.95;76.7;0;0.039;150;0;0
+I58;6;0;SIN_EXT;Normal;0.95;79.8;0;0.017;157;0;0
+I58;7;0;SIN_EXT;Normal;0.95;79.2;0;0.016;155;0;0
+I58;8;1;ambigua;Normal;0.95;78.6;0;0.02;155;0;0
+I58;9;1;ambigua;Normal;0.95;80.4;0;0.026;158;0;0
+I58;10;0;SIN_EXT;Normal;0.95;76.5;0;0.018;151;0;0
+I58;11;0;SIN_EXT;Normal;0.95;84.7;1;0.02;166;1;1
+I58;12;0;SIN_EXT;Normal;0.95;83.9;0;0.027;165;0;0
+I58;13;2;CON_EXT;Normal;0.95;74.0;1;0.022;146;1;0
+I58;14;1;ambigua;Normal;0.95;74.9;1;0.019;148;1;0
+I59;0;0;SIN_EXT;Bradicardia;0.617;53.0;0;0.081;104;0;0
+I59;1;0;SIN_EXT;Bradicardia;0.598;54.1;0;0.082;106;0;0
+I59;2;0;SIN_EXT;Bradicardia;0.611;53.4;0;0.079;105;0;0
+I59;3;0;SIN_EXT;Bradicardia;0.576;55.4;0;0.078;109;0;0
+I59;4;0;SIN_EXT;Bradicardia;0.61;53.4;0;0.085;105;0;0
+I59;5;0;SIN_EXT;Bradicardia;0.62;52.8;0;0.076;103;0;0
+I59;6;0;SIN_EXT;Bradicardia;0.505;59.7;0;0.065;117;0;0
+I59;7;0;SIN_EXT;Normal;0.95;83.4;0;0.024;164;0;0
+I59;8;0;SIN_EXT;Normal;0.95;95.2;0;0.017;187;0;0
+I59;9;54;CON_EXT;Fibrilación Auricular;0.667;97.6;35;0.128;191;2;1
+I59;10;27;CON_EXT;Extrasístoles;0.9;88.3;26;0.046;173;0;0
+I59;11;0;SIN_EXT;Normal;0.95;82.2;0;0.025;162;0;0
+I59;12;0;SIN_EXT;Normal;0.95;82.7;0;0.035;163;0;0
+I59;13;0;SIN_EXT;Normal;0.95;86.5;0;0.026;170;0;0
+I59;14;0;SIN_EXT;Normal;0.907;76.1;0;0.083;149;0;0
+I60;0;0;SIN_EXT;Normal;0.866;66.0;0;0.107;129;0;0
+I60;1;0;SIN_EXT;Normal;0.868;66.4;0;0.096;131;0;0
+I60;2;0;SIN_EXT;Normal;0.885;67.5;0;0.091;133;0;0
+I60;3;0;SIN_EXT;Normal;0.905;67.8;0;0.084;134;0;0
+I60;4;0;SIN_EXT;Normal;0.928;77.6;0;0.064;152;0;0
+I60;5;0;SIN_EXT;Normal;0.95;91.3;0;0.024;179;0;0
+I60;6;0;SIN_EXT;Normal;0.948;74.7;1;0.047;147;0;0
+I60;7;0;SIN_EXT;Normal;0.95;87.0;0;0.016;171;0;0
+I60;8;0;SIN_EXT;Normal;0.95;86.8;0;0.029;171;0;0
+I60;9;0;SIN_EXT;Normal;0.95;86.0;0;0.023;170;0;0
+I60;10;0;SIN_EXT;Normal;0.95;91.4;0;0.018;180;0;0
+I60;11;0;SIN_EXT;Normal;0.95;93.9;0;0.022;185;0;0
+I60;12;0;SIN_EXT;Normal;0.95;86.9;0;0.02;171;0;0
+I60;13;0;SIN_EXT;Normal;0.95;95.1;0;0.014;187;0;0
+I60;14;0;SIN_EXT;Normal;0.95;99.2;1;0.031;195;0;0
+I61;0;0;SIN_EXT;Bradicardia;0.69;48.6;0;0.052;96;0;0
+I61;1;0;SIN_EXT;Bradicardia;0.69;48.6;0;0.055;96;0;0
+I61;2;0;SIN_EXT;Bradicardia;0.689;48.7;0;0.06;96;0;0
+I61;3;1;ambigua;Bradicardia;0.688;48.7;1;0.057;96;0;0
+I61;4;0;SIN_EXT;Bradicardia;0.692;48.5;0;0.055;96;0;0
+I61;5;0;SIN_EXT;Bradicardia;0.669;49.9;0;0.051;98;0;0
+I61;6;0;SIN_EXT;Bradicardia;0.701;47.9;0;0.063;94;0;0
+I61;7;0;SIN_EXT;Bradicardia;0.682;49.1;0;0.06;96;0;0
+I61;8;0;SIN_EXT;Bradicardia;0.701;48.0;0;0.064;94;0;0
+I61;9;0;SIN_EXT;Bradicardia;0.711;47.4;0;0.062;93;0;0
+I61;10;0;SIN_EXT;Bradicardia;0.709;47.4;0;0.057;94;0;0
+I61;11;0;SIN_EXT;Bradicardia;0.713;47.2;0;0.079;93;0;0
+I61;12;0;SIN_EXT;Bradicardia;0.675;49.5;0;0.075;97;0;0
+I61;13;0;SIN_EXT;Bradicardia;0.696;48.3;0;0.063;95;0;0
+I61;14;0;SIN_EXT;Bradicardia;0.678;49.3;0;0.068;97;0;0
+I62;0;0;SIN_EXT;Bradicardia;0.594;54.4;0;0.046;107;0;0
+I62;1;1;ambigua;Bradicardia;0.537;57.8;1;0.033;114;0;0
+I62;2;61;CON_EXT;Extrasístoles;0.69;64.6;7;0.05;120;11;6
+I62;3;207;CON_EXT;Extrasístoles;0.9;99.5;18;0.071;196;12;0
+I62;4;176;CON_EXT;Extrasístoles;0.63;88.4;4;0.096;174;11;0
+I62;5;4;CON_EXT;Extrasístoles;0.67;80.0;6;0.072;157;0;0
+I62;6;72;CON_EXT;Extrasístoles;0.65;80.3;5;0.06;158;0;0
+I62;7;1;ambigua;Normal;0.95;66.2;1;0.035;130;0;0
+I62;8;5;CON_EXT;Normal;0.95;67.0;0;0.038;131;0;0
+I62;9;4;CON_EXT;Extrasístoles;0.61;65.1;3;0.029;128;0;0
+I62;10;52;CON_EXT;Extrasístoles;0.75;73.5;10;0.061;144;1;0
+I62;11;182;CON_EXT;Normal;0.95;91.1;0;0.005;180;0;0
+I62;12;36;CON_EXT;Extrasístoles;0.63;77.8;4;0.092;153;1;1
+I62;13;2;CON_EXT;Normal;0.889;78.2;0;0.093;154;0;0
+I62;14;1;ambigua;Normal;0.922;76.6;1;0.062;151;0;0
+I63;0;11;CON_EXT;Extrasístoles;0.65;68.8;5;0.068;136;2;0
+I63;1;4;CON_EXT;Extrasístoles;0.61;69.4;3;0.041;136;0;0
+I63;2;12;CON_EXT;Extrasístoles;0.65;65.1;5;0.059;124;7;5
+I63;3;8;CON_EXT;Extrasístoles;0.69;67.6;7;0.043;132;1;1
+I63;4;6;CON_EXT;Extrasístoles;0.65;65.6;5;0.031;127;2;2
+I63;5;5;CON_EXT;Extrasístoles;0.63;64.5;4;0.036;126;1;1
+I63;6;4;CON_EXT;Extrasístoles;0.61;64.7;3;0.041;127;0;0
+I63;7;11;CON_EXT;Extrasístoles;0.59;65.3;2;0.06;123;7;6
+I63;8;32;CON_EXT;Extrasístoles;0.69;69.2;7;0.07;120;18;16
+I63;9;5;CON_EXT;Extrasístoles;0.59;64.1;2;0.036;126;0;0
+I63;10;5;CON_EXT;Extrasístoles;0.61;64.1;3;0.055;126;1;1
+I63;11;9;CON_EXT;Extrasístoles;0.69;65.3;7;0.031;126;2;2
+I63;12;5;CON_EXT;Extrasístoles;0.65;65.3;5;0.052;125;4;3
+I63;13;5;CON_EXT;Extrasístoles;0.69;69.7;7;0.039;135;1;2
+I63;14;17;CON_EXT;Extrasístoles;0.75;64.4;10;0.069;125;2;2
+I64;0;2;CON_EXT;Extrasístoles;0.61;66.1;3;0.02;130;1;1
+I64;1;0;SIN_EXT;Normal;0.95;63.6;0;0.022;125;0;0
+I64;2;3;CON_EXT;Normal;0.933;66.3;1;0.049;130;1;0
+I64;3;0;SIN_EXT;Normal;0.95;66.4;0;0.023;131;0;0
+I64;4;0;SIN_EXT;Normal;0.95;66.0;0;0.016;130;0;0
+I64;5;1;ambigua;Normal;0.95;63.4;1;0.021;125;0;0
+I64;6;3;CON_EXT;Normal;0.902;60.3;1;0.078;118;2;0
+I64;7;1;ambigua;Normal;0.95;61.3;1;0.02;120;1;1
+I64;8;8;CON_EXT;Extrasístoles;0.59;60.3;2;0.034;118;7;0
+I64;9;1;ambigua;Normal;0.95;60.3;1;0.024;117;1;1
+I64;10;0;SIN_EXT;Bradicardia;0.51;59.4;0;0.024;117;0;0
+I64;11;2;CON_EXT;Bradicardia;0.509;59.5;1;0.068;116;2;1
+I64;12;0;SIN_EXT;Normal;0.95;61.5;0;0.022;121;0;0
+I64;13;0;SIN_EXT;Extrasístoles;0.59;68.8;2;0.022;134;0;1
+I64;14;2;CON_EXT;Extrasístoles;0.63;68.7;4;0.021;134;0;1
+I65;0;35;CON_EXT;Extrasístoles;0.9;88.3;37;0.095;174;1;0
+I65;1;35;CON_EXT;Extrasístoles;0.9;82.6;35;0.076;161;1;1
+I65;2;27;CON_EXT;Extrasístoles;0.9;89.4;26;0.06;176;0;0
+I65;3;42;CON_EXT;Extrasístoles;0.9;109.6;37;0.077;215;0;0
+I65;4;63;CON_EXT;Extrasístoles;0.71;141.9;8;0.071;279;0;0
+I65;5;26;CON_EXT;Extrasístoles;0.9;103.8;20;0.058;204;2;0
+I65;6;22;CON_EXT;Extrasístoles;0.9;86.7;30;0.064;170;0;0
+I65;7;15;CON_EXT;Extrasístoles;0.9;81.8;18;0.058;161;0;0
+I65;8;15;CON_EXT;Extrasístoles;0.9;82.7;18;0.061;162;0;0
+I65;9;22;CON_EXT;Extrasístoles;0.9;80.1;23;0.072;158;0;0
+I65;10;30;CON_EXT;Extrasístoles;0.9;78.8;30;0.068;155;0;0
+I65;11;19;CON_EXT;Extrasístoles;0.9;77.5;20;0.058;152;0;0
+I65;12;24;CON_EXT;Extrasístoles;0.9;76.6;24;0.052;150;0;0
+I65;13;6;CON_EXT;Extrasístoles;0.67;75.8;6;0.022;149;0;0
+I65;14;6;CON_EXT;Extrasístoles;0.71;75.6;8;0.024;149;0;0
+I66;0;30;CON_EXT;Extrasístoles;0.9;80.0;41;0.049;158;0;0
+I66;1;22;CON_EXT;Extrasístoles;0.9;80.4;29;0.096;158;0;0
+I66;2;7;CON_EXT;Extrasístoles;0.77;81.4;11;0.025;159;0;2
+I66;3;5;CON_EXT;Extrasístoles;0.69;77.2;7;0.026;152;0;0
+I66;4;11;CON_EXT;Extrasístoles;0.89;78.8;17;0.035;155;0;0
+I66;5;15;CON_EXT;Extrasístoles;0.87;77.5;16;0.018;153;0;0
+I66;6;7;CON_EXT;Extrasístoles;0.79;78.7;12;0.04;155;0;0
+I66;7;7;CON_EXT;Extrasístoles;0.77;74.9;11;0.034;148;0;0
+I66;8;13;CON_EXT;Extrasístoles;0.83;76.6;14;0.043;150;0;0
+I66;9;11;CON_EXT;Extrasístoles;0.89;76.4;17;0.039;150;0;0
+I66;10;10;CON_EXT;Extrasístoles;0.81;73.8;13;0.046;145;0;0
+I66;11;8;CON_EXT;Extrasístoles;0.87;74.9;16;0.048;147;0;0
+I66;12;9;CON_EXT;Extrasístoles;0.85;75.7;15;0.045;148;0;0
+I66;13;12;CON_EXT;Extrasístoles;0.79;80.4;12;0.041;158;0;0
+I66;14;34;CON_EXT;Extrasístoles;0.9;84.1;54;0.082;166;0;0
+I67;0;39;CON_EXT;Extrasístoles;0.9;96.2;40;0.081;189;0;0
+I67;1;38;CON_EXT;Extrasístoles;0.9;96.7;40;0.096;191;0;0
+I67;2;39;CON_EXT;Extrasístoles;0.9;105.6;37;0.054;207;0;0
+I67;3;41;CON_EXT;Extrasístoles;0.9;98.8;48;0.076;194;0;0
+I67;4;61;CON_EXT;Extrasístoles;0.9;125.6;27;0.112;247;0;0
+I67;5;30;CON_EXT;Extrasístoles;0.9;108.8;27;0.055;214;0;0
+I67;6;30;CON_EXT;Extrasístoles;0.9;104.1;29;0.031;204;1;1
+I67;7;24;CON_EXT;Extrasístoles;0.9;94.1;26;0.065;185;0;0
+I67;8;35;CON_EXT;Extrasístoles;0.9;103.0;34;0.071;202;0;0
+I67;9;38;CON_EXT;Extrasístoles;0.9;94.7;40;0.07;186;0;0
+I67;10;39;CON_EXT;Extrasístoles;0.9;95.6;34;0.05;188;1;0
+I67;11;35;CON_EXT;Extrasístoles;0.9;92.3;36;0.081;182;0;0
+I67;12;25;CON_EXT;Extrasístoles;0.9;89.6;33;0.048;175;0;1
+I67;13;37;CON_EXT;Extrasístoles;0.9;96.0;37;0.067;189;0;0
+I67;14;25;CON_EXT;Extrasístoles;0.9;86.2;26;0.069;169;0;0
+I68;0;8;CON_EXT;Extrasístoles;0.67;82.4;6;0.048;162;8;0
+I68;1;9;CON_EXT;Extrasístoles;0.81;76.0;13;0.115;148;23;0
+I68;2;12;CON_EXT;Fibrilación Auricular;0.609;66.5;10;0.131;130;37;0
+I68;3;12;CON_EXT;Fibrilación Auricular;0.95;68.9;12;0.388;134;39;1
+I68;4;15;CON_EXT;Fibrilación Auricular;0.95;46.3;11;0.335;90;84;0
+I68;5;8;CON_EXT;Extrasístoles;0.65;69.4;5;0.116;136;33;0
+I68;6;13;CON_EXT;Fibrilación Auricular;0.618;75.7;13;0.138;149;27;0
+I68;7;13;CON_EXT;Fibrilación Auricular;0.706;69.5;12;0.178;135;40;1
+I68;8;10;CON_EXT;Extrasístoles;0.71;68.4;8;0.14;134;38;0
+I68;9;13;CON_EXT;Fibrilación Auricular;0.847;65.4;9;0.254;124;52;1
+I68;10;12;CON_EXT;Fibrilación Auricular;0.7;63.4;8;0.188;124;48;0
+I68;11;12;CON_EXT;Extrasístoles;0.77;71.4;11;0.106;139;36;0
+I68;12;11;CON_EXT;Fibrilación Auricular;0.673;77.7;11;0.175;153;27;0
+I68;13;10;CON_EXT;Extrasístoles;0.69;71.8;7;0.234;139;36;0
+I68;14;5;CON_EXT;Extrasístoles;0.65;85.3;5;0.053;167;7;1
+I69;0;14;CON_EXT;Fibrilación Auricular;0.691;58.1;6;0.181;113;29;0
+I69;1;8;CON_EXT;Extrasístoles;0.67;70.4;6;0.068;139;5;0
+I69;2;13;CON_EXT;Fibrilación Auricular;0.661;63.3;9;0.157;124;18;0
+I69;3;8;CON_EXT;Extrasístoles;0.61;66.7;3;0.152;130;12;0
+I69;4;6;CON_EXT;Extrasístoles;0.71;78.1;8;0.079;148;6;6
+I69;5;10;CON_EXT;Fibrilación Auricular;0.731;61.7;7;0.207;121;19;0
+I69;6;18;CON_EXT;Fibrilación Auricular;0.95;41.8;10;0.317;82;59;0
+I69;7;13;CON_EXT;Fibrilación Auricular;0.823;59.5;4;0.253;117;24;0
+I69;8;13;CON_EXT;Fibrilación Auricular;0.904;54.3;8;0.292;107;33;0
+I69;9;10;CON_EXT;Extrasístoles;0.71;66.0;8;0.123;130;10;0
+I69;10;14;CON_EXT;Fibrilación Auricular;0.95;60.3;8;0.363;119;22;0
+I69;11;9;CON_EXT;Extrasístoles;0.63;64.9;4;0.168;127;14;1
+I69;12;11;CON_EXT;Extrasístoles;0.75;65.0;10;0.188;126;15;0
+I69;13;12;CON_EXT;Fibrilación Auricular;0.937;53.1;8;0.303;104;39;0
+I69;14;9;CON_EXT;Extrasístoles;0.69;66.8;7;0.17;131;11;0
+I70;0;20;CON_EXT;Extrasístoles;0.9;55.7;19;0.027;110;1;0
+I70;1;18;CON_EXT;Extrasístoles;0.77;52.5;11;0.026;103;7;0
+I70;2;14;CON_EXT;Extrasístoles;0.77;54.7;11;0.026;107;3;0
+I70;3;0;SIN_EXT;Bradicardia;0.588;54.7;0;0.01;108;0;0
+I70;4;3;CON_EXT;Extrasístoles;0.59;55.0;2;0.014;108;1;0
+I70;5;21;CON_EXT;Bloqueo AV;0.769;56.4;20;0.024;111;0;0
+I70;6;15;CON_EXT;Extrasístoles;0.79;53.9;12;0.022;106;3;0
+I70;7;1;ambigua;Bradicardia;0.604;53.8;0;0.013;106;0;0
+I70;8;0;SIN_EXT;Bradicardia;0.595;54.3;0;0.014;107;0;0
+I70;9;0;SIN_EXT;Bradicardia;0.592;54.5;0;0.012;107;0;0
+I70;10;0;SIN_EXT;Bradicardia;0.578;55.3;0;0.01;109;0;0
+I70;11;0;SIN_EXT;Bradicardia;0.585;54.9;0;0.011;108;0;0
+I70;12;0;SIN_EXT;Bradicardia;0.571;55.7;0;0.01;110;0;0
+I70;13;18;CON_EXT;Extrasístoles;0.85;55.1;15;0.025;108;3;0
+I70;14;16;CON_EXT;Extrasístoles;0.83;56.6;14;0.019;110;3;1
+I71;0;2;CON_EXT;Extrasístoles;0.59;51.3;2;0.012;101;0;0
+I71;1;3;CON_EXT;Extrasístoles;0.61;51.2;3;0.013;100;0;0
+I71;2;1;ambigua;Bradicardia;0.647;51.2;1;0.012;101;0;0
+I71;3;4;CON_EXT;Extrasístoles;0.59;51.9;2;0.067;102;0;0
+I71;4;1;ambigua;Bradicardia;0.663;50.2;1;0.017;99;0;0
+I71;5;0;SIN_EXT;Fibrilación Auricular;0.622;65.1;17;0.134;128;0;0
+I71;6;0;SIN_EXT;Fibrilación Auricular;0.655;74.0;25;0.132;146;0;0
+I71;7;0;SIN_EXT;Bradicardia;0.61;53.4;0;0.066;105;0;0
+I71;8;3;CON_EXT;Extrasístoles;0.61;52.4;3;0.068;104;0;0
+I71;9;6;CON_EXT;Extrasístoles;0.67;53.2;6;0.049;105;0;0
+I71;10;3;CON_EXT;Extrasístoles;0.81;60.5;13;0.117;119;0;0
+I71;11;1;ambigua;Bradicardia;0.596;54.2;0;0.08;106;0;0
+I71;12;8;CON_EXT;Extrasístoles;0.71;54.5;8;0.049;107;0;0
+I71;13;3;CON_EXT;Extrasístoles;0.61;55.7;3;0.055;109;0;0
+I71;14;0;SIN_EXT;Bradicardia;0.561;56.3;0;0.049;111;0;0
+I72;0;24;CON_EXT;Extrasístoles;0.9;76.9;23;0.046;151;0;0
+I72;1;28;CON_EXT;Extrasístoles;0.9;78.9;28;0.012;155;0;0
+I72;2;28;CON_EXT;Extrasístoles;0.9;78.8;26;0.032;155;1;0
+I72;3;26;CON_EXT;Extrasístoles;0.9;76.1;25;0.058;150;0;0
+I72;4;31;CON_EXT;Extrasístoles;0.9;79.6;31;0.024;156;1;0
+I72;5;32;CON_EXT;Extrasístoles;0.9;76.8;30;0.068;150;1;0
+I72;6;29;CON_EXT;Extrasístoles;0.9;76.5;25;0.109;150;2;0
+I72;7;27;CON_EXT;Extrasístoles;0.9;76.4;25;0.116;150;3;0
+I72;8;31;CON_EXT;Extrasístoles;0.9;72.8;27;0.095;143;5;0
+I72;9;25;CON_EXT;Extrasístoles;0.9;80.3;22;0.053;157;6;0
+I72;10;29;CON_EXT;Extrasístoles;0.9;76.2;28;0.024;150;0;0
+I72;11;24;CON_EXT;Extrasístoles;0.9;72.0;24;0.059;141;1;1
+I72;12;27;CON_EXT;Extrasístoles;0.9;70.6;26;0.07;138;0;0
+I72;13;19;CON_EXT;Extrasístoles;0.9;67.4;19;0.071;133;1;0
+I72;14;14;CON_EXT;Extrasístoles;0.87;65.8;16;0.018;130;0;0
+I73;0;12;CON_EXT;Extrasístoles;0.77;69.6;11;0.024;137;0;0
+I73;1;6;CON_EXT;Extrasístoles;0.69;68.0;7;0.013;134;0;0
+I73;2;1;ambigua;Normal;0.95;65.9;1;0.023;130;0;0
+I73;3;8;CON_EXT;Extrasístoles;0.71;66.9;8;0.012;132;0;0
+I73;4;7;CON_EXT;Extrasístoles;0.71;66.9;8;0.019;131;0;0
+I73;5;6;CON_EXT;Extrasístoles;0.67;65.6;6;0.014;129;0;0
+I73;6;11;CON_EXT;Extrasístoles;0.77;66.7;11;0.055;131;0;0
+I73;7;13;CON_EXT;Extrasístoles;0.79;67.5;12;0.018;133;1;0
+I73;8;5;CON_EXT;Extrasístoles;0.65;65.4;5;0.045;129;0;0
+I73;9;8;CON_EXT;Extrasístoles;0.73;66.3;9;0.033;130;0;0
+I73;10;7;CON_EXT;Extrasístoles;0.73;66.0;9;0.017;129;0;0
+I73;11;2;CON_EXT;Extrasístoles;0.59;65.9;2;0.015;129;0;0
+I73;12;11;CON_EXT;Extrasístoles;0.77;66.1;11;0.015;130;0;0
+I73;13;2;CON_EXT;Extrasístoles;0.59;64.2;2;0.017;127;0;0
+I73;14;3;CON_EXT;Extrasístoles;0.61;64.7;3;0.018;127;0;0
+I74;0;6;CON_EXT;Extrasístoles;0.65;83.1;5;0.053;162;0;1
+I74;1;3;CON_EXT;Normal;0.946;85.1;0;0.054;167;0;0
+I74;2;6;CON_EXT;Normal;0.95;86.7;0;0.022;171;1;0
+I74;3;11;CON_EXT;Extrasístoles;0.61;84.6;3;0.04;166;0;0
+I74;4;22;CON_EXT;Extrasístoles;0.69;84.6;7;0.061;166;0;0
+I74;5;22;CON_EXT;Extrasístoles;0.69;85.9;7;0.059;169;1;0
+I74;6;45;CON_EXT;Extrasístoles;0.9;75.9;25;0.116;149;0;0
+I74;7;14;CON_EXT;Extrasístoles;0.61;78.7;3;0.059;154;0;0
+I74;8;15;CON_EXT;Normal;0.937;81.8;1;0.056;161;0;0
+I74;9;22;CON_EXT;Extrasístoles;0.67;76.6;6;0.086;150;0;0
+I74;10;23;CON_EXT;Extrasístoles;0.73;76.7;9;0.11;150;0;0
+I74;11;22;CON_EXT;Extrasístoles;0.63;75.8;4;0.087;149;1;0
+I74;12;19;CON_EXT;Extrasístoles;0.67;75.5;6;0.075;148;2;0
+I74;13;23;CON_EXT;Extrasístoles;0.75;74.6;10;0.066;147;0;0
+I74;14;21;CON_EXT;Extrasístoles;0.67;75.0;6;0.063;148;0;0
+I75;0;44;CON_EXT;Extrasístoles;0.9;72.7;42;0.049;142;0;0
+I75;1;43;CON_EXT;Extrasístoles;0.9;71.9;42;0.058;141;0;0
+I75;2;38;CON_EXT;Extrasístoles;0.9;71.6;36;0.053;140;0;0
+I75;3;37;CON_EXT;Extrasístoles;0.9;70.9;33;0.104;139;1;0
+I75;4;40;CON_EXT;Extrasístoles;0.9;72.8;38;0.035;143;0;0
+I75;5;40;CON_EXT;Extrasístoles;0.9;71.4;36;0.068;141;0;0
+I75;6;36;CON_EXT;Extrasístoles;0.9;71.0;30;0.072;140;0;0
+I75;7;39;CON_EXT;Extrasístoles;0.9;73.1;28;0.089;144;0;0
+I75;8;43;CON_EXT;Fibrilación Auricular;0.737;66.1;31;0.128;130;0;0
+I75;9;47;CON_EXT;Fibrilación Auricular;0.827;65.6;33;0.153;128;0;0
+I75;10;46;CON_EXT;Fibrilación Auricular;0.787;66.7;33;0.144;131;0;0
+I75;11;46;CON_EXT;Extrasístoles;0.9;68.1;38;0.095;134;0;0
+I75;12;46;CON_EXT;Extrasístoles;0.9;70.5;44;0.085;139;0;0
+I75;13;32;CON_EXT;Extrasístoles;0.9;69.4;20;0.076;136;0;1
+I75;14;36;CON_EXT;Extrasístoles;0.9;69.8;28;0.079;137;0;0

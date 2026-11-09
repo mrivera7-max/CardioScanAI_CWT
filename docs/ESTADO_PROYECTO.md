@@ -17,7 +17,8 @@ queda **congelada como referencia** y no recibe estas correcciones.
 | `13cb724` | v2.3: **Reporte PDF** con diagnóstico, métricas, referencia y las 7 gráficas con guía de lectura |
 | `950d60d` | v2.4: **separación de pacientes** (Operador vs Paciente/ID, botón Nuevo paciente, borrado automático al cambiar de señal, reportes con ID y sin escritura en disco) |
 | `eccee6c` | **Validación BUT PDB** (`validar_but_pdb.py`, resultados en `docs/validacion_but_pdb/`): detección Se 94.4 % / +P 99.1 %; diagnóstico 27.3 % estricta / 38.6 % aceptable; FA Se 10/10 pero VPP 32 % |
-| _(este)_ | v2.5: **reglas por patrón de ritmo** + search-back. BUT PDB: exactitud 27.3 → 70.5 %, VPP FA 32 → 73 %, detección Se 96.2 % |
+| `af95d42` | v2.5: **reglas por patrón de ritmo** + search-back. BUT PDB: exactitud 27.3 → 70.5 %, VPP FA 32 → 73 %, detección Se 96.2 % |
+| _(este)_ | **Prueba independiente** (`validar_independiente.py`): AFDB FA Se 98.7 % / Esp 97.4 %; INCART extrasístoles Se 69.6 % / Esp 83.8 %; latidos Se 94.5 % / +P 99.0 % |
 
 Detalle técnico y resultados: ver `README.md`.
 
@@ -30,8 +31,9 @@ python run.py          # → http://localhost:5050
 ## Pendientes
 - [x] Validación BUT PDB (50 registros) — ver `docs/validacion_but_pdb/resumen.md`.
 - [x] Rediseñar reglas FA / Extrasístoles / Bloqueo AV (BUT PDB = desarrollo) — v2.5.
-- [ ] Prueba independiente: AFDB (FA) + INCART (extrasístoles). MIT-BIH NO es independiente (BUT PDB 01–38 sale de mitdb).
-- [ ] Correr `python validar_picos_physionet.py` y registrar Se / +P contra anotaciones de cardiólogos.
+- [x] Prueba independiente AFDB + INCART — `docs/validacion_independiente/LEEME.md`.
+- [x] Detección de latidos validada en INCART (Se 94.5 %, +P 99.0 %).
+- [ ] (opcional) Correr `python validar_picos_physionet.py` y registrar Se / +P contra anotaciones de cardiólogos.
 - [x] Regla de Bloqueo AV reformulada (RR bimodal ≈ 2:1).
-- [ ] Opción 3: features wavelet al clasificador + validación cruzada sobre bases PhysioNet completas.
+- [ ] Opción 3: morfología QRS / ondas P-F con CWT para ectopia frecuente, flutter y BAV 1.er/3.er grado.
 - [ ] Detección de flutter por ondas F (hoy solo diferencial de taquicardia regular 140–160 lpm).
