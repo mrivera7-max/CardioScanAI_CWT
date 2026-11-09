@@ -332,3 +332,25 @@ Evita que el reporte de un paciente salga con el nombre de otro.
 - Flujo recomendado: **🆕 Nuevo paciente → escribir ID → analizar → 📑 Reporte PDF**.
 - Los reportes se llaman `CardioScan_<ID>_<fecha>.pdf/.txt` y se envían desde memoria: **ningún reporte queda
   guardado en disco** en el servidor (antes el TXT se sobrescribía en un archivo temporal compartido).
+
+
+---
+
+## Reglas de ritmo y validación — v2.5
+
+Resultados completos y comparación v1/v2 en `docs/validacion_but_pdb/LEEME.md`.
+
+| BUT PDB (50 reg., desarrollo) | v1 | **v2.5** |
+|---|---|---|
+| Detección Se / +P | 94.4 % / 99.1 % | **96.2 % / 99.0 %** |
+| Exactitud diagnóstica estricta | 27.3 % | **70.5 %** |
+| VPP de fibrilación auricular | 32 % | **73 %** |
+
+- **Clasificador por patrón de ritmo** (`rhythm_pattern`): FA = irregularidad de fondo sin patrón; extrasístoles =
+  ritmo de base regular con latidos prematuros; bloqueo AV 2.º grado = RR en dos grupos compactos con razón ≈ 2.
+  El ritmo tiene prioridad sobre la frecuencia.
+- **Detector:** search-back de Pan-Tompkins.
+- **Demo de bloqueo AV** realista (ondas P no conducidas, conducción 2:1 intermitente); demos de 30 s.
+- "Isquemia" queda como hallazgo secundario inespecífico (requiere análisis del segmento ST).
+
+⚠ Umbrales ajustados en BUT PDB → cifras optimistas. Falta la prueba independiente (AFDB + INCART).

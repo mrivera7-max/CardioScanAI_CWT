@@ -268,10 +268,31 @@ def detect_r_peaks(ecg: np.ndarray, fs: float) -> np.ndarray:
     for i in range(0, len(integ), seg):
         chunk = integ[max(0, i - seg): i + 2 * seg]
         thr[i:i + seg] = 0.3 * np.percentile(chunk, 98)
-    cand, _ = signal.find_peaks(integ, distance=refractory)
-    cand = cand[integ[cand] > thr[cand]]
+    allc, _ = signal.find_peaks(integ, distance=refractory)
+    cand = allc[integ[allc] > thr[allc]]
     if len(cand) == 0:
         return cand
+
+    # Search-back (Pan & Tompkins, 1985): si un intervalo supera 1.66 × RR
+    # típico, se busca allí el candidato más alto con umbral reducido a la mitad.
+    # Recupera latidos normales perdidos cuando ectópicos grandes elevan el umbral.
+    if len(cand) >= 4:
+        for _ in range(3):
+            added = []
+            rr_c = np.diff(cand)
+            for k in range(len(rr_c)):
+                lo_k = max(0, k - 4)
+                ref_rr = np.median(rr_c[lo_k:k + 5])
+                if rr_c[k] > 1.66 * ref_rr:
+                    a0, a1 = cand[k] + refractory, cand[k + 1] - refractory
+                    inside = allc[(allc > a0) & (allc < a1)]
+                    if len(inside):
+                        best = inside[np.argmax(integ[inside])]
+                        if integ[best] > 0.5 * thr[best]:
+                            added.append(best)
+            if not added:
+                break
+            cand = np.sort(np.concatenate([cand, added]))
 
     # Polaridad dominante del QRS (derivaciones con R negativa)
     half = int(0.075 * fs)
@@ -356,7 +377,60 @@ def hrv_frequency_domain(peaks: np.ndarray, fs: float, fs_interp: float = 4.0) -
     return out
 
 
-# ─── 4c. EXTRACCIÓN DE CARACTERÍSTICAS ──────────────────────────────────────
+# ─── 4c. PATRÓN DEL RITMO (FA vs extrasístoles vs bloqueo AV) ────────────────
+def rhythm_pattern(rr_ms: np.ndarray) -> dict:
+    """
+    Descriptores del PATRÓN de los intervalos RR (no solo de su variabilidad):
+
+    - reg_frac:   fracción de RR dentro de ±12 % de la mediana local (7 latidos).
+                  Alta en ritmo sinusal con ectópicos aislados; baja en FA.
+    - n_prem:     latidos prematuros (RR < 85 % de la mediana local).
+    - nrmssd_clean: RMSSD/RR medio tras excluir prematuros, pausas compensatorias
+                  y pausas largas → irregularidad "de fondo". Alta en FA
+                  (irregularmente irregular), baja con ectópicos aislados.
+    - bi_ratio / bi_minor / bi_spread: agrupamiento de RR en dos grupos (k-means
+                  1D). Dos grupos compactos con razón ≈ 2 → conducción 2:1
+                  intermitente (bloqueo AV de 2.º grado).
+    """
+    out = {"reg_frac": 1.0, "n_prem": 0, "prem_frac": 0.0, "nrmssd_clean": 0.0,
+           "bi_ratio": 0.0, "bi_minor": 0.0, "bi_spread": 1.0}
+    rr = np.asarray(rr_ms, float)
+    rr = rr[(rr > 250) & (rr < 3000)]
+    n = len(rr)
+    if n < 8:
+        return out
+    pad = np.pad(rr, (3, 3), mode="edge")
+    loc = np.array([np.median(pad[i:i + 7]) for i in range(n)])
+    rel = rr / loc
+    prem = rel < 0.85
+    comp = np.zeros(n, bool)
+    comp[1:] = prem[:-1] & (rel[1:] > 1.08)
+    excl = prem | comp | (rel > 1.5)
+    clean = rr[~excl]
+    out["reg_frac"] = float(np.mean(np.abs(rel - 1) < 0.12))
+    out["n_prem"] = int(prem.sum())
+    out["prem_frac"] = float(prem.mean())
+    if len(clean) > 5:
+        out["nrmssd_clean"] = float(np.sqrt(np.mean(np.diff(clean) ** 2)) / np.mean(clean))
+
+    # Agrupamiento en dos niveles (k-means 1D)
+    srt = np.sort(rr)
+    c1, c2 = np.percentile(srt, 25), np.percentile(srt, 75)
+    lab = None
+    for _ in range(30):
+        lab = np.abs(srt - c1) > np.abs(srt - c2)
+        if lab.all() or (~lab).all():
+            break
+        c1, c2 = srt[~lab].mean(), srt[lab].mean()
+    if lab is not None and 3 <= lab.sum() <= n - 3:
+        lo, hi = srt[~lab], srt[lab]
+        out["bi_ratio"] = float(hi.mean() / lo.mean())
+        out["bi_minor"] = float(min(len(lo), len(hi)) / n)
+        out["bi_spread"] = float(max(np.std(lo) / lo.mean(), np.std(hi) / hi.mean()))
+    return out
+
+
+# ─── 4d. EXTRACCIÓN DE CARACTERÍSTICAS ──────────────────────────────────────
 def extract_features(ecg: np.ndarray, fs: int, f: np.ndarray,
                      Sxx: np.ndarray) -> dict:
     """Extrae features temporales, HRV (tiempo y frecuencia) y espectrales del ECG."""
@@ -384,10 +458,12 @@ def extract_features(ecg: np.ndarray, fs: int, f: np.ndarray,
         features["rmssd"]        = float(np.sqrt(np.mean(np.diff(rr) ** 2)))
         features["pnn50"]        = float(np.sum(np.abs(np.diff(rr)) > 50) / len(rr) * 100)
         features["num_peaks"]    = int(len(peaks))
+        features.update(rhythm_pattern(rr))
     else:
         features.update({k: 0.0 for k in [
             "heart_rate","rr_mean","rr_std","rr_cv","sdnn","rmssd","pnn50"]})
         features["num_peaks"] = int(len(peaks))
+        features.update(rhythm_pattern(np.array([])))
 
     # ── HRV en frecuencia (tacograma RR, NO el espectro del ECG) ──
     hrv = hrv_frequency_domain(peaks, fs)
@@ -418,92 +494,114 @@ def _kurtosis(x):
 
 
 # ─── 5. CLASIFICACIÓN BASADA EN REGLAS + ML ──────────────────────────────────
+# Umbrales de las reglas de ritmo. Ajustados en BUT PDB (conjunto de DESARROLLO,
+# ver docs/validacion_but_pdb). El desempeño final debe medirse en bases
+# independientes SIN modificar estos valores.
+AF_NRMSSD_MIN = 0.12      # irregularidad de fondo (tras quitar ectópicos)
+AF_REG_MAX = 0.80         # fracción máxima de RR "regulares" compatible con FA
+BAV_RATIO = (1.6, 2.3)    # razón entre los dos grupos de RR (≈ 2 → conducción 2:1)
+BAV_MINOR_MIN = 0.15      # el grupo minoritario debe ser ≥ 15 % de los latidos
+BAV_SPREAD_MAX = 0.10     # cada grupo compacto (CV < 10 %)
+EXT_MIN_PREM = 2          # latidos prematuros mínimos para extrasístoles
+
+
 def classify_ecg(features: dict) -> tuple[str, float, list[str], dict]:
     """
-    Clasificación multi-capa:
-      1. Reglas clínicas basadas en features
-      2. Isolation Forest para detección de anomalía global
-    Retorna (diagnóstico, confianza, notas_clínicas, scores)
+    Clasificación por reglas clínicas en dos niveles:
+
+    1. RITMO (prioridad): bloqueo AV 2:1 → fibrilación auricular → extrasístoles.
+       Se basa en el PATRÓN de los RR (rhythm_pattern), no solo en su variabilidad:
+       la versión anterior (CV > 0.15 y RMSSD > 50) clasificaba como FA cualquier
+       ritmo irregular, incluidos extrasístoles y bloqueos (VPP de FA 32 % en BUT PDB).
+    2. FRECUENCIA: taquicardia / bradicardia / flutter 2:1, cuando el ritmo es regular.
+       Si hay un hallazgo de ritmo, la frecuencia se reporta como hallazgo secundario.
+
+    Retorna (diagnóstico, confianza, notas_clínicas, puntajes)
     """
     hr     = features.get("heart_rate", 75)
     rr_cv  = features.get("rr_cv", 0.0)
-    rmssd  = features.get("rmssd", 30)
-    pnn50  = features.get("pnn50", 10)
     lf_hf  = features.get("lf_hf_ratio", 1.5)
-    sdnn   = features.get("sdnn", 50)
-    df     = features.get("dominant_freq", 1.0)
     peaks  = features.get("num_peaks", 0)
+    reg    = features.get("reg_frac", 1.0)
+    nprem  = features.get("n_prem", 0)
+    nrm    = features.get("nrmssd_clean", 0.0)
+    bi_r   = features.get("bi_ratio", 0.0)
+    bi_m   = features.get("bi_minor", 0.0)
+    bi_s   = features.get("bi_spread", 1.0)
 
     notes = []
-    candidates = {}
+    rhythm = {}     # hallazgos de ritmo (prioritarios)
+    rate = {}       # hallazgos de frecuencia
 
-    # ── Taquicardia ──
+    if peaks < 8:
+        notes.append(f"Solo {peaks} latidos detectados: el análisis de ritmo no es fiable.")
+
+    # ── 1a. Bloqueo AV de 2.º grado (conducción 2:1 intermitente) ──
+    is_bav = (BAV_RATIO[0] <= bi_r <= BAV_RATIO[1] and bi_m >= BAV_MINOR_MIN
+              and bi_s < BAV_SPREAD_MAX)
+    if is_bav:
+        rhythm["Bloqueo AV"] = min(0.95, 0.70 + 0.5 * (BAV_SPREAD_MAX - bi_s) / BAV_SPREAD_MAX)
+        notes.append(f"RR agrupados en dos niveles con razón {bi_r:.2f} ({100 * bi_m:.0f} % en el "
+                     "grupo minoritario): compatible con bloqueo AV de 2.º grado con "
+                     "conducción 2:1 intermitente. Confirmar ondas P no conducidas.")
+
+    # ── 1b. Fibrilación auricular: irregularidad de fondo, sin patrón ──
+    if not is_bav and nrm > AF_NRMSSD_MIN and reg < AF_REG_MAX:
+        rhythm["Fibrilación Auricular"] = min(0.95, 0.55 + (nrm - AF_NRMSSD_MIN) * 2
+                                              + (AF_REG_MAX - reg) * 0.5)
+        notes.append(f"Ritmo irregularmente irregular: irregularidad de fondo {nrm:.3f} "
+                     f"(> {AF_NRMSSD_MIN}) y solo {100 * reg:.0f} % de RR regulares.")
+
+    # ── 1c. Extrasístoles: ritmo de base regular con latidos prematuros ──
+    if not is_bav and "Fibrilación Auricular" not in rhythm and nprem >= EXT_MIN_PREM:
+        rhythm["Extrasístoles"] = min(0.90, 0.55 + 0.02 * nprem)
+        notes.append(f"{nprem} latidos prematuros (RR < 85 % del local) sobre un ritmo de base "
+                     f"regular ({100 * reg:.0f} % de RR regulares): compatible con extrasístoles.")
+
+    # ── 2. Frecuencia ──
     if hr > 100:
-        score = min(1.0, (hr - 100) / 50)
-        candidates["Taquicardia"] = score
+        rate["Taquicardia"] = min(0.95, 0.5 + (hr - 100) / 100)
         notes.append(f"FC elevada: {hr:.0f} lpm (normal 60-100)")
-
-    # ── Bradicardia ──
-    if hr < 60 and hr > 0:
-        score = min(1.0, (60 - hr) / 30)
-        candidates["Bradicardia"] = score
+    elif 0 < hr < 60:
+        rate["Bradicardia"] = min(0.95, 0.5 + (60 - hr) / 60)
         notes.append(f"FC reducida: {hr:.0f} lpm (normal 60-100)")
+        if hr < 40 and not rhythm:
+            notes.append("Bradicardia marcada y regular: descartar bloqueo AV avanzado (2:1 "
+                         "fijo o completo) evaluando las ondas P.")
+    # Flutter: solo como diferencial de taquicardia regular ≈ 150 lpm (2:1)
+    if 140 <= hr <= 160 and rr_cv < 0.05 and not rhythm:
+        rate["Flutter Auricular"] = 0.55
+        notes.append(f"Taquicardia regular a {hr:.0f} lpm: considerar flutter auricular con "
+                     "conducción 2:1 (confirmar ondas F).")
 
-    # ── Fibrilación Auricular (alta variabilidad RR + irregularidad) ──
-    if rr_cv > 0.15 and rmssd > 50:
-        score = min(1.0, rr_cv / 0.3 * 0.7 + rmssd / 100 * 0.3)
-        candidates["Fibrilación Auricular"] = score
-        notes.append(f"Alta variabilidad RR: CV={rr_cv:.3f}, RMSSD={rmssd:.1f} ms")
-
-    # ── Flutter Auricular ──
-    # El flutter típico tiene ondas F a ~300/min con conducción 2:1 → respuesta
-    # ventricular REGULAR ≈ 150 lpm. Sin análisis de ondas F (pendiente), solo
-    # se puede plantear como diagnóstico diferencial de la taquicardia regular.
-    # (La regla anterior usaba la frecuencia dominante del ECG 0.3–8 Hz, banda
-    #  donde siempre cae la energía del QRS → se activaba con cualquier ritmo regular.)
-    if 140 <= hr <= 160 and rr_cv < 0.05:
-        candidates["Flutter Auricular"] = 0.55
-        notes.append(f"Taquicardia regular a {hr:.0f} lpm: considerar flutter "
-                     "auricular con conducción 2:1 (confirmar ondas F)")
-
-    # ── Bloqueo AV (RR muy largo o irregular sin FA) ──
-    if features.get("rr_mean", 0) > 1200 and rr_cv < 0.1:
-        candidates["Bloqueo AV"] = 0.7
-        notes.append(f"Intervalo RR prolongado: {features['rr_mean']:.0f} ms")
-
-    # ── Extrasístoles (picos aislados con RR variable bajo) ──
-    if 0.05 < rr_cv < 0.15 and pnn50 < 5 and peaks > 3:
-        candidates["Extrasístoles"] = 0.6
-        notes.append("Variabilidad RR moderada compatible con latidos ectópicos")
-
-    # ── Isquemia (alteraciones espectrales en baja frecuencia) ──
-    # Solo si el registro es suficientemente largo para estimar LF (≥ 2 min)
+    # ── Isquemia: solo como hallazgo de HRV en registros ≥ 2 min ──
     if (features.get("hrv_lf_valid", False)
             and lf_hf > 4.0 and features.get("lf_ratio", 0) > 0.7):
-        score = min(1.0, lf_hf / 8.0)
-        candidates["Isquemia Miocárdica"] = score
-        notes.append(f"Dominio LF marcado (ratio LF/HF = {lf_hf:.2f}) - posible isquemia")
+        rate["Isquemia Miocárdica"] = min(0.6, lf_hf / 8.0)
+        notes.append(f"Dominio LF marcado (LF/HF = {lf_hf:.2f}). Hallazgo inespecífico: "
+                     "la isquemia requiere análisis del segmento ST.")
 
-    # ── Selección final ──
-    if not candidates:
-        diagnosis = "Normal"
-        confidence = max(0.70, min(0.95, 1.0 - rr_cv * 2))
-        notes.append("Ritmo sinusal normal. Sin anomalías detectadas.")
+    # ── Selección: ritmo primero, luego frecuencia ──
+    candidates = {**rate, **rhythm}
+    if rhythm:
+        diagnosis = max(rhythm, key=rhythm.get)
+        confidence = float(rhythm[diagnosis])
+    elif rate:
+        diagnosis = max(rate, key=rate.get)
+        confidence = float(rate[diagnosis])
     else:
-        diagnosis = max(candidates, key=candidates.get)
-        confidence = float(candidates[diagnosis])
-        # ajuste por múltiples señales
-        if len(candidates) > 1:
-            notes.append(f"Hallazgos secundarios: {', '.join(k for k in candidates if k != diagnosis)}")
+        diagnosis = "Normal"
+        confidence = float(max(0.70, min(0.95, 0.6 + 0.4 * reg - nrm)))
+        notes.append("Ritmo sinusal regular, sin latidos prematuros ni pausas significativas.")
+    others = [k for k in candidates if k != diagnosis]
+    if others:
+        notes.append(f"Hallazgos secundarios: {', '.join(others)}")
 
-    # Scores completos
     all_scores = {d: 0.0 for d in DIAGNOSES}
-    all_scores["Normal"] = max(0.0, 1.0 - sum(candidates.values()) / max(1, len(candidates)))
+    all_scores["Normal"] = 0.0 if candidates else confidence
     all_scores.update(candidates)
-    # normalizar
     total = sum(all_scores.values()) + 1e-8
     all_scores = {k: v / total for k, v in all_scores.items()}
-
     return diagnosis, confidence, notes, all_scores
 
 
@@ -938,18 +1036,33 @@ def generate_demo_ecg(condition: str = "normal", fs: int = 500,
         "tachy":  {"bpm": 130, "rr_noise": 0.02},
         "brady":  {"bpm": 42,  "rr_noise": 0.02},
         "afib":   {"bpm": 90,  "rr_noise": 0.18},
-        "block":  {"bpm": 45,  "rr_noise": 0.01},
+        "block":  {"bpm": 80,  "rr_noise": 0.01},   # frecuencia auricular
     }
     p = params.get(condition, params["normal"])
     bpm, rr_noise = p["bpm"], p["rr_noise"]
 
     rr_base = 60.0 / bpm
     beat_times = []
+    blocked_p = []   # ondas P no conducidas (solo demo de bloqueo AV)
     current = 0.0
-    while current < duration:
-        beat_times.append(current)
-        rr = rr_base * (1 + np.random.randn() * rr_noise)
-        current += max(0.3, rr)
+    if condition == "block":
+        # Bloqueo AV de 2.º grado: aurícula a 80 lpm; tramos alternos de
+        # conducción 1:1 y 2:1 (una P de cada dos no genera QRS).
+        pp = 60.0 / 80
+        k = 0
+        while current < duration:
+            two_to_one = (k // 6) % 2 == 1
+            if two_to_one and k % 2 == 1:
+                blocked_p.append(current)
+            else:
+                beat_times.append(current)
+            current += pp * (1 + np.random.randn() * rr_noise)
+            k += 1
+    else:
+        while current < duration:
+            beat_times.append(current)
+            rr = rr_base * (1 + np.random.randn() * rr_noise)
+            current += max(0.3, rr)
 
     # Forma del latido PQRST simplificada
     def pqrst(t_local):
@@ -964,6 +1077,10 @@ def generate_demo_ecg(condition: str = "normal", fs: int = 500,
         local_t = t - bt
         mask = (local_t >= -0.05) & (local_t <= 0.55)
         ecg[mask] += pqrst(local_t[mask])
+    for bt in blocked_p:   # P sin QRS
+        local_t = t - bt
+        mask = (local_t >= -0.05) & (local_t <= 0.25)
+        ecg[mask] += 0.15 * np.exp(-((local_t[mask] - 0.10) ** 2) / (2 * 0.008 ** 2))
 
     # Ruido
     ecg += np.random.randn(len(t)) * 0.03

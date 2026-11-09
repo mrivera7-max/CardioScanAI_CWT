@@ -79,7 +79,7 @@ def api_demo(condition: str):
     if condition not in allowed:
         return jsonify({"status": "error", "message": "Condición no válida."}), 400
 
-    ecg = generate_demo_ecg(condition, fs=500, duration=12.0)
+    ecg = generate_demo_ecg(condition, fs=500, duration=30.0)
     tmp = UPLOAD_DIR / f"demo_{condition}_{os.getpid()}.csv"
     try:
         np.savetxt(str(tmp), ecg, fmt="%.6f")
