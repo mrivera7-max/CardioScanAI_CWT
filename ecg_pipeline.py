@@ -576,6 +576,11 @@ def _render_plots(d: dict, theme: str = "dark") -> dict:
         }
 
 
+def forget_analysis(analysis_id: str) -> bool:
+    """Elimina un análisis de la caché (botón 'Nuevo paciente')."""
+    return _ANALYSIS_CACHE.pop(analysis_id or "", None) is not None
+
+
 def render_plots_for_report(analysis_id: str) -> dict | None:
     """Figuras en tema claro para el PDF; None si el análisis ya no está en caché."""
     d = _ANALYSIS_CACHE.get(analysis_id or "")

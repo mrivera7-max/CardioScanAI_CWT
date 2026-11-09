@@ -315,3 +315,20 @@ Botón **📑 Reporte PDF** (tras cualquier análisis: archivo, demo o registro 
 Implementación: `report_pdf.py` (reportlab + fuente DejaVu de matplotlib). Las figuras se regeneran en tema claro a
 partir del análisis en memoria; si el servidor se reinició, se usan las figuras de la interfaz. El reporte TXT se mantiene.
 La gráfica/pestaña "Probabilidades" se renombró a **Puntajes**: son puntajes relativos de las reglas, no probabilidades calibradas.
+
+---
+
+## Separación de pacientes — v2.4
+
+Evita que el reporte de un paciente salga con el nombre de otro.
+
+- **Operador** y **Paciente / ID** son campos separados. El operador se mantiene en la sesión; el paciente es
+  **obligatorio** para generar el PDF.
+- **🆕 Nuevo paciente** limpia paciente, archivo, fs, resultados, gráficas y referencia, y borra el análisis
+  anterior de la memoria del servidor (`/api/forget`). La base WFDB cargada se conserva (no es dato de un paciente).
+- **Bloqueo automático:** el nombre queda ligado al análisis que estaba en pantalla cuando se escribió. Si luego se
+  analiza una señal **distinta** (otro archivo, otra demo u otro registro WFDB), el nombre se borra y aparece un aviso.
+  Otro canal o tramo del **mismo** registro conserva el nombre.
+- Flujo recomendado: **🆕 Nuevo paciente → escribir ID → analizar → 📑 Reporte PDF**.
+- Los reportes se llaman `CardioScan_<ID>_<fecha>.pdf/.txt` y se envían desde memoria: **ningún reporte queda
+  guardado en disco** en el servidor (antes el TXT se sobrescribía en un archivo temporal compartido).

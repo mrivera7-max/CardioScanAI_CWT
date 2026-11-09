@@ -2,7 +2,7 @@
 Servidor web Flask para interfaz de análisis ECG.
 """
 
-import os, sys, json, tempfile, base64
+import os, sys, io, json, tempfile, base64, re
 from pathlib import Path
 
 # ── Instalar Flask si no está disponible ──────────────────────────────────────
@@ -12,7 +12,7 @@ except ImportError:
     os.system(f"{sys.executable} -m pip install flask --break-system-packages -q")
     from flask import Flask, request, jsonify, send_file
 
-from ecg_pipeline import analyze_ecg, generate_demo_ecg, render_plots_for_report
+from ecg_pipeline import analyze_ecg, generate_demo_ecg, render_plots_for_report, forget_analysis
 import numpy as np
 import wfdb_import
 import report_pdf
@@ -169,6 +169,7 @@ def export_report():
     from datetime import datetime
     data = request.json or {}
     operator = (data.get("operator_name") or "").strip()
+    patient = (data.get("patient_id") or "").strip()
 
     lines = [
         "=" * 60,
@@ -176,8 +177,9 @@ def export_report():
         "  Sistema de Detección de Anomalías Cardíacas",
         "=" * 60,
     ]
+    lines.append(f"  Paciente / ID: {patient or '(no indicado)'}")
     if operator:
-        lines.append(f"  Operador / Paciente: {operator}")
+        lines.append(f"  Operador:      {operator}")
     lines.append(f"  Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
     lines += [
         "=" * 60,
@@ -208,10 +210,10 @@ def export_report():
         "=" * 60,
     ]
     text = "\n".join(lines)
-    tmp_report = UPLOAD_DIR / "reporte_ecg.txt"
-    tmp_report.write_text(text, encoding="utf-8")
-    return send_file(str(tmp_report), as_attachment=True,
-                     download_name="reporte_ecg.txt", mimetype="text/plain")
+    stamp = datetime.now().strftime("%Y%m%d_%H%M")
+    return send_file(io.BytesIO(text.encode("utf-8")), as_attachment=True,
+                     download_name=f"CardioScan_{_safe_name(patient or 'sin_paciente')}_{stamp}.txt",
+                     mimetype="text/plain")
 
 
 @app.route("/api/export_pdf", methods=["POST"])
@@ -222,20 +224,38 @@ def export_pdf():
     if data.get("status") != "ok":
         return jsonify({"status": "error", "message": "No hay un análisis para reportar."}), 400
     operator = (data.get("operator_name") or "").strip()
+    patient = (data.get("patient_id") or "").strip()
+    if not patient:
+        return jsonify({"status": "error",
+                        "message": "Falta el Paciente / ID: es obligatorio en el reporte."}), 400
     # Gráficas en tema claro (imprimible) si el análisis sigue en memoria;
     # si no (p. ej. tras reiniciar el servidor), se usan las de la interfaz.
     plots = render_plots_for_report(data.get("analysis_id")) or data.get("plots") or {}
     try:
-        pdf = report_pdf.build_report(data, plots, operator)
+        pdf = report_pdf.build_report(data, plots, operator=operator, patient=patient)
     except Exception as e:
         return jsonify({"status": "error", "message": f"No se pudo generar el PDF: {e}"}), 500
     stamp = datetime.now().strftime("%Y%m%d_%H%M")
-    safe = "".join(c for c in (data.get("diagnosis") or "ECG") if c.isalnum()) or "ECG"
-    out = UPLOAD_DIR / f"reporte_cardioscan_{stamp}.pdf"
-    out.write_bytes(pdf)
-    return send_file(str(out), as_attachment=True,
-                     download_name=f"CardioScan_{safe}_{stamp}.pdf",
+    pid = _safe_name(patient)
+    # Se envía desde memoria: ningún reporte de paciente queda escrito en disco.
+    return send_file(io.BytesIO(pdf), as_attachment=True,
+                     download_name=f"CardioScan_{pid}_{stamp}.pdf",
                      mimetype="application/pdf")
+
+
+def _safe_name(text: str, maxlen: int = 40) -> str:
+    """ID de paciente → nombre de archivo seguro (sin tildes ni símbolos)."""
+    import unicodedata
+    t = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    t = re.sub(r"[^A-Za-z0-9]+", "_", t).strip("_")
+    return (t[:maxlen] or "paciente")
+
+
+@app.route("/api/forget", methods=["POST"])
+def api_forget():
+    """Botón 'Nuevo paciente': borra el análisis previo de la memoria del servidor."""
+    aid = (request.get_json(silent=True) or {}).get("analysis_id", "")
+    return jsonify({"status": "ok", "forgotten": forget_analysis(aid)})
 
 
 if __name__ == "__main__":

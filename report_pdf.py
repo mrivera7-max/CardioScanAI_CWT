@@ -186,7 +186,7 @@ def _footer(canvas, doc):
 
 
 # ─── Reporte ─────────────────────────────────────────────────────────────────
-def build_report(data: dict, plots: dict, operator: str = "") -> bytes:
+def build_report(data: dict, plots: dict, operator: str = "", patient: str = "") -> bytes:
     """data: resultado de analyze_ecg (dict). plots: base64 PNG por clave."""
     buf = io.BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=letter, leftMargin=1.7 * cm, rightMargin=1.7 * cm,
@@ -205,13 +205,13 @@ def build_report(data: dict, plots: dict, operator: str = "") -> bytes:
     el.append(Spacer(1, 8))
 
     meta = [
-        ["Paciente / operador", _e(operator or "—"), "Fecha del reporte", now],
+        ["Paciente / ID", f"<b>{_e(patient or '—')}</b>", "Fecha del reporte", now],
+        ["Operador", _e(operator or "—"), "ID del análisis", _e((data.get("analysis_id") or "—")[:12])],
         ["Origen de la señal", _e(data.get("source") or "—"), "Duración analizada",
          _fmt(si.get("duration_sec"), 1, "s")],
         ["Frecuencia de muestreo", f"{_e(si.get('fs_hz', '—'))} Hz", "Fuente de la fs",
          _e(si.get("fs_source", "—"))],
-        ["N.º de muestras", f"{si.get('n_samples', 0):,}".replace(",", "."), "ID del análisis",
-         _e((data.get("analysis_id") or "—")[:12])],
+        ["N.º de muestras", f"{si.get('n_samples', 0):,}".replace(",", "."), "", ""],
     ]
     if data.get("wfdb"):
         w = data["wfdb"]

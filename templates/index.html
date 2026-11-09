@@ -106,6 +106,22 @@ body {
 
 .operator-saved-icon.show { opacity: 1; }
 
+.patient-input { width: 150px; border-color: #334155; }
+.patient-input.required { border-color: var(--warn); box-shadow: 0 0 0 2px rgba(245,158,11,.25); }
+.btn-new-patient {
+  background: transparent; border: 1px solid var(--accent3); color: var(--accent3);
+  border-radius: 6px; padding: 5px 10px; font-size: .75rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: all .15s;
+}
+.btn-new-patient:hover { background: rgba(167,139,250,.12); }
+.patient-alert {
+  display: none; margin: 0 0 1rem; padding: .6rem .9rem; border-radius: var(--radius-sm);
+  background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.45);
+  color: #fbbf24; font-size: .8rem;
+}
+.patient-alert.show { display: block; }
+.diag-patient { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
+
 /* ── Layout ───────────────────────────────────────────────────────── */
 .main {
   max-width: 1400px; margin: 0 auto;
@@ -548,11 +564,17 @@ body {
     Cardio<span>Scan</span>&nbsp;AI
   </div>
   <div class="operator-field">
-    <label class="operator-label" for="operatorName">Operador / Paciente:</label>
+    <label class="operator-label" for="operatorName">Operador:</label>
     <input type="text" id="operatorName" class="operator-input"
-           placeholder="Tu nombre" maxlength="60"
+           placeholder="Quien realiza el análisis" maxlength="60"
            oninput="saveOperatorName()">
-    <span class="operator-saved-icon" id="operatorSavedIcon">✓ guardado</span>
+    <span class="operator-saved-icon" id="operatorSavedIcon">✓</span>
+    <label class="operator-label" for="patientId" style="margin-left:.5rem">Paciente / ID:</label>
+    <input type="text" id="patientId" class="operator-input patient-input"
+           placeholder="Obligatorio para PDF" maxlength="60"
+           oninput="onPatientInput()">
+    <button class="btn-new-patient" onclick="newPatient()"
+            title="Limpia paciente, archivo y resultados para empezar con otro paciente">🆕 Nuevo paciente</button>
   </div>
   <div class="header-badge">ECG · STFT + CWT · ML</div>
 </header>
@@ -696,6 +718,8 @@ body {
   <!-- ── Right column ──────────────────────────────────────────────────── -->
   <div class="right-col">
 
+    <div class="patient-alert" id="patientAlert"></div>
+
     <!-- Diagnosis banner -->
     <div class="diagnosis-banner" id="diagnosisBanner">
       <div class="diag-main">
@@ -703,6 +727,7 @@ body {
         <div class="diag-info">
           <h2 id="diagName"></h2>
           <p id="diagConf"></p>
+          <p class="diag-patient" id="diagPatient"></p>
         </div>
         <div class="diag-badge" id="diagRisk"></div>
       </div>
@@ -764,6 +789,83 @@ body {
 // ── State ──────────────────────────────────────────────────────────────────
 let lastResult = null;
 let operatorName = '';
+// Paciente: el nombre queda ligado al análisis que estaba en pantalla cuando se
+// escribió (patientOwner). Si luego se analiza una señal DISTINTA, se borra.
+let patientOwner = null;      // analysis_id dueño del nombre actual (null = ninguno)
+let lastSource = null;        // origen de la señal mostrada
+const EMPTY_PLOTS_HTML = `
+        <div class="empty-state">
+          <span class="big-icon">📈</span>
+          <h3>Esperando análisis</h3>
+          <p>Carga un archivo ECG o selecciona una señal de demostración para comenzar.</p>
+        </div>`;
+
+function getPatient() { return document.getElementById('patientId').value.trim(); }
+
+function onPatientInput() {
+  // lo escrito pertenece al análisis visible (o a ninguno si no hay resultado)
+  patientOwner = lastResult ? lastResult.analysis_id : null;
+  const el = document.getElementById('patientId');
+  if (getPatient()) el.classList.remove('required');
+  hidePatientAlert();
+  updatePatientLine();
+}
+
+function updatePatientLine() {
+  const el = document.getElementById('diagPatient');
+  if (!el) return;
+  const p = getPatient();
+  el.textContent = p ? `Paciente: ${p}` : 'Paciente: — (ingréselo para generar el reporte)';
+}
+
+function showPatientAlert(msg) {
+  const a = document.getElementById('patientAlert');
+  a.textContent = msg; a.classList.add('show');
+}
+function hidePatientAlert() { document.getElementById('patientAlert').classList.remove('show'); }
+
+// Llamar ANTES de cada análisis con un identificador del origen de la señal.
+function guardPatient(source) {
+  const p = getPatient();
+  if (p && lastResult && patientOwner !== null && source !== lastSource) {
+    document.getElementById('patientId').value = '';
+    document.getElementById('patientId').classList.add('required');
+    patientOwner = null;
+    showPatientAlert(`⚠ Se cargó una señal distinta: se borró el paciente "${p}" para no mezclar ` +
+                     `registros. Ingrese el Paciente / ID correspondiente a esta señal.`);
+  }
+}
+
+function newPatient() {
+  const prev = lastResult ? lastResult.analysis_id : null;
+  if (prev) {
+    fetch('/api/forget', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ analysis_id: prev }) }).catch(() => {});
+  }
+  lastResult = null; lastSource = null; patientOwner = null;
+  const pid = document.getElementById('patientId');
+  pid.value = ''; pid.classList.remove('required');
+  // entradas
+  fileInput.value = '';
+  document.getElementById('fileSelected').style.display = 'none';
+  document.getElementById('fileName').textContent = '';
+  analyzeBtn.disabled = true;
+  document.getElementById('fsInput').value = '';
+  const st = document.getElementById('wfStart'); if (st) st.value = 0;
+  // resultados
+  document.getElementById('diagnosisBanner').style.display = 'none';
+  ['notesCard', 'metricsCard', 'refCard'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  document.getElementById('notesList').innerHTML = '';
+  document.getElementById('refBody').innerHTML = '';
+  document.getElementById('actionsRow').innerHTML = '';
+  document.getElementById('tabStrip').innerHTML = '';
+  document.getElementById('plotPanels').innerHTML = EMPTY_PLOTS_HTML;
+  hidePatientAlert();
+  updateReportFooter();
+  pid.focus();
+}
 
 // ── Nombre del operador / paciente ────────────────────────────────────────
 function saveOperatorName() {
@@ -824,7 +926,8 @@ async function analyzeFile() {
   const fsVal = document.getElementById('fsInput').value.trim();
   if (fsVal) fd.append('fs', fsVal);
   await runAnalysis(() =>
-    fetch('/api/analyze', { method: 'POST', body: fd }).then(r => r.json())
+    fetch('/api/analyze', { method: 'POST', body: fd }).then(r => r.json()),
+    `file:${file.name}:${file.size}:${file.lastModified}`
   );
 }
 
@@ -883,11 +986,13 @@ function wfParams() {
 
 async function wfAnalyze() {
   if (!wfToken) return;
+  const prm = wfParams();
   await runAnalysis(() =>
     fetch('/api/wfdb/analyze', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(wfParams()),
-    }).then(r => r.json())
+      body: JSON.stringify(prm),
+    }).then(r => r.json()),
+    `wfdb:${prm.record}`   // otro canal/tramo del mismo registro = mismo paciente
   );
 }
 
@@ -918,7 +1023,8 @@ function renderReference(data) {
 // ── Load demo ──────────────────────────────────────────────────────────────
 async function loadDemo(condition) {
   await runAnalysis(() =>
-    fetch(`/api/demo/${condition}`).then(r => r.json())
+    fetch(`/api/demo/${condition}`).then(r => r.json()),
+    `demo:${condition}`
   );
 }
 
@@ -934,7 +1040,8 @@ const LOADING_MSGS = [
   'Generando visualizaciones…',
 ];
 
-async function runAnalysis(fetchFn) {
+async function runAnalysis(fetchFn, source) {
+  guardPatient(source || 'desconocido');
   showLoading(true);
   let msgIdx = 0;
   const msgEl = document.getElementById('loadingText');
@@ -948,8 +1055,14 @@ async function runAnalysis(fetchFn) {
     clearInterval(msgTimer);
     showLoading(false);
     if (data.status === 'ok') {
+      const prevId = lastResult ? lastResult.analysis_id : null;
       lastResult = data;
+      lastSource = source || 'desconocido';
+      // el nombre vigente pasa a pertenecer a este análisis
+      if (getPatient() && (patientOwner === null || patientOwner === prevId))
+        patientOwner = data.analysis_id;
       renderResult(data);
+      updatePatientLine();
     } else {
       alert('Error: ' + (data.message || 'Error desconocido'));
     }
@@ -1076,6 +1189,13 @@ function switchTab(id, btn) {
 // ── Export ─────────────────────────────────────────────────────────────────
 async function exportPdf() {
   if (!lastResult) return;
+  const patient = getPatient();
+  if (!patient) {
+    const pid = document.getElementById('patientId');
+    pid.classList.add('required'); pid.focus();
+    showPatientAlert('Ingrese el Paciente / ID (arriba) antes de generar el reporte PDF.');
+    return;
+  }
   const btn = document.getElementById('pdfBtn');
   const label = btn.textContent;
   btn.disabled = true; btn.textContent = '⏳ Generando PDF…';
@@ -1083,7 +1203,7 @@ async function exportPdf() {
     const res = await fetch('/api/export_pdf', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...lastResult, operator_name: operatorName }),
+      body: JSON.stringify({ ...lastResult, operator_name: operatorName, patient_id: patient }),
     });
     if (!res.ok) {
       let msg = 'Error ' + res.status;
@@ -1107,7 +1227,7 @@ async function exportPdf() {
 
 async function exportReport() {
   if (!lastResult) return;
-  const payload = { ...lastResult, operator_name: operatorName };
+  const payload = { ...lastResult, operator_name: operatorName, patient_id: getPatient() };
   const res = await fetch('/api/export_report', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1116,7 +1236,9 @@ async function exportReport() {
   const blob = await res.blob();
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'reporte_ecg.txt';
+  const cd = res.headers.get('Content-Disposition') || '';
+  const m = cd.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i);
+  a.download = m ? decodeURIComponent(m[1]) : 'reporte_cardioscan.txt';
   a.click();
 }
 
@@ -1124,6 +1246,7 @@ function downloadScores() {
   if (!lastResult) return;
   const blob = new Blob([JSON.stringify({
     operator_name: operatorName || null,
+    patient_id: getPatient() || null,
     generated_at: new Date().toISOString(),
     diagnosis: lastResult.diagnosis,
     confidence: lastResult.confidence,
